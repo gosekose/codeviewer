@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.web.client.RestTemplate;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -25,21 +26,25 @@ public class OAuth2ClientConfig {
     @Bean
     SecurityFilterChain oauth2SecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests((requests) -> requests
-                .antMatchers("/api/user")
-                .access("hasAnyRole('SCOPE_profile','SCOPE_profile_image', 'SCOPE_email')")
-                .antMatchers("/api/oidc")
-                .access("hasRole('SCOPE_openid')")
                 .antMatchers("/", "/resources/**")
                 .permitAll()
                 .anyRequest().authenticated());
+
         http.formLogin().loginPage("/login").loginProcessingUrl("/loginProc").defaultSuccessUrl("/").permitAll();
+
         http.oauth2Login(oauth2 -> oauth2.userInfoEndpoint(
                 userInfoEndpointConfig -> userInfoEndpointConfig
                         .userService(customOAuth2UserService)
                         .oidcUserService(customOidcUserService)));
+
         http.exceptionHandling().authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"));
         http.logout().logoutSuccessUrl("/");
         return http.build();
+   }
+
+   @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
    }
 
 }

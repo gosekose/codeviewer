@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import resource.resource.dto.LoginDto;
+import resource.resource.application.dto.LoginDto;
 import resource.resource.infra.signiture.SecuritySigner;
 
 import javax.servlet.FilterChain;
@@ -41,20 +41,22 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             throw new RuntimeException(e);
         }
 
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
+        UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword());
 
-        return getAuthenticationManager().authenticate(usernamePasswordAuthenticationToken);
+        return getAuthenticationManager().authenticate(authenticationToken);
+
     }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
+        User user = (User)authResult.getPrincipal();
         String jwtToken;
-
-        User user = (User) authResult.getPrincipal();
 
         try {
             jwtToken = securitySigner.getJwtToken(user, jwk);
             response.addHeader("Authorization", "Bearer " + jwtToken);
+
         } catch (JOSEException e) {
             throw new RuntimeException(e);
         }
