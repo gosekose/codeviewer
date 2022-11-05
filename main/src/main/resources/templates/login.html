@@ -67,8 +67,8 @@
 
             </header>
               <main class="mb-auto col-12">
-                  <h1>로그인</h1>
                   <div sec:authorize="isAnonymous()">
+                      <h1>로그인</h1>
                       <div class="col-12 col-lg-10 col-xl-8">
                           <a th:href="@{/oauth2/authorization/google}" class="btn btn-primary btn-xl">
                               <span>Google</span>
@@ -78,6 +78,17 @@
                           </a>
                           <a th:href="@{/oauth2/authorization/kakao}" class="btn btn-primary btn-xl">
                               <span>Kakao</span>
+                          </a>
+                      </div>
+                  </div>
+                  <div sec:authorize="isAuthenticated()">
+                      <h1>로그아웃</h1>
+                      <div class="col-12 col-lg-10 col-xl-8">
+                          <a th:href="@{/}" class="btn btn-primary btn-xl">
+                              <span>홈 이동</span>
+                          </a>
+                          <a th:href="@{/logout}" class="btn btn-primary btn-xl">
+                              <span>로그아웃</span>
                           </a>
                       </div>
                   </div>

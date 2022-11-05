@@ -105,8 +105,10 @@
             </a>
           </li>
         </ul>
-
       </div>
+    </div>
+    <div sec:authorize="isAuthenticated()" hidden>
+
     </div>
   </nav>
 
@@ -266,6 +268,35 @@
 
       console.log(scrollpos);
     })
+
+    function  token() {
+      fetch("/token").then(response => {
+        response.json().then(function (data) {
+          console.log("tokenValue = " + data.tokenValue);
+          window.localStorage.setItem("access_token", data.tokenValue);
+        })
+      })
+    }
+
+    function photo() {
+      fetch("/phothos?token=" + localStorage.getItem("access_token"),
+            {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+            })
+              .then(response => {
+                response.json().then(function (data) {
+                  for(const prop in data) {
+                    document.querySelector("photos").append(data[prop].userId);
+                  }
+                })
+              })
+              .catch((error) => console.log("error", error))
+    }
+
+
   </script>
 
 </body>
