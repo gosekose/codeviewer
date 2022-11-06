@@ -22,9 +22,6 @@ public abstract class OAuth2ProviderUser implements ProviderUser {
     private boolean isCertificated;
 
     public OAuth2ProviderUser(Map<String, Object> attributes, OAuth2User oAuth2User, ClientRegistration clientRegistration){
-        log.info("attributes = {}", attributes);
-        log.info("oAuth2User = {}", oAuth2User);
-        log.info("clientRegistration = {}", clientRegistration);
         this.attributes = attributes;
         this.oAuth2User = oAuth2User;
         this.clientRegistration = clientRegistration;
@@ -37,7 +34,6 @@ public abstract class OAuth2ProviderUser implements ProviderUser {
 
     @Override
     public String getEmail() {
-        log.info("attributes data = {}, {}", attributes, attributes.get("email"));
         return (String)attributes.get("email");
     }
 

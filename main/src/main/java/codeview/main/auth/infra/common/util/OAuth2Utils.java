@@ -24,9 +24,6 @@ public class OAuth2Utils {
 
         Map<String, Object> subAttributes = (Map<String, Object>) oAuth2User.getAttributes().get(mainAttributesKey);
 
-        log.info("oauth2User = {}", oAuth2User.getAttributes());
-        log.info("mainAttributesKey = {}", mainAttributesKey);
-        log.info("subAttributes = {}", subAttributes);
 
         return Attributes
                 .builder()
@@ -58,9 +55,6 @@ public class OAuth2Utils {
         if (registrationId.equals(OAuth2Config.SocialType.NAVER.getSocialName())) {
             attributes = OAuth2Utils.getSubAttributes(oAuth2User, "response");
             userName = (String) attributes.getSubAttributes().get("name");
-            log.info("attributes = {}", attributes);
-            log.info("username = {}", userName);
-
 
         // Kakao
         } else if (registrationId.equals(OAuth2Config.SocialType.KAKAO.getSocialName())) {
