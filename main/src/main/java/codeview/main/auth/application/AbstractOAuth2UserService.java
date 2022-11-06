@@ -35,7 +35,6 @@ public abstract class AbstractOAuth2UserService {
     }
 
     public void selfCertificate(ProviderUser providerUser){
-        log.info("providerUser = {}", providerUser.getAttributes());
         certification.checkCertification(providerUser);
     }
     public void register(ProviderUser providerUser, OAuth2UserRequest userRequest){
@@ -45,8 +44,6 @@ public abstract class AbstractOAuth2UserService {
         if(member == null){
             ClientRegistration clientRegistration = userRequest.getClientRegistration();
             memberService.register(clientRegistration.getRegistrationId(),providerUser);
-        }else{
-            System.out.println("userRequest = " + userRequest);
         }
     }
 
@@ -54,7 +51,6 @@ public abstract class AbstractOAuth2UserService {
 
         String registrationId = clientRegistration.getRegistrationId();
 
-        log.info("registrationId = {}", registrationId);
 
         switch (registrationId) {
 
@@ -62,8 +58,6 @@ public abstract class AbstractOAuth2UserService {
                 return new GoogleUser(OAuth2Utils.getMainAttributes(oAuth2User), oAuth2User, clientRegistration);
 
             case "naver":
-                log.info("provider name = Naver ");
-                log.info("OAuth2Utils.getSubAttributes(oAuth2User, response) = {}", OAuth2Utils.getSubAttributes(oAuth2User, "response"));
                 return new NaverUser(OAuth2Utils.getSubAttributes(oAuth2User, "response"), oAuth2User, clientRegistration);
 
             case "kakao":

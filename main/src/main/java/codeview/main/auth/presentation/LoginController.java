@@ -17,6 +17,12 @@ public class LoginController {
         return "login";
     }
 
+    @GetMapping("/api/user")
+    public Authentication apiUser(Authentication authentication) {
+        return authentication;
+    }
+
+
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication ) {
 

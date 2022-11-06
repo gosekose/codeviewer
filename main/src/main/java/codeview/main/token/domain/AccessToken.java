@@ -1,4 +1,4 @@
-package codeview.main;
+package codeview.main.token.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
