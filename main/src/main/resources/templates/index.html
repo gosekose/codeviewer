@@ -11,7 +11,7 @@
   <meta name="author" content="Holger Koenemann">
   <meta name="generator" content="Eleventy v2.0.0">
   <meta name="HandheldFriendly" content="true">
-  <title>Stride HTML Template - Frontpage one</title>
+  <title>CODEVIEWER</title>
   <link rel="stylesheet" th:href="@{/static/css/theme.min.css}">
 
   <style>
@@ -179,7 +179,34 @@
       </div>
 
     </div>
+
+    <div class="py-vh-6 bg-gray-900 text-light w-100 overflow-hidden" id="workwithus">
+      <div class="container">
+        <div class="row d-flex justify-content-center">
+          <div class="row d-flex justify-content-center text-center">
+            <div class="col-lg-8 text-center" data-aos="fade">
+              <p class="text-secondary lead">서비스 미리보기</p>
+              <h2 class="display-6 mb-5">온라인 IDE 환경을 제공하여, 실시간 코드 결과를 확인할 수 있습니다.</h2>
+              <form class="row" th:action="@{/api/v1/test/index}" th:object="${indexTestForm}" method="post">
+                <div>
+                  <div>
+                    <label th:for="source" class="form-label">"Hello CODEVIEWER"를 출력하세요</label>
+                    <input type="text" class="form-control form-control-lg input-group-prepend" th:field="*{source}">
+                  </div>
+                </div>
+                <div class="col-12">
+                  <button type="submit" class="btn btn-warning btn-xl shadow me-3 mt-4" data-aos="fade-down">Submit</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
   </main>
+
+
 
   <footer>
     <div class="container small border-top">
@@ -294,6 +321,35 @@
                 })
               })
               .catch((error) => console.log("error", error))
+    }
+
+    function serviceTest() {
+
+      var csrfHeader = $('meta[name="_csrf_header"]').attr('content')
+      var csrfToken = $('meta[name="_csrf"]').attr('content')
+
+      $.ajax({
+
+        type: "post",
+        url: "/api/v1/test/index",
+        dataType: "json",
+        beforeSend : function(xhr) {
+          xhr.setRequestHeader(csrfHeader, csrfToken);
+          xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+          xhr.setRequestHeader("Content-type", "application/json");
+        },
+        error: function(xhr, status, error) {
+          console.log(error);
+          if(xhr.responseJSON.status == '401') {
+            console.log("error 401");
+          } else if(cht.responseJSON.status == '403') {
+            console.log("error 403");
+          }
+
+        }
+
+
+      })
     }
 
 
