@@ -11,6 +11,9 @@
   <meta name="author" content="Holger Koenemann">
   <meta name="generator" content="Eleventy v2.0.0">
   <meta name="HandheldFriendly" content="true">
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
   <title>CODEVIEWER</title>
   <link rel="stylesheet" th:href="@{/static/css/theme.min.css}">
 
@@ -187,15 +190,15 @@
             <div class="col-lg-8 text-center" data-aos="fade">
               <p class="text-secondary lead">서비스 미리보기</p>
               <h2 class="display-6 mb-5">온라인 IDE 환경을 제공하여, 실시간 코드 결과를 확인할 수 있습니다.</h2>
-              <form class="row" th:action="@{/api/v1/test/index}" th:object="${indexTestForm}" method="post">
+              <form class="row" th:object="${indexTestForm}" method="post">
                 <div>
                   <div>
                     <label th:for="source" class="form-label">"Hello CODEVIEWER"를 출력하세요</label>
-                    <input type="text" class="form-control form-control-lg input-group-prepend" th:field="*{source}">
+                    <input type="text" id="textSource" class="form-control form-control-lg input-group-prepend" th:field="*{source}">
                   </div>
                 </div>
                 <div class="col-12">
-                  <button type="submit" class="btn btn-warning btn-xl shadow me-3 mt-4" data-aos="fade-down">Submit</button>
+                  <button type="button" id="ajaxIndexTest" onclick="ajaxCall()" class="btn btn-warning btn-xl shadow me-3 mt-4" data-aos="fade-down">Submit</button>
                 </div>
               </form>
             </div>
@@ -273,6 +276,7 @@
 
   <script th:src="@{/static/js/bootstrap.bundle.min.js}"></script>
   <script th:src="@{/static/js/aos.js}"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
   <script>
     AOS.init({
       duration: 800, // values from 0 to 3000, with step 50ms
@@ -305,51 +309,38 @@
       })
     }
 
-    function photo() {
-      fetch("/phothos?token=" + localStorage.getItem("access_token"),
-            {
-                method: "GET",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-            })
-              .then(response => {
-                response.json().then(function (data) {
-                  for(const prop in data) {
-                    document.querySelector("photos").append(data[prop].userId);
-                  }
-                })
-              })
-              .catch((error) => console.log("error", error))
-    }
+    function ajaxCall() {
+      const token = $("meta[name='_csrf']").attr("content");
+      const header = $("meta[name='_csrf_header']").attr("content");
+      const source = $("#textSource").val();
 
-    function serviceTest() {
-
-      var csrfHeader = $('meta[name="_csrf_header"]').attr('content')
-      var csrfToken = $('meta[name="_csrf"]').attr('content')
+      const jsonData = {
+        "source": source
+      }
 
       $.ajax({
 
-        type: "post",
-        url: "/api/v1/test/index",
-        dataType: "json",
-        beforeSend : function(xhr) {
-          xhr.setRequestHeader(csrfHeader, csrfToken);
-          xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-          xhr.setRequestHeader("Content-type", "application/json");
+        type: 'POST',
+        contentType: 'application/json',
+        url: '/api/v1/test/index',
+        data: JSON.stringify(jsonData),
+        beforeSend: function(xhr) {
+          xhr.setRequestHeader(header, token);
+        },
+        dataType: 'json',
+        async: true,
+        cache: true,
+        success: function(data) {
+          console.log(data.checkStatus);
         },
         error: function(xhr, status, error) {
-          console.log(error);
-          if(xhr.responseJSON.status == '401') {
-            console.log("error 401");
-          } else if(cht.responseJSON.status == '403') {
-            console.log("error 403");
-          }
-
+          console.log('error:' + error);
+          console.log('status:' + status);
         }
 
 
       })
+
     }
 
 

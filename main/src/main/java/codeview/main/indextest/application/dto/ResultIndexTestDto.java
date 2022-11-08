@@ -1,4 +1,4 @@
-package codeview.main.test.application.dto;
+package codeview.main.indextest.application.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +8,8 @@ import lombok.Setter;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class IndexTestForm {
+public class ResultIndexTestDto {
 
-    String source;
+    private String checkStatus;
+
 }

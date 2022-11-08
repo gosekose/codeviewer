@@ -1,4 +1,4 @@
-package codeview.main.test.application;
+package codeview.main.indextest.application;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,9 +15,9 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class TestCompileService {
 
-    public void makeJavaSource(HttpSession session, String source) throws IOException {
+    public String makeJavaSource(HttpSession session, String source) throws IOException {
 
-        String decoderResult = URLDecoder.decode(source, StandardCharsets.UTF_8).substring(50);
+        String decoderResult = URLDecoder.decode(source, StandardCharsets.UTF_8);
 
         String[] sourceArray = decoderResult.split(" ");
 
@@ -41,7 +41,7 @@ public class TestCompileService {
         }
 
         if (className == "") {
-            return;
+            return "RuntimeError" ;
         }
 
         className = "T_" + session.getId() + "_" + className;
@@ -65,10 +65,10 @@ public class TestCompileService {
         writer = new BufferedWriter(fw);
 
         writer.write("javac ");
-        writer.write(className);
-        writer.write(".java");
+        writer.write(path);
         writer.close();
 
+        return "Success";
     }
 
 }
