@@ -1,0 +1,1 @@
+package codeview.main.indextest.application; public class DynamicClass { public byte[] main(byte[] params) throws Exception {byte[] result = new byte[1]; if(params[0] == 't') result[0] = 'a'; else result[0] = 'b'; return result;} }

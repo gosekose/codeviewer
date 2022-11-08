@@ -1,9 +1,6 @@
 package codeview.main.token.infra.filter.authorization;
 
 import com.nimbusds.jose.JWSVerifier;
-import com.nimbusds.jose.crypto.MACVerifier;
-import com.nimbusds.jose.jwk.OctetSequenceKey;
-import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 public abstract class JwtAuthorizationFilter extends OncePerRequestFilter {
@@ -75,5 +71,3 @@ public abstract class JwtAuthorizationFilter extends OncePerRequestFilter {
         return header == null || !header.startsWith("Bearer ");
     }
 }
-
-
