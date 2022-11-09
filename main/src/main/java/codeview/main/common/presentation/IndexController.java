@@ -11,6 +11,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ public class IndexController {
 
     private final CsrfProviderService csrfProviderService;
 
+    @CrossOrigin("http://localhost:5000/api/v1/test/index/compile")
     @GetMapping("/")
     public String index(Model model, Authentication authentication,
                         HttpServletRequest request,

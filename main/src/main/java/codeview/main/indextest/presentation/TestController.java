@@ -6,12 +6,16 @@ import codeview.main.indextest.application.dto.IndexTestResultDto;
 import codeview.main.indextest.application.dto.ResultIndexTestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 @Slf4j
 @RestController
@@ -20,15 +24,17 @@ public class TestController {
 
     private final TestCompileService testCompileService;
 
+
+    @CrossOrigin("http://localhost:5000/api/v1/test/index/compile")
     @PostMapping(value = "/api/v1/test/index")
-    public ResultIndexTestDto indexTest(@RequestBody IndexTestDto indexTestDto,
-                                        HttpSession httpSession) throws IOException {
+    public ResponseEntity<String> indexTest(@RequestBody IndexTestDto indexTestDto,
+                                    HttpSession httpSession) throws IOException {
 
         log.info(httpSession.getId());
 
-        String checkStatus = testCompileService.makeJavaSource(httpSession, indexTestDto.getSource());
+        String message = testCompileService.makeJavaSource(httpSession, indexTestDto.getSource());
 
-        return new ResultIndexTestDto(checkStatus);
+        return ResponseEntity.ok().body(message);
     }
 
     @PostMapping(value = "/api/v1/test/index/result")

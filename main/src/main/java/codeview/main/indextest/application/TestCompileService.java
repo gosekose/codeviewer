@@ -68,7 +68,7 @@ public class TestCompileService {
         writer.write(path);
         writer.close();
 
-        return "Success";
+        return className;
     }
 
 }
