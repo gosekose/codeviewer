@@ -11,7 +11,7 @@
   <meta name="author" content="Holger Koenemann">
   <meta name="generator" content="Eleventy v2.0.0">
   <meta name="HandheldFriendly" content="true">
-  <title>login</title>
+  <title>CODEVIEWER</title>
   <link rel="stylesheet" type="text/css" th:href="@{/static/css/theme.min.css}">
 
   <style>
@@ -46,6 +46,10 @@
       url('/static/fonts/inter-v12-latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
     }
 
+    .field-error {
+      color: red;
+    }
+
   </style>
 
 </head>
@@ -67,37 +71,50 @@
 
       </header>
       <main class="mb-auto col-12">
-        <h1>마이 페이지</h1>
+        <h1>클래스 생성</h1>
         <div sec:authorize="isAuthenticated()">
           <form class="row" th:action="@{/api/v1/classes/new}" th:object="${createClassesForm}" method="post">
-            <input type="hidden" th:field="*{id}" />
+<!--            <input type="hidden" th:field="*{id}" />-->
             <div class="col-12 col-lg-10 col-xl-8">
+
               <div class="mb-3">
-                <label th:for="memberName" class="form-label">클래스명</label>
-                <input type="text" class="form-control form-control-lg" th:field="*{className}">
+                <label th:for="name" class="form-label">클래스명</label>
+                <input type="text" id="name" class="form-control form-control-lg" th:errorclass="field-error" th:field="*{name}"  placeholder="클래스명은 필수입니다.">
               </div>
+              <div class="field-error" th:errors="*{name}"></div>
+
               <div class="mb-3">
-                <label th:for="joinClosedTime" class="form-label">가입 기간</label>
-                <input type="text" class="form-control form-control-lg" th:field="*{joinClosedTime}">
+                <label th:for="joinClosedTime" class="form-label">가입 가능 기간</label>
+                <input type="text" id="joinClosedTime" class="form-control form-control-lg" th:errorclass="joinClosedTime" th:field="*{joinClosedTime}">
               </div>
+              <div class="field-error" th:errors="*{joinClosedTime}"></div>
+
               <div class="mb-3">
                 <label th:for="maxMember" class="form-label">최대 인원</label>
-                <input type="text" class="form-control form-control-lg" th:field="*{maxMember}">
+                <input type="text" class="form-control form-control-lg" th:errorclass="maxMember" th:field="*{maxMember}">
               </div>
+              <div class="field-error" th:errors="*{maxMember}"></div>
+
               <div class="mb-3">
-                <label th:for="school" class="form-label">클래스 설명</label>
+                <label th:for="description" class="form-label">클래스 설명</label>
                 <input type="text" class="form-control form-control-lg" th:field="*{description}">
               </div>
+
               <div class="mb-3">
-                <label th:for="visibilityClass" class="form-label">공개 여부</label>
-                <input type="text" class="form-control form-control-lg" th:field="*{visibilityClass}">
+                <div th:each="visibility: ${visibilities}">
+                  <label class="form-label" th:text="${visibility.key}"></label>
+                  <input type="radio" th:field="*{memberClassesVisibility}" th:errorclass="memberClassesVisibility" class="form-check-inline" th:value="${visibility.value}">
+                </div>
               </div>
+              <div class="field-error" th:errors="*{memberClassesVisibility}"></div>
+
               <div class="mb-3">
-                <label th:for="work" class="form-label">스킬 태그</label>
+                <label th:for="skillTag" class="form-label">스킬 태그</label>
                 <input type="text" class="form-control form-control-lg" th:field="*{skillTag}">
               </div>
+
               <div class="mb-3">
-                <label th:for="work" class="form-label">패스워드</label>
+                <label th:for="password" class="form-label">패스워드</label>
                 <input type="text" class="form-control form-control-lg" th:field="*{password}">
               </div>
               <button type="submit" class="btn btn-primary btn-xl">Submit</button>

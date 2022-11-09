@@ -4,10 +4,13 @@ import codeview.main.auth.domain.users.PrincipalUser;
 import codeview.main.auth.infra.common.util.OAuth2Utils;
 import codeview.main.common.application.CsrfProviderService;
 import codeview.main.indextest.application.dto.IndexTestForm;
+import codeview.main.member.application.MemberService;
+import codeview.main.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @Slf4j
 @Controller
@@ -23,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 public class IndexController {
 
     private final CsrfProviderService csrfProviderService;
+    private final MemberService memberService;
 
     @CrossOrigin("http://localhost:5000/api/v1/test/index/compile")
     @GetMapping("/")
@@ -30,8 +35,6 @@ public class IndexController {
                         HttpServletRequest request,
                         HttpServletResponse response,
                         @AuthenticationPrincipal PrincipalUser principalUser) {
-
-        String view = "index";
 
         if (authentication != null) {
 
@@ -42,17 +45,25 @@ public class IndexController {
                 userName = principalUser.getProviderUser().getUsername();
             }
 
+            Member member = memberService.findByRegisterId(principalUser.getProviderUser().getId());
+
+            log.info("memberId = {}", member.getId());
+            log.info("SecurityContextHolder.getContext().getAuthentication().getPrincipal() = {}", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+            log.info("SecurityContextHolder.getContext().getAuthentication().getDetails() = {}", SecurityContextHolder.getContext().getAuthentication().getDetails());
+
+            HttpSession session = request.getSession();
+
+            log.info("session.getId() = {}", session.getId());
+            log.info("SecurityContextHolder.getContext().getAuthentication().getName() = {}", SecurityContextHolder.getContext().getAuthentication().getName());
+
             model.addAttribute("user", userName);
             model.addAttribute("provider", principalUser.getProviderUser().getProvider().toUpperCase());
-
-            if(!principalUser.getProviderUser().isCertificated()) view = "selfcert";
         }
-
 
         model.addAttribute("_csrf", csrfProviderService.createCsrf(request));
         model.addAttribute("indexTestForm", new IndexTestForm());
 
-        return view;
+        return "index";
     }
 
 }
