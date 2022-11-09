@@ -1,9 +1,14 @@
-from flask import Flask, request
+from flask import Flask, request, Response, make_response, jsonify
 from flask_restx import Resource, Api
 import os, stat
 
+from flask_cors import CORS
+
 app = Flask(__name__)
 api = Api(app)
+
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+
 
 todos = {}
 count = 1
@@ -15,37 +20,38 @@ class CompileIndex(Resource):
     def get(self):
 
       
-      filename = request.args.get("filename")
+        filename = request.args.get("filename")
 
-      path = "/home/koseyun/IdeaProjects/capston/main/source/index/"
+        path = "/home/koseyun/IdeaProjects/capston/main/source/index/"
 
-      result = "suceess"
+        result = "suceess"
 
-      full_file = path + filename + ".sh"
+        full_file = path + filename + ".sh"
 
-      first_list_count = os.listdir().count
+        first_list_count = os.listdir().count
 
-      try:
+        try:
 
-        os.chmod(full_file, stat.S_IRWXU)
-
-        os.path.join(path, filename)
-
-        os.system(full_file)
+            os.chmod(full_file, stat.S_IRWXU)
+            os.system(full_file)
         
-        if os.listdir().count == first_list_count:
-          result = "not_found_error"
+            if os.listdir().count == first_list_count:
+                result = "not_found_error"
 
-      except:
+        except:
 
-        result = "comfile_error"
+            result = "comfile_error"
 
-
-      return {
+        response = make_response(jsonify({
             'filename': filename,
             'result': result
-        }
+        }))
 
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        response.headers.add('Access-Control-Allow-Headers', "*")
+        response.headers.add('Access-Control-Allow-Methods', "*")
+
+        return response
 
 @api.route('/todos')
 class TodoPost(Resource):

@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResultIndexTestDto {
+public class  ResultIndexTestDto {
 
     private String checkStatus;
 

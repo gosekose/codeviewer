@@ -1,0 +1,1 @@
+javac /home/koseyun/IdeaProjects/capston/main/source/index/T_633AC3F39370B0133B8CD4970FEF0161_Test.java
