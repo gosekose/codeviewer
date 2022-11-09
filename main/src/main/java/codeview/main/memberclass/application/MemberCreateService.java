@@ -17,7 +17,7 @@ public class MemberCreateService {
     private final MemberClassesRepository memberClassesRepository;
     private final MemberRepository memberRepository;
 
-    public MemberClasses createMemberClass(Long id, CreateClassesForm form) {
+    public MemberClasses createdClassesSave(Long id, CreateClassesForm form) {
 
         Optional<Member> findMember = memberRepository.findById(id);
 
@@ -28,14 +28,14 @@ public class MemberCreateService {
 
         MemberClasses memberClasses = MemberClasses
                 .builder()
-                .className(form.getClassName())
-                .visibilityClass(form.isVisibilityClass())
+                .className(form.getName())
                 .maxMember(form.getMaxMember())
                 .description(form.getDescription())
                 .joinClosedTime(form.getJoinClosedTime())
                 .skillTag(form.getSkillTag())
                 .member(member)
                 .password(form.getPassword())
+                .memberClassesVisibility(form.getMemberClassesVisibility())
                 .build();
 
         memberClassesRepository.save(memberClasses);

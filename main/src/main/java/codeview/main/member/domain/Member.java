@@ -25,7 +25,7 @@ public class Member extends BaseEntity {
     private Long id;
     private String registrationId;
 
-    private String register_id;
+    private String registerId;
     private String ci;
 
     @Column(name = "register_name")
@@ -64,9 +64,9 @@ public class Member extends BaseEntity {
     private int realPayment;
 
     @Builder
-    public Member(String registrationId, String register_id, String username, String password, String email, String picture, String authorities) {
+    public Member(String registrationId, String registerId, String username, String password, String email, String picture, String authorities) {
         this.registrationId = registrationId;
-        this.register_id = register_id;
+        this.registerId = registerId;
         this.username = username;
         this.password = password;
         this.email = email;

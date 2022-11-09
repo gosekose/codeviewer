@@ -1,19 +1,21 @@
 package codeview.main.memberclass.application.dto;
 
+import codeview.main.memberclass.domain.MemberClassesVisibility;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Getter @NoArgsConstructor
+@Getter @NoArgsConstructor @Setter
 @AllArgsConstructor
 public class CreateClassesForm {
 
-    private String className;
+    private String name;
     private Integer maxMember;
 
-    private boolean visibilityClass;
+    private MemberClassesVisibility memberClassesVisibility;
 
     private LocalDateTime joinClosedTime;
 

@@ -4,6 +4,7 @@ import codeview.main.auth.domain.BaseEntity;
 import codeview.main.member.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -11,6 +12,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+
+@Getter
 @Entity @AllArgsConstructor
 @NoArgsConstructor
 public class MemberClasses extends BaseEntity {
@@ -29,7 +32,8 @@ public class MemberClasses extends BaseEntity {
     private String className;
     private Integer maxMember;
 
-    private boolean visibilityClass;
+    @Enumerated(EnumType.STRING)
+    private MemberClassesVisibility memberClassesVisibility;
 
     private LocalDateTime joinClosedTime;
 
@@ -40,11 +44,11 @@ public class MemberClasses extends BaseEntity {
     private String password;
 
     @Builder
-    public MemberClasses(Member member, String className, Integer maxMember, boolean visibilityClass, LocalDateTime joinClosedTime, String description, String skillTag, String password) {
+    public MemberClasses(Member member, String className, Integer maxMember, MemberClassesVisibility memberClassesVisibility, LocalDateTime joinClosedTime, String description, String skillTag, String password) {
         this.creator = member;
         this.className = className;
         this.maxMember = maxMember;
-        this.visibilityClass = visibilityClass;
+        this.memberClassesVisibility = memberClassesVisibility;
         this.joinClosedTime = joinClosedTime;
         this.description = description;
         this.skillTag = skillTag;

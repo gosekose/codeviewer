@@ -29,12 +29,23 @@ public class MemberService {
         return member;
     }
 
+    public Member findByRegisterId(String registeredId) {
+        Optional<Member> findMember = memberRepository.findByRegisterId(registeredId);
+        Member member = findMember.orElseThrow(
+                () -> {
+                    throw new IllegalArgumentException("일치하는 회원이 없습니다.");
+                }
+        );
+
+        return member;
+    }
+
 
     public void register(String registrationId, ProviderUser providerUser) {
 
         Member member = Member.builder()
                 .registrationId(registrationId)
-                .register_id(providerUser.getId())
+                .registerId(providerUser.getId())
                 .username(providerUser.getUsername())
                 .password(providerUser.getPassword())
                 .authorities(String.valueOf(providerUser.getAuthorities().get(0)))
