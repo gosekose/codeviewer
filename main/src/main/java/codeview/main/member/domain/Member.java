@@ -2,8 +2,8 @@ package codeview.main.member.domain;
 
 import codeview.main.auth.domain.BaseEntity;
 import codeview.main.common.domain.Address;
+import codeview.main.groupstorage.domain.GroupStorage;
 import codeview.main.membergroup.domain.MemberGroup;
-import codeview.main.membergroup.domain.MemberGroupStorage;
 import codeview.main.membership.domain.MemberShip;
 import codeview.main.school.domain.School;
 import lombok.Builder;
@@ -26,12 +26,10 @@ public class Member extends BaseEntity {
     private String registrationId;
 
     private String registerId;
-    private String ci;
 
     @Column(name = "register_name")
     private String username;
     private String password;
-    private String provider;
     private String email;
     private String picture;
 
@@ -42,7 +40,7 @@ public class Member extends BaseEntity {
     private String work;
 
     @OneToMany(mappedBy = "member")
-    private List<MemberGroupStorage> memberGroupStorageList = new ArrayList<>();
+    private List<GroupStorage> groupStorageList = new ArrayList<>();
 
     @OneToMany(mappedBy = "creator")
     private List<MemberGroup> memberGroupList = new ArrayList<>();

@@ -2,6 +2,8 @@ package codeview.main.membergroup.domain;
 
 import codeview.main.auth.domain.BaseEntity;
 import codeview.main.member.domain.Member;
+import codeview.main.groupstorage.domain.GroupStorage;
+import codeview.main.problem.domain.Problem;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,7 +29,10 @@ public class MemberGroup extends BaseEntity {
     private Member creator;
 
     @OneToMany(mappedBy = "memberGroup")
-    private List<MemberGroupStorage> memberGroupStorage = new ArrayList<>();
+    private List<GroupStorage> groupStorage = new ArrayList<>();
+
+    @OneToMany(mappedBy = "memberGroup")
+    private List<Problem> problems = new ArrayList<>();
 
     private String name;
     private Integer maxMember;
