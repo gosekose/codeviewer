@@ -2,8 +2,8 @@ package codeview.main.member.domain;
 
 import codeview.main.auth.domain.BaseEntity;
 import codeview.main.common.domain.Address;
-import codeview.main.memberclass.domain.MemberClasses;
-import codeview.main.memberclass.domain.MemberClassesStorage;
+import codeview.main.membergroup.domain.MemberGroup;
+import codeview.main.membergroup.domain.MemberGroupStorage;
 import codeview.main.membership.domain.MemberShip;
 import codeview.main.school.domain.School;
 import lombok.Builder;
@@ -42,10 +42,10 @@ public class Member extends BaseEntity {
     private String work;
 
     @OneToMany(mappedBy = "member")
-    private List<MemberClassesStorage> memberClassesStorageList = new ArrayList<>();
+    private List<MemberGroupStorage> memberGroupStorageList = new ArrayList<>();
 
     @OneToMany(mappedBy = "creator")
-    private List<MemberClasses> memberClassesList = new ArrayList<>();
+    private List<MemberGroup> memberGroupList = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "school_id")

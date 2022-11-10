@@ -1,7 +1,7 @@
 package codeview.main.school.application;
 
 import codeview.main.school.domain.School;
-import codeview.main.school.infra.SchoolRepository;
+import codeview.main.school.infra.repository.SchoolRepository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

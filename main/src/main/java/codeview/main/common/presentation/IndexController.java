@@ -3,7 +3,7 @@ package codeview.main.common.presentation;
 import codeview.main.auth.domain.users.PrincipalUser;
 import codeview.main.auth.infra.common.util.OAuth2Utils;
 import codeview.main.common.application.CsrfProviderService;
-import codeview.main.indextest.application.dto.IndexTestForm;
+import codeview.main.indextest.presentation.dto.IndexTestForm;
 import codeview.main.member.application.MemberService;
 import codeview.main.member.domain.Member;
 import lombok.RequiredArgsConstructor;

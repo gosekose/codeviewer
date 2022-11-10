@@ -1,6 +1,6 @@
 package codeview.main.token.infra.filter.authentication;
 
-import codeview.main.token.application.dto.LoginDto;
+import codeview.main.token.presentation.dto.LoginDto;
 import codeview.main.token.infra.signature.SecuritySigner;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.JOSEException;

@@ -1,9 +1,9 @@
 package codeview.main.indextest.presentation;
 
 import codeview.main.indextest.application.TestCompileService;
-import codeview.main.indextest.application.dto.IndexTestDto;
-import codeview.main.indextest.application.dto.IndexTestResultDto;
-import codeview.main.indextest.application.dto.ResultIndexTestDto;
+import codeview.main.indextest.presentation.dto.IndexTestDto;
+import codeview.main.indextest.presentation.dto.IndexTestResultDto;
+import codeview.main.indextest.presentation.dto.ResultIndexTestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
