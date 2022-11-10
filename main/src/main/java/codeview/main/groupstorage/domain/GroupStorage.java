@@ -1,7 +1,9 @@
-package codeview.main.membergroup.domain;
+package codeview.main.groupstorage.domain;
 
 import codeview.main.auth.domain.BaseEntity;
 import codeview.main.member.domain.Member;
+import codeview.main.membergroup.domain.MemberGroup;
+import codeview.main.membergroup.domain.MemberGroupAuthority;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
@@ -9,10 +11,10 @@ import javax.persistence.*;
 
 @Entity @AllArgsConstructor
 @NoArgsConstructor
-public class MemberGroupStorage extends BaseEntity {
+public class GroupStorage extends BaseEntity {
 
     @Id @GeneratedValue
-    @Column(name = "classes_storage_id")
+    @Column(name = "group_storage_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

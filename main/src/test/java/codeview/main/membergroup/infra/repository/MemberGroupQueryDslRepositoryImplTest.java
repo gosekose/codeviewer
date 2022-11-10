@@ -6,10 +6,14 @@ import codeview.main.member.infra.MemberRepository;
 import codeview.main.membergroup.domain.MemberGroup;
 import codeview.main.membergroup.domain.MemberGroupVisibility;
 import codeview.main.membergroup.infra.dao.MemberGroupSearchCondition;
+import codeview.main.membergroup.presentation.dto.MemberGroupDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -188,5 +192,41 @@ class MemberGroupQueryDslRepositoryImplTest {
 
     }
 
+    @Test
+    public void 페이징_멤버그룹_리스트_사이즈() throws Exception {
 
+        //given
+        Member member = memberService.findByRegisterId(String.valueOf(10));
+        Pageable pageable = PageRequest.of(0, 20);
+
+        //when
+        MemberGroupSearchCondition condition1 = new MemberGroupSearchCondition(member,"TEST1", null);
+        Page<MemberGroupDto> memberGroupDtos = memberGroupQueryDslRepository.searchPageComplex(condition1, pageable);
+
+        List<MemberGroupDto> content = memberGroupDtos.getContent();
+
+        //then
+        assertThat(content.size()).isEqualTo(20);
+    }
+
+    @Test
+    public void 페이징_정보처리() throws Exception {
+
+        /**
+         * 페이징 정렬은 클라인언트에서 진행 함
+         * 페이징 그대로 클라이언트에게 전달하여 처리
+         */
+
+        //given
+        Member member = memberService.findByRegisterId(String.valueOf(10));
+        Pageable pageable = PageRequest.of(0, 20);
+        //when
+
+        MemberGroupSearchCondition condition = new MemberGroupSearchCondition(member, "TEST1", null);
+        Page<MemberGroupDto> memberGroupDtos = memberGroupQueryDslRepository.searchPageComplex(condition, pageable);
+
+        assertThat(memberGroupDtos.getSize()).isEqualTo(20);
+        assertThat(memberGroupDtos.getTotalPages()).isEqualTo(3);
+        assertThat(memberGroupDtos.getTotalElements()).isEqualTo(50);
+    }
 }
