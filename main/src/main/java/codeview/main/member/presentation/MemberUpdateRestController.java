@@ -1,19 +1,18 @@
 package codeview.main.member.presentation;
 
 import codeview.main.member.application.MemberService;
-import codeview.main.member.application.dto.MemberResponseDto;
-import codeview.main.member.application.dto.UpdateMemberRequest;
-import codeview.main.member.domain.Member;
 import codeview.main.school.application.SchoolService;
-import codeview.main.school.application.dto.AllSchoolDto;
-import codeview.main.school.application.dto.AllSchoolResult;
-import codeview.main.school.application.dto.SchoolDto;
-import codeview.main.school.domain.SchoolSearchCondition;
-import codeview.main.school.infra.SchoolQueryDslRepositoryImpl;
+import codeview.main.school.infra.dao.SchoolSearchCondition;
+import codeview.main.school.infra.repository.SchoolQueryDslRepositoryImpl;
+import codeview.main.school.presentation.dto.AllSchoolDto;
+import codeview.main.school.presentation.dto.AllSchoolResult;
+import codeview.main.school.presentation.dto.SchoolDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,13 +41,13 @@ public class MemberUpdateRestController {
         return schoolQueryDslRepository.searchPageComplex(schoolSearchCondition, pageable);
     }
 
-    @PostMapping("/{id}/update-info")
-    public MemberResponseDto updateMember(@PathVariable("id") Long id,
-                                          @RequestBody UpdateMemberRequest updateMemberRequest) {
-        memberService.update(id, updateMemberRequest);
-        Member member = memberService.find(id);
-
-        return new MemberResponseDto(member.getId(), member);
-    }
+//    @PostMapping("/{id}/update-info")
+//    public MemberResponseDto updateMember(@PathVariable("id") Long id,
+//                                          @RequestBody UpdateMemberRequest updateMemberRequest) {
+//        memberService.update(id, updateMemberRequest);
+//        Member member = memberService.find(id);
+//
+//        return new MemberResponseDto(member.getId(), member);
+//    }
 
 }

@@ -3,7 +3,7 @@ package codeview.main.membership.application;
 import codeview.main.member.domain.Member;
 import codeview.main.member.infra.MemberRepository;
 import codeview.main.school.domain.School;
-import codeview.main.school.infra.SchoolRepository;
+import codeview.main.school.infra.repository.SchoolRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
