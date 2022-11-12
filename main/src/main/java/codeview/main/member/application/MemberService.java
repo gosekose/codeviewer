@@ -24,6 +24,19 @@ public class MemberService {
         return member;
     }
 
+    public Member findByEmail(String email) {
+
+        Member member = memberRepository.findByEmail(email);
+
+        if(member == null) {
+            throw new IllegalArgumentException("일치하는 회원이 없습니다.");
+        }
+
+        return member;
+    }
+
+
+
     public Member findByRegisterId(String registeredId) {
         Optional<Member> findMember = memberRepository.findByRegisterId(registeredId);
         Member member = findMember.orElseThrow(
@@ -41,7 +54,6 @@ public class MemberService {
         Member member = Member.builder()
                 .registrationId(registrationId)
                 .registerId(providerUser.getId())
-                .username(providerUser.getUsername())
                 .password(providerUser.getPassword())
                 .authorities(String.valueOf(providerUser.getAuthorities().get(0)))
                 .email(providerUser.getEmail())

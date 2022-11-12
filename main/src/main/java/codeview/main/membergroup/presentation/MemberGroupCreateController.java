@@ -43,7 +43,7 @@ public class MemberGroupCreateController {
     public String getCreateGroups(Model model) {
 
         model.addAttribute("createGroupForm", new CreateGroupForm());
-        return "create-my-group";
+        return "groups/create-my-group";
     }
 
 
@@ -51,7 +51,7 @@ public class MemberGroupCreateController {
     public String getGroupsById(Model model, @PathVariable String id) {
 
         model.addAttribute("createGroupForm", new CreateGroupForm());
-        return "create-my-group";
+        return "groups/create-my-group";
     }
 
     @PostMapping
@@ -61,7 +61,7 @@ public class MemberGroupCreateController {
 
          if (bindingResult.hasErrors()) {
             log.info("errors = {}", bindingResult);
-            return "create-my-group";
+            return "groups/create-my-group";
         }
 
         Member member = memberService.findByRegisterId(principalUser.getProviderUser().getId());
@@ -70,7 +70,7 @@ public class MemberGroupCreateController {
         redirectAttributes.addAttribute("id", memberGroup.getId());
         redirectAttributes.addAttribute("status", true);
 
-        return "redirect:/api/v1/groups/{id}";
+        return "redirect:/api/v1/groups/admin/{id}";
     }
 
 
