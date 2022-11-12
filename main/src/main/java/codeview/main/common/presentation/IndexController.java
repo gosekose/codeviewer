@@ -56,6 +56,11 @@ public class IndexController {
             log.info("session.getId() = {}", session.getId());
             log.info("SecurityContextHolder.getContext().getAuthentication().getName() = {}", SecurityContextHolder.getContext().getAuthentication().getName());
 
+
+            log.info("principalUser.getProviderUser().getProvider().toUpperCase() = {}",
+                    principalUser.getProviderUser().getProvider().toUpperCase());
+
+
             model.addAttribute("user", userName);
             model.addAttribute("provider", principalUser.getProviderUser().getProvider().toUpperCase());
         }

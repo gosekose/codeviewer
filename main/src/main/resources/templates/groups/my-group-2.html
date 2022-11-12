@@ -15,7 +15,7 @@
   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 
   <title>CODEVIEWER</title>
-  <link rel="stylesheet" th:href="@{/static/css/theme.min.css}">
+  <link rel="stylesheet" th:href="@{/css/theme.min.css}">
 
   <style>
     /* inter-300 - latin */
@@ -25,9 +25,9 @@
       font-weight: 300;
       font-display: swap;
       src: local(''),
-        url('/static/fonts/inter-v12-latin-300.woff2') format('woff2'),
+        url('/fonts/inter-v12-latin-300.woff2') format('woff2'),
         /* Chrome 26+, Opera 23+, Firefox 39+ */
-        url('/static/fonts/inter-v12-latin-300.woff') format('woff');
+        url('/fonts/inter-v12-latin-300.woff') format('woff');
       /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
     }
 
@@ -37,9 +37,9 @@
       font-weight: 500;
       font-display: swap;
       src: local(''),
-        url('/static/fonts/inter-v12-latin-500.woff2') format('woff2'),
+        url('/fonts/inter-v12-latin-500.woff2') format('woff2'),
         /* Chrome 26+, Opera 23+, Firefox 39+ */
-        url('/static/fonts/inter-v12-latin-500.woff') format('woff');
+        url('/fonts/inter-v12-latin-500.woff') format('woff');
       /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
     }
 
@@ -49,9 +49,9 @@
       font-weight: 700;
       font-display: swap;
       src: local(''),
-        url('/static/fonts/inter-v12-latin-700.woff2') format('woff2'),
+        url('/fonts/inter-v12-latin-700.woff2') format('woff2'),
         /* Chrome 26+, Opera 23+, Firefox 39+ */
-        url('/static/fonts/inter-v12-latin-700.woff') format('woff');
+        url('/fonts/inter-v12-latin-700.woff') format('woff');
       /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
     }
   </style>
@@ -62,7 +62,7 @@
 
   <nav id="navScroll" class="navbar navbar-expand-lg navbar-light fixed-top" tabindex="0">
     <div class="container">
-      <a class="navbar-brand pe-4 fs-4" href="/">
+      <a class="navbar-brand pe-4 fs-4" href="/static">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-layers-half"
           viewbox="0 0 16 16">
           <path
@@ -120,7 +120,7 @@
 
       <div class="container position-relative">
         <div class="col-12 col-lg-8 mt-0 h-100 position-absolute top-0 end-0 bg-cover" data-aos="fade-left"
-          style="background-image: url(/static/img/webp/interior11.webp);">
+          style="background-image: url(/img/webp/interior11.webp);">
 
         </div>
         <div class="row">
@@ -263,8 +263,8 @@
     </div>
   </footer>
 
-  <script th:src="@{/static/js/bootstrap.bundle.min.js}"></script>
-  <script th:src="@{/static/js/aos.js}"></script>
+  <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+  <script th:src="@{/js/aos.js}"></script>
   <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
   <script>
     AOS.init({

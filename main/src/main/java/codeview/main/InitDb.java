@@ -1,5 +1,8 @@
 package codeview.main;
 
+import codeview.main.member.domain.Member;
+import codeview.main.membergroup.domain.MemberGroup;
+import codeview.main.membergroup.domain.MemberGroupVisibility;
 import codeview.main.school.domain.School;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -7,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -29,6 +34,39 @@ public class InitDb {
 
         public void dbInit() {
 
+            for (int i=0; i<10; i++) {
+
+                String uuid = UUID.randomUUID().toString();
+
+                Member member = Member.builder()
+                        .email(String.valueOf(i) + "@naver.com")
+                        .registrationId("NAVER")
+                        .authorities("ROLE_USER")
+                        .password(UUID.randomUUID().toString())
+                        .registerId(uuid)
+                        .build();
+
+                em.persist(member);
+
+                for (int j=0; j<10; j++) {
+
+                    uuid = UUID.randomUUID().toString();
+                    em.persist(MemberGroup.builder()
+                            .memberGroupVisibility(MemberGroupVisibility.VISIBLE)
+                            .name(String.valueOf(i) + "_" + String.valueOf(j))
+                            .password(UUID.randomUUID().toString())
+                            .joinClosedTime(LocalDateTime.now())
+                            .description("")
+                            .maxMember(20)
+                            .member(member)
+                            .build());
+                }
+            }
+            em.flush();
+        }
+
+
+        public void inputSchool() {
             String schoolAddress;
 
             em.persist(School.builder().schoolMembership("membership").name("서울과학기술대학교").address("서울특별시 노원구 공릉로 232").build());

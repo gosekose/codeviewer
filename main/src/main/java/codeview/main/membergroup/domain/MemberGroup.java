@@ -21,7 +21,7 @@ import java.util.List;
 public class MemberGroup extends BaseEntity {
 
     @Id @GeneratedValue
-    @Column(name = "member_classes_id")
+    @Column(name = "member_group_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
