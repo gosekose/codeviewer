@@ -44,7 +44,6 @@ class MemberGroupQueryDslRepositoryImplTest {
             Member member = Member.builder()
                     .registrationId("NAVER")
                     .authorities("MEMBER")
-                    .username("TEST")
                     .registerId(String.valueOf(i))
                     .picture(UUID.randomUUID().toString())
                     .password(UUID.randomUUID().toString())
