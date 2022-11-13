@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class MemberGroupDto {
 
+    private Long id;
+
     private String name;
     private MemberGroupVisibility visibility;
 
@@ -21,7 +23,8 @@ public class MemberGroupDto {
     private LocalDateTime joinClosedTime;
 
     @QueryProjection
-    public MemberGroupDto(String name, MemberGroupVisibility visibility, Integer maxMember, LocalDateTime joinClosedTime) {
+    public MemberGroupDto(Long id, String name, MemberGroupVisibility visibility, Integer maxMember, LocalDateTime joinClosedTime) {
+        this.id = id;
         this.name = name;
         this.visibility = visibility;
         this.maxMember = maxMember;

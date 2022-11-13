@@ -13,6 +13,7 @@
     <meta name="HandheldFriendly" content="true">
 
     <title>CODEVIEWER</title>
+    <link rel="stylesheet" th:href="@{/static/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/static/css/theme.min.css}">
 
     <style>
@@ -60,7 +61,7 @@
 
 <nav id="navScroll" class="navbar navbar-expand-lg navbar-light fixed-top" tabindex="0">
     <div class="container">
-        <a class="navbar-brand pe-4 fs-4" href="/static">
+        <a class="navbar-brand pe-4 fs-4" href="/">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-layers-half"
                  viewbox="0 0 16 16">
                 <path
@@ -131,56 +132,44 @@
         </div>
     </div>
 
-    </div>
+</main>
+
+<main>
+    <div class="container py-vh-6">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>그룹 번호</th>
+                    <th>그룹명</th>
+                    <th>공개 여부</th>
+                    <th>최대 멤버</th>
+                    <th>가입 신청 마감 시간</th>
+                    <td></td>
+                </tr>
+            </thead>
+            <tr th:each="group: ${memberGroups.getContent()}">
+                <td th:text="${group.id}"></td>
+                <td th:text="${group.name}"></td>
+                <td th:text="${group.visibility}"></td>
+                <td th:text="${group.maxMember}"></td>
+                <td th:text="${group.joinClosedTime}"></td>
+                <td>
+                    <a href="#" th:href="@{/api/v1/groups/admin/{id} (id=${group.id})}"
+                       class="btn btn-primary" role="button">수정</a>
+                </td>
+            </tr>
+        </table>
+
+        <nav style="text-align: center;">
+            <ul class="pagination">
+
+            </ul>
+        </nav>
+
+/    </div>
 </main>
 
 
-<!--<main>-->
-<!--    <table class="table table-striped table-hover" style="table-layout: fixed">-->
-<!--        <thead class="table-light">-->
-<!--        <tr>-->
-<!--            <th scope="col" style="width: 50px;">번호</th>-->
-<!--            <th scope="col">그룹명</th>-->
-<!--            <th scope="col">공개</th>-->
-<!--            <th scope="col">최대 인원</th>-->
-<!--            <th scope="col">가입 멤버 수</th>-->
-<!--            <th scope="col">가입 마감 기간</th>-->
-<!--        </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--        <tr th:each="g: ${group}">-->
-<!--            <td th:text="${g.id}"></td>-->
-<!--            <td th:text="${g.name}"></td>-->
-<!--            <td th:text="${g.memberGroupVisibility}"></td>-->
-<!--            <td th:text="${g.maxMember}"></td>-->
-<!--            <td th:text="${g.countMember}"></td>-->
-<!--            <td th:text="${g.joinClosedTime}"></td>-->
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--    </table>-->
-
-<!--    <nav style="text-align: center;">-->
-<!--        <ul class="pagination" th:with="start=${(group.number/maxPage)*maxPage + 1}, end=(${(group.totalPages == 0) ? 1 : (start + (maxPage - 1) < group.totalPages ? start + (maxPage - 1) : group.totalPages)})">-->
-<!--            <li th:if="${start > 1}">-->
-<!--                <a th:href="@{/admin/main(page=0)}" th:text="'<<'"></a>-->
-<!--            </li>-->
-<!--            <li th:if="${start > 1}">-->
-<!--                <a th:href="@{/admin/main(page=${start - maxPage})}" th:text="'<'"></a>-->
-<!--            </li>-->
-
-<!--            <li th:each="page: ${#numbers.sequence(start, end)}">-->
-<!--                <a th:text="${page}" th:href="@{/admin/main(page=${page - 1})}"></a>-->
-<!--            </li>-->
-
-<!--            <li th:if="${end < group.totalPages}">-->
-<!--                <a th:href="@{/admin/main(page=${start + maxPage})}" th:text="'>'"></a>-->
-<!--            </li>-->
-<!--            <li th:if="${end < group.totalPages}">-->
-<!--                <a th:href="@{/admin/main(page=${group.totalPages - 1})}" th:text="'>>'"></a>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--    </nav>-->
-<!--</main>-->
 
 
 <footer>

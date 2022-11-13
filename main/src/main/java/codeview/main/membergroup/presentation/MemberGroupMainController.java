@@ -4,6 +4,7 @@ import codeview.main.auth.domain.users.PrincipalUser;
 import codeview.main.member.application.MemberService;
 import codeview.main.member.domain.Member;
 import codeview.main.membergroup.application.MemberGroupService;
+import codeview.main.membergroup.domain.MemberGroup;
 import codeview.main.membergroup.infra.dao.MemberGroupSearchCondition;
 import codeview.main.membergroup.infra.repository.MemberGroupQueryDslRepository;
 import codeview.main.membergroup.presentation.dto.MemberGroupDto;
@@ -49,7 +50,12 @@ public class MemberGroupMainController {
 
         Page<MemberGroupDto> memberGroupDtos = memberGroupQueryDslRepository.searchPageComplex(condition, pageable);
 
+        int start = (int) (Math.floor(memberGroupDtos.getTotalElements() / 10) * 10 + 1);
+        int last = start + 9 < memberGroupDtos.getTotalPages() ? start + 9 : memberGroupDtos.getTotalPages();
+
         model.addAttribute("memberGroups", memberGroupDtos);
+        model.addAttribute("start", start);
+        model.addAttribute("last", last);
 
         log.info("memberGroupDtos.getTotalPages() = {}", ((Page<?>) memberGroupDtos).getTotalPages());
         log.info("memberGroupDtos.getTotalElements() = {}", memberGroupDtos.getTotalElements());
@@ -62,6 +68,9 @@ public class MemberGroupMainController {
     public String getGroupDetail(
             Model model, @PathVariable("id") Integer id,
             @AuthenticationPrincipal PrincipalUser principalUser) {
+
+        MemberGroup memberGroup = memberGroupService.findById(Long.valueOf(id));
+
 
 
         return "groups/admin-group-detail";
@@ -77,7 +86,7 @@ public class MemberGroupMainController {
             return "errors/403";
         }
 
-        return "errors/500";
+        return "errors/404";
 
     }
 

@@ -41,7 +41,7 @@ public class MemberGroupQueryDslRepositoryImpl implements MemberGroupQueryDslRep
     public Page<MemberGroupDto> searchPageComplex(MemberGroupSearchCondition condition, Pageable pageable) {
 
         List<MemberGroupDto> content = jpaQueryFactory
-                .select(new QMemberGroupDto(memberGroup.name, memberGroup.memberGroupVisibility, memberGroup.maxMember, memberGroup.joinClosedTime))
+                .select(new QMemberGroupDto(memberGroup.id, memberGroup.name, memberGroup.memberGroupVisibility, memberGroup.maxMember, memberGroup.joinClosedTime))
                 .from(memberGroup)
                 .where(
                         memberEq(condition.getMember()),
