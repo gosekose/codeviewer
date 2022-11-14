@@ -73,7 +73,7 @@
       <main class="mb-auto col-12">
         <h1>그룹 생성</h1>
         <div sec:authorize="isAuthenticated()">
-          <form class="row" th:action="@{/api/v1/groups/new}" th:object="${createGroupForm}" method="post">
+          <form class="row" th:action="@{/api/v1/groups/edit}" th:object="${createGroupForm}" method="post">
 <!--            <input type="hidden" th:field="*{id}" />-->
             <div class="col-12 col-lg-10 col-xl-8">
 

@@ -145,6 +145,7 @@
                     <th>최대 멤버</th>
                     <th>가입 신청 마감 시간</th>
                     <td></td>
+                    <td></td>
                 </tr>
             </thead>
             <tr th:each="group: ${memberGroups.getContent()}">
@@ -155,7 +156,11 @@
                 <td th:text="${group.joinClosedTime}"></td>
                 <td>
                     <a href="#" th:href="@{/api/v1/groups/admin/{id} (id=${group.id})}"
-                       class="btn btn-primary" role="button">수정</a>
+                       class="btn btn-primary" role="button">그룹 이동</a>
+                </td>
+                <td>
+                    <a href="#" th:href="@{/api/v1/groups/admin/edit/{id} (id=${group.id})}"
+                       class="btn btn-primary" role="button">그룹 수정</a>
                 </td>
             </tr>
         </table>

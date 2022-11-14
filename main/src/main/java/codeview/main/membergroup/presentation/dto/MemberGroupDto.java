@@ -2,6 +2,7 @@ package codeview.main.membergroup.presentation.dto;
 
 import codeview.main.membergroup.domain.MemberGroupVisibility;
 import com.querydsl.core.annotations.QueryProjection;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,6 +23,7 @@ public class MemberGroupDto {
 
     private LocalDateTime joinClosedTime;
 
+    @Builder
     @QueryProjection
     public MemberGroupDto(Long id, String name, MemberGroupVisibility visibility, Integer maxMember, LocalDateTime joinClosedTime) {
         this.id = id;
@@ -30,4 +32,6 @@ public class MemberGroupDto {
         this.maxMember = maxMember;
         this.joinClosedTime = joinClosedTime;
     }
+
+
 }

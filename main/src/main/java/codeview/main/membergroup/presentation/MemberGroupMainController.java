@@ -71,7 +71,17 @@ public class MemberGroupMainController {
 
         MemberGroup memberGroup = memberGroupService.findById(Long.valueOf(id));
 
+        MemberGroupDto memberGroupDto = MemberGroupDto.builder()
+                .id(memberGroup.getId())
+                .name(memberGroup.getName())
+                .maxMember(memberGroup.getMaxMember())
+                .visibility(memberGroup.getMemberGroupVisibility())
+                .joinClosedTime(memberGroup.getJoinClosedTime())
+                .build();
 
+        model.addAttribute("memberGroupDto", memberGroupDto);
+
+        log.info("memberGroupDto = {}", memberGroupDto);
 
         return "groups/admin-group-detail";
     }
