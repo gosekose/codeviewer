@@ -13,6 +13,7 @@
   <meta name="HandheldFriendly" content="true">
   <meta name="_csrf" th:content="${_csrf.token}"/>
   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <meta name="groupId" th:content="${groupId}"/>
 
   <title>CODEVIEWER</title>
   <link rel="stylesheet" type="text/css" th:href="@{/static/css/theme.min.css}">
@@ -74,7 +75,7 @@
 
         <h1>문제 생성</h1>
         <div sec:authorize="isAuthenticated()">
-          <form id="problemCreateForm" class="row" method="post">
+          <form id="problemCreateForm" class="row" method="post" enctype="multipart/form-data">
             <!--            <input type="hidden" th:field="*{id}" />-->
             <div class="col-12 col-lg-10 col-xl-8">
 
@@ -102,27 +103,26 @@
               <a id="addSampleParam" href="javascript:void(0);">샘플 추가</a>
 
 
-<!--              <div class="mb-3">-->
-<!--                <label class="form-label">문제 코드 업로드-->
-<!--                  <input type="file" class="form-control form-control-lg" name="problemCode">-->
-<!--                </label>-->
-<!--              </div>-->
-<!--              </div>-->
+              <div class="mb-3">
+                <label class="form-label">문제 파일 업로드
+                  <input type="file" class="form-control form-control-lg" name="problemFile" id="problemFile">
+                </label>
+              </div>
+              </div>
 
-<!--              <div class="mb-3">-->
-<!--                <label class="form-label">테스트 코드 업로드-->
-<!--                  <input type="file" class="form-control form-control-lg" name="testCode">-->
-<!--                </label>-->
-<!--              </div>-->
+              <div class="mb-3">
+                <label class="form-label">쉘 파일 업로드
+                  <input type="file" class="form-control form-control-lg" name="shellFile" id="shellFile">
+                </label>
+              </div>
 
-<!--              <div class="mb-3">-->
-<!--                <label class="form-label">인풋 파일 업로드-->
-<!--                  <input type="file" class="form-control form-control-lg" name="inputFile">-->
-<!--                </label>-->
-<!--              </div>-->
+              <div class="mb-3">
+                <label class="form-label">인풋 파일 업로드
+                  <input type="file" class="form-control form-control-lg" name="inputFile" id="inputFile">
+                </label>
+              </div>
 
             <button type="button" id="ajaxProblemCall" onclick="ajaxCall()" class="btn btn-primary btn-xl">등록</button>
-            </div>
           </form>
         </div>
       </main>
@@ -164,24 +164,22 @@
       const token = $("meta[name='_csrf']").attr("content");
       const header = $("meta[name='_csrf_header']").attr("content");
 
-      const form = $("#problemCreateForm").serializeObject();
+      const groupId = $("meta[name='groupId']").attr("content");
 
-      const jsonForm = {
-        "name": form.name,
-        "descriptions": form.descriptions,
-        "inputs": form.inputs,
-        "outputs": form.outputs
-      }
+      const form = $("#problemCreateForm")[0];
 
-      console.log(form)
+      const formData = new FormData(form);
 
+      console.log(formData);
 
       $.ajax({
-
         type: 'POST',
-        contentType: 'application/json',
-        url: '/api/v1/problem/new',
-        data: JSON.stringify(jsonForm),
+        contentType: false,
+        processData: false,
+        cache: false,
+        enctype : 'multipart/form-data',
+        url: '/api/v1/groups/admin/' + groupId + '/problems/new',
+        data: formData,
         beforeSend: function(xhr) {
           xhr.setRequestHeader(header, token);
         },
@@ -201,27 +199,28 @@
       })
     }
 
+
     jQuery.fn.serializeObject = function() {
-      var obj = null;
+      let obj = null;
       try {
         if (this[0].tagName && this[0].tagName.toUpperCase() == "FORM") {
-          var arr = this.serializeArray();
+          const arr = this.serializeArray();
           if (arr) {
             obj = {};
             jQuery.each(arr, function() {
 
-              if (obj[this.name] != null) {
-
-                console.log(typeof obj[this.name])
+              if (this.name === "descriptions" || this.name === "inputs" || this.name === "outputs") {
 
                 if (typeof obj[this.name] != "object") {
-                  obj[this.name] = [obj[this.name]]
+                  if (obj[this.name] == null) {
+                    obj[this.name] = []
+                  }
                 }
                 obj[this.name].push(this.value)
+
               } else {
                 obj[this.name] = this.value
               }
-
 
             });
           }//if ( arr ) {
@@ -233,6 +232,8 @@
 
       return obj;
     };
+
+
 
 
   </script>
