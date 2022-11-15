@@ -85,6 +85,20 @@
                 </label>
               </div>
 
+              <div class="mb-3">
+                <label class="form-label">오픈 시간
+                  <input type="text" value="" name="openTime" class="form-control form-control-lg" placeholder="오픈 시간">
+                </label>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label">마감 시간
+                  <input type="text" value="" name="closedTime" class="form-control form-control-lg" placeholder="마감 시간">
+                </label>
+              </div>
+
+
+
               <div class="mb-3" id="addDescriptionForm">
                 <label class="form-label">문제 설명
                 <input type="text" class="form-control form-control-lg" name="descriptions">
@@ -186,9 +200,7 @@
         async: true,
         cache: true,
         success: function(data) {
-          console.log("success");
-          console.log(data);
-
+          location.href = "/api/v1/groups/admin/" + groupId;
         },
 
         error: function(xhr, status, error) {

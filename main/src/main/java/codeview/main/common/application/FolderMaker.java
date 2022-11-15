@@ -1,12 +1,10 @@
 package codeview.main.common.application;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 
 @Slf4j
-@Component
 public class FolderMaker {
 
     public static String folderMaker(String fileDir, String addPath) {

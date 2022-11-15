@@ -3,8 +3,12 @@ package codeview.main.problem.domain;
 import codeview.main.Solve.domain.Solve;
 import codeview.main.auth.domain.BaseEntity;
 import codeview.main.membergroup.domain.MemberGroup;
+import codeview.main.problem.domain.embedded.InputFile;
+import codeview.main.problem.domain.embedded.ProblemFile;
+import codeview.main.problem.domain.embedded.ShellFile;
 import codeview.main.problemdescription.domain.ProblemDescription;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,11 +35,27 @@ public class Problem extends BaseEntity {
 
     @OneToMany(mappedBy = "problem")
     private List<ProblemDescription> problemDescriptions = new ArrayList<>();
+    private String name;
 
-    private String storageAddress;
+    @Embedded
+    private ProblemFile problemFile;
+    @Embedded
+    private ShellFile shellFile;
+    @Embedded
+    private InputFile inputFile = new InputFile();
     private LocalDateTime openTime;
-    private LocalDateTime closeTime;
-    private String description;
+    private LocalDateTime closedTime;
     private String solveJavaAddress;
     private String solvePythonAddress;
+
+    @Builder
+    public Problem(MemberGroup memberGroup, String name, ProblemFile problemFile, ShellFile shellFile, InputFile inputFile, LocalDateTime openTime, LocalDateTime closedTime) {
+        this.memberGroup = memberGroup;
+        this.name = name;
+        this.problemFile = problemFile;
+        this.shellFile = shellFile;
+        this.inputFile = inputFile;
+        this.openTime = openTime;
+        this.closedTime = closedTime;
+    }
 }

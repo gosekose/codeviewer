@@ -1,4 +1,4 @@
-package codeview.main.problem.infra.config;
+package codeview.main.problem.infra.util.filestore;
 
 import codeview.main.problem.domain.UploadFile;
 import org.springframework.stereotype.Component;
@@ -15,5 +15,4 @@ public interface FileStore {
 
     String createNewProblemFolder(String groupId);
 
-//    String extractExt(String originalFileName);
 }

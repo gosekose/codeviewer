@@ -66,10 +66,10 @@ public class MemberGroupMainController {
 
     @GetMapping("/admin/{groupId}")
     public String getGroupDetail(
-            Model model, @PathVariable("groupId") Integer id,
+            Model model, @PathVariable("groupId") Integer groupId,
             @AuthenticationPrincipal PrincipalUser principalUser) {
 
-        MemberGroup memberGroup = memberGroupService.findById(Long.valueOf(id));
+        MemberGroup memberGroup = memberGroupService.findById(Long.valueOf(groupId));
 
         MemberGroupDto memberGroupDto = MemberGroupDto.builder()
                 .id(memberGroup.getId())
@@ -80,10 +80,11 @@ public class MemberGroupMainController {
                 .build();
 
         model.addAttribute("memberGroupDto", memberGroupDto);
+        model.addAttribute("groupId", groupId);
 
         log.info("memberGroupDto = {}", memberGroupDto);
 
-        return "groups/admin-group-detail";
+        return "problems/my-problems";
     }
 
 
