@@ -1,4 +1,4 @@
-package codeview.main.problem.infra.config;
+package codeview.main.problem.infra.util.filestore;
 
 import codeview.main.common.application.FolderMaker;
 import codeview.main.problem.domain.UploadFile;

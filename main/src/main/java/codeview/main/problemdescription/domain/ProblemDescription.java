@@ -3,6 +3,7 @@ package codeview.main.problemdescription.domain;
 import codeview.main.auth.domain.BaseEntity;
 import codeview.main.problem.domain.Problem;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,4 +27,10 @@ public class ProblemDescription extends BaseEntity {
     private String description;
 
 
+    @Builder
+    public ProblemDescription(Problem problem, int number, String description) {
+        this.problem = problem;
+        this.number = number;
+        this.description = description;
+    }
 }
