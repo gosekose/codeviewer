@@ -6,11 +6,13 @@ import codeview.main.membergroup.application.MemberGroupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,9 +30,14 @@ public class GroupAdminInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
+        Map<?, ?> pathVariables = (Map<?, ?>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+        log.info("pathVariables = {}", pathVariables);
+
         String email = request.getUserPrincipal().getName();
-        String[] uri = request.getRequestURI().split("/");
-        Long uriId = Long.valueOf(Integer.parseInt(uri[uri.length - 1]));
+//        String[] uri = request.getRequestURI().split("/");
+//        Long uriId = Long.valueOf(Integer.parseInt(uri[uri.length - 1]));
+        Long uriId = Long.valueOf(String.valueOf(pathVariables.get("groupId")));
+        log.info("uriId = {}", uriId);
 
         try {
             Member member = memberService.findByEmail(email);
@@ -52,7 +59,7 @@ public class GroupAdminInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        log.info("model = {},  handler = {}", modelAndView, handler);
+//        log.info("model = {},  handler = {}", modelAndView, handler);
         HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);
     }
 

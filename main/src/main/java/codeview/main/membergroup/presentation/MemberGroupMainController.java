@@ -64,9 +64,9 @@ public class MemberGroupMainController {
     }
 
 
-    @GetMapping("/admin/{id}")
+    @GetMapping("/admin/{groupId}")
     public String getGroupDetail(
-            Model model, @PathVariable("id") Integer id,
+            Model model, @PathVariable("groupId") Integer id,
             @AuthenticationPrincipal PrincipalUser principalUser) {
 
         MemberGroup memberGroup = memberGroupService.findById(Long.valueOf(id));

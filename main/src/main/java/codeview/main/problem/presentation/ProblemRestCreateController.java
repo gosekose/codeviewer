@@ -1,31 +1,40 @@
 package codeview.main.problem.presentation;
 
-import codeview.main.common.infra.WebJsonConfig;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import codeview.main.auth.domain.users.PrincipalUser;
+import codeview.main.membergroup.application.MemberGroupService;
+import codeview.main.problem.application.ProblemService;
+import codeview.main.problem.domain.UploadFile;
+import codeview.main.problem.infra.config.PythonFileStore;
+import codeview.main.problem.presentation.dto.ProblemCreateVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 @RestController
-@RequestMapping("/api/v1/problem")
+@RequestMapping("/api/v1/groups/admin")
 @Slf4j
 @RequiredArgsConstructor
 public class ProblemRestCreateController {
 
-    private final WebJsonConfig webJsonConfig;
+    private final PythonFileStore pythonFileStore;
+    private final MemberGroupService memberGroupService;
+    private final ProblemService problemService;
 
-    @PostMapping("/new")
-    public String postCreateProblem(@RequestBody Map<String, Object> map) throws JsonProcessingException {
+    @PostMapping("/{groupId}/problems/new")
+    public String postCreateProblem(
+            @PathVariable("groupId") Integer groupId,
+            @ModelAttribute ProblemCreateVO problemCreateVO,
+            @AuthenticationPrincipal PrincipalUser principalUser,
+            HttpServletRequest request) throws IOException {
 
-        log.info("map = {}", map);
+        UploadFile uploadFile = pythonFileStore.storeFile(problemCreateVO.getInputFile(), String.valueOf(groupId));
 
-        Object name = map.get("name");
-        log.info(name.toString());
+        log.info("uploadFile.getUploadFileName = {}", uploadFile.getUploadFileName());
+        log.info("uploadFile.getStoreFileName = {}", uploadFile.getStoreFileName());
 
         return "clear";
     }
