@@ -3,6 +3,8 @@ package codeview.main.membergroup.domain;
 import codeview.main.auth.domain.BaseEntity;
 import codeview.main.member.domain.Member;
 import codeview.main.groupstorage.domain.GroupStorage;
+import codeview.main.membergroup.domain.eumerate.GroupAutoJoin;
+import codeview.main.membergroup.domain.eumerate.MemberGroupVisibility;
 import codeview.main.problem.domain.Problem;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,6 +15,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static javax.persistence.EnumType.STRING;
 
 
 @Getter
@@ -37,7 +41,7 @@ public class MemberGroup extends BaseEntity {
     private String name;
     private Integer maxMember;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(STRING)
     private MemberGroupVisibility memberGroupVisibility;
 
     private LocalDateTime joinClosedTime;
@@ -48,8 +52,16 @@ public class MemberGroup extends BaseEntity {
 
     private String password;
 
+    @Enumerated(STRING)
+    private GroupAutoJoin groupAutoJoin;
+
+    @OneToMany(mappedBy = "memberGroup")
+    private List<GroupJoinRequest> groupJoinRequests = new ArrayList<>();
+
     @Builder
-    public MemberGroup(Member member, String name, Integer maxMember, MemberGroupVisibility memberGroupVisibility, LocalDateTime joinClosedTime, String description, String skillTag, String password) {
+    public MemberGroup(Member member, String name, Integer maxMember, MemberGroupVisibility memberGroupVisibility,
+                       LocalDateTime joinClosedTime, String description, String skillTag, String password,
+                       GroupAutoJoin groupAutoJoin) {
         this.creator = member;
         this.name = name;
         this.maxMember = maxMember;
@@ -58,5 +70,6 @@ public class MemberGroup extends BaseEntity {
         this.description = description;
         this.skillTag = skillTag;
         this.password = password;
+        this.groupAutoJoin = groupAutoJoin;
     }
 }

@@ -6,7 +6,7 @@ import org.springframework.validation.MessageCodesResolver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class MemberGroupCreateControllerTest {
+class GroupCreateControllerTest {
 
     MessageCodesResolver codesResolver = new DefaultMessageCodesResolver();
 

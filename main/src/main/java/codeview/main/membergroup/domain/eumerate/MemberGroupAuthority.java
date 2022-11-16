@@ -1,4 +1,4 @@
-package codeview.main.membergroup.domain;
+package codeview.main.membergroup.domain.eumerate;
 
 public enum MemberGroupAuthority {
     HOST,

@@ -2,7 +2,7 @@ package codeview.main;
 
 import codeview.main.member.domain.Member;
 import codeview.main.membergroup.domain.MemberGroup;
-import codeview.main.membergroup.domain.MemberGroupVisibility;
+import codeview.main.membergroup.domain.eumerate.MemberGroupVisibility;
 import codeview.main.school.domain.School;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

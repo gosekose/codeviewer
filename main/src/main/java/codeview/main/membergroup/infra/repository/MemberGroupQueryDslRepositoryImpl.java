@@ -1,11 +1,12 @@
 package codeview.main.membergroup.infra.repository;
 
 import codeview.main.member.domain.Member;
+import codeview.main.membergroup.domain.eumerate.GroupAutoJoin;
 import codeview.main.membergroup.domain.MemberGroup;
-import codeview.main.membergroup.domain.MemberGroupVisibility;
-import codeview.main.membergroup.infra.dao.MemberGroupSearchCondition;
-import codeview.main.membergroup.presentation.dto.MemberGroupDto;
-import codeview.main.membergroup.presentation.dto.QMemberGroupDto;
+import codeview.main.membergroup.domain.eumerate.MemberGroupVisibility;
+import codeview.main.membergroup.presentation.dao.MemberGroupSearchCondition;
+import codeview.main.membergroup.presentation.dto.GroupForPageDto;
+import codeview.main.membergroup.presentation.dto.QGroupForPageDto;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -38,15 +39,17 @@ public class MemberGroupQueryDslRepositoryImpl implements MemberGroupQueryDslRep
     }
 
     @Override
-    public Page<MemberGroupDto> searchPageComplex(MemberGroupSearchCondition condition, Pageable pageable) {
+    public Page<GroupForPageDto> searchPageComplex(MemberGroupSearchCondition condition, Pageable pageable) {
 
-        List<MemberGroupDto> content = jpaQueryFactory
-                .select(new QMemberGroupDto(memberGroup.id, memberGroup.name, memberGroup.memberGroupVisibility, memberGroup.maxMember, memberGroup.joinClosedTime))
+        List<GroupForPageDto> content = jpaQueryFactory
+                .select(new QGroupForPageDto(memberGroup.id, memberGroup.name, memberGroup.memberGroupVisibility,
+                        memberGroup.maxMember, memberGroup.joinClosedTime, memberGroup.groupAutoJoin))
                 .from(memberGroup)
                 .where(
                         memberEq(condition.getMember()),
                         visibilityEq(condition.getVisibility()),
-                        nameContains(condition.getName())
+                        nameContains(condition.getName()),
+                        groupJoinEq(condition.getGroupAutoJoin())
                 )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -58,7 +61,8 @@ public class MemberGroupQueryDslRepositoryImpl implements MemberGroupQueryDslRep
                 .where(
                         memberEq(condition.getMember()),
                         visibilityEq(condition.getVisibility()),
-                        nameContains(condition.getName())
+                        nameContains(condition.getName()),
+                        groupJoinEq(condition.getGroupAutoJoin())
                 );
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
@@ -76,5 +80,8 @@ public class MemberGroupQueryDslRepositoryImpl implements MemberGroupQueryDslRep
         return memberGroupVisibility != null ? memberGroup.memberGroupVisibility.eq(memberGroupVisibility) : null;
     }
 
+    private BooleanExpression groupJoinEq(GroupAutoJoin groupAutoJoin) {
+        return groupAutoJoin != null ? memberGroup.groupAutoJoin.eq(groupAutoJoin) : null;
+    }
 
 }

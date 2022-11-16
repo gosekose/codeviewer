@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
 
@@ -49,6 +49,7 @@ public class MemberService {
     }
 
 
+    @Transactional(readOnly = false)
     public void register(String registrationId, ProviderUser providerUser) {
 
         Member member = Member.builder()

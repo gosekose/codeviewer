@@ -1,6 +1,6 @@
 package codeview.main.membergroup.presentation.dto;
 
-import codeview.main.membergroup.domain.MemberGroupVisibility;
+import codeview.main.membergroup.domain.eumerate.MemberGroupVisibility;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

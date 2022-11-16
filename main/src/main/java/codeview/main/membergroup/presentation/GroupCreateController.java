@@ -3,9 +3,9 @@ package codeview.main.membergroup.presentation;
 import codeview.main.auth.domain.users.PrincipalUser;
 import codeview.main.member.application.MemberService;
 import codeview.main.member.domain.Member;
-import codeview.main.membergroup.application.MemberGroupCreateService;
+import codeview.main.membergroup.application.GroupCreateService;
 import codeview.main.membergroup.domain.MemberGroup;
-import codeview.main.membergroup.domain.MemberGroupVisibility;
+import codeview.main.membergroup.domain.eumerate.MemberGroupVisibility;
 import codeview.main.membergroup.presentation.dto.CreateGroupForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,9 +24,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/api/v1/groups/new")
-public class MemberGroupCreateController {
+public class GroupCreateController {
 
-    private final MemberGroupCreateService memberGroupCreateService;
+    private final GroupCreateService groupCreateService;
     private final MemberService memberService;
 
     @ModelAttribute("visibilities")
@@ -36,7 +36,6 @@ public class MemberGroupCreateController {
         visibilities.put("비공개", MemberGroupVisibility.HIDDEN);
         return visibilities;
     }
-
 
 
     @GetMapping
@@ -66,7 +65,7 @@ public class MemberGroupCreateController {
 
         Member member = memberService.findByRegisterId(principalUser.getProviderUser().getId());
 
-        MemberGroup memberGroup = memberGroupCreateService.createdGroupSave(member.getId(), createGroupForm);
+        MemberGroup memberGroup = groupCreateService.createdGroupSave(member.getId(), createGroupForm);
         redirectAttributes.addAttribute("groupId", memberGroup.getId());
         redirectAttributes.addAttribute("status", true);
 
