@@ -6,6 +6,7 @@ import codeview.main.membergroup.domain.MemberGroup;
 import codeview.main.problem.domain.embedded.InputFile;
 import codeview.main.problem.domain.embedded.ProblemFile;
 import codeview.main.problem.domain.embedded.ShellFile;
+import codeview.main.problem.domain.embedded.SolvePython;
 import codeview.main.problemdescription.domain.ProblemDescription;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,8 +46,11 @@ public class Problem extends BaseEntity {
     private InputFile inputFile = new InputFile();
     private LocalDateTime openTime;
     private LocalDateTime closedTime;
+
     private String solveJavaAddress;
-    private String solvePythonAddress;
+
+    @Embedded
+    private SolvePython solvePython;
 
     @Builder
     public Problem(MemberGroup memberGroup, String name, ProblemFile problemFile, ShellFile shellFile, InputFile inputFile, LocalDateTime openTime, LocalDateTime closedTime) {
@@ -58,4 +62,5 @@ public class Problem extends BaseEntity {
         this.openTime = openTime;
         this.closedTime = closedTime;
     }
+
 }

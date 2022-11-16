@@ -2,7 +2,7 @@ package codeview.main.membergroup.infra.repository;
 
 import codeview.main.member.domain.Member;
 import codeview.main.membergroup.domain.MemberGroup;
-import codeview.main.membergroup.domain.MemberGroupVisibility;
+import codeview.main.membergroup.domain.eumerate.MemberGroupVisibility;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,8 +15,6 @@ import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest

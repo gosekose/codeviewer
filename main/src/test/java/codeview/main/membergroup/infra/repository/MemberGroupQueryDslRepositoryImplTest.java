@@ -4,9 +4,9 @@ import codeview.main.member.application.MemberService;
 import codeview.main.member.domain.Member;
 import codeview.main.member.infra.MemberRepository;
 import codeview.main.membergroup.domain.MemberGroup;
-import codeview.main.membergroup.domain.MemberGroupVisibility;
-import codeview.main.membergroup.infra.dao.MemberGroupSearchCondition;
-import codeview.main.membergroup.presentation.dto.MemberGroupDto;
+import codeview.main.membergroup.domain.eumerate.MemberGroupVisibility;
+import codeview.main.membergroup.presentation.dao.MemberGroupSearchCondition;
+import codeview.main.membergroup.presentation.dto.GroupForPageDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -200,9 +200,9 @@ class MemberGroupQueryDslRepositoryImplTest {
 
         //when
         MemberGroupSearchCondition condition1 = new MemberGroupSearchCondition(member,"TEST1", null);
-        Page<MemberGroupDto> memberGroupDtos = memberGroupQueryDslRepository.searchPageComplex(condition1, pageable);
+        Page<GroupForPageDto> memberGroupDtos = memberGroupQueryDslRepository.searchPageComplex(condition1, pageable);
 
-        List<MemberGroupDto> content = memberGroupDtos.getContent();
+        List<GroupForPageDto> content = memberGroupDtos.getContent();
 
         //then
         assertThat(content.size()).isEqualTo(20);
@@ -222,7 +222,7 @@ class MemberGroupQueryDslRepositoryImplTest {
         //when
 
         MemberGroupSearchCondition condition = new MemberGroupSearchCondition(member, "TEST1", null);
-        Page<MemberGroupDto> memberGroupDtos = memberGroupQueryDslRepository.searchPageComplex(condition, pageable);
+        Page<GroupForPageDto> memberGroupDtos = memberGroupQueryDslRepository.searchPageComplex(condition, pageable);
 
         assertThat(memberGroupDtos.getSize()).isEqualTo(20);
         assertThat(memberGroupDtos.getTotalPages()).isEqualTo(3);

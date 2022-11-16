@@ -3,9 +3,10 @@ package codeview.main.temp;
 import codeview.main.auth.domain.users.PrincipalUser;
 import codeview.main.member.application.MemberService;
 import codeview.main.member.domain.Member;
-import codeview.main.membergroup.application.MemberGroupService;
+import codeview.main.membergroup.application.GroupService;
+import codeview.main.membergroup.domain.eumerate.GroupAutoJoin;
 import codeview.main.membergroup.domain.MemberGroup;
-import codeview.main.membergroup.domain.MemberGroupVisibility;
+import codeview.main.membergroup.domain.eumerate.MemberGroupVisibility;
 import codeview.main.membergroup.infra.repository.MemberGroupRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,7 @@ import java.time.LocalDateTime;
 public class TempController {
 
     private final MemberService memberService;
-    private final MemberGroupService memberGroupService;
+    private final GroupService groupService;
     private final MemberGroupRepository memberGroupRepository;
 
     @GetMapping("/api/v1/temp/admin/create/group")
@@ -39,9 +40,11 @@ public class TempController {
             randomName = (int) (Math.random() * 7);
 
             MemberGroupVisibility visibility = MemberGroupVisibility.VISIBLE;
+            GroupAutoJoin join = GroupAutoJoin.ON;
 
             if (i > 80) {
                 visibility = MemberGroupVisibility.HIDDEN;
+                join = GroupAutoJoin.OFF;
             }
 
             memberGroupRepository.save(MemberGroup.builder()
@@ -51,6 +54,7 @@ public class TempController {
                             .name(groupNames[randomName])
                             .joinClosedTime(LocalDateTime.now())
                             .memberGroupVisibility(visibility)
+                            .groupAutoJoin(join)
                             .build());
         }
 

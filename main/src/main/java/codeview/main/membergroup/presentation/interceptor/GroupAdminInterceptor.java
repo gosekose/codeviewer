@@ -2,7 +2,7 @@ package codeview.main.membergroup.presentation.interceptor;
 
 import codeview.main.member.application.MemberService;
 import codeview.main.member.domain.Member;
-import codeview.main.membergroup.application.MemberGroupService;
+import codeview.main.membergroup.application.GroupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -22,7 +22,7 @@ public class GroupAdminInterceptor implements HandlerInterceptor {
     private final static String CREATOR = "creator";
 
     @Resource
-    private MemberGroupService memberGroupService;
+    private GroupService groupService;
 
     @Resource
     private MemberService memberService;
@@ -41,7 +41,7 @@ public class GroupAdminInterceptor implements HandlerInterceptor {
 
         try {
             Member member = memberService.findByEmail(email);
-            Member creator = memberGroupService.findById(uriId).getCreator();
+            Member creator = groupService.findById(uriId).getCreator();
 
             if (member.getId() != creator.getId()) {
                 response.sendRedirect("/api/v1/groups/admin/errors?status=403");

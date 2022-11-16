@@ -5,13 +5,15 @@ import codeview.main.membergroup.domain.MemberGroup;
 import codeview.main.membergroup.infra.repository.MemberGroupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class MemberGroupService {
+public class GroupService {
 
     private final MemberGroupRepository memberGroupRepository;
 

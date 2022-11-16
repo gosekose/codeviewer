@@ -1,6 +1,7 @@
 package codeview.main.membergroup.presentation.dto;
 
-import codeview.main.membergroup.domain.MemberGroupVisibility;
+import codeview.main.membergroup.domain.eumerate.GroupAutoJoin;
+import codeview.main.membergroup.domain.eumerate.MemberGroupVisibility;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-public class MemberGroupDto {
+public class GroupForPageDto {
 
     private Long id;
 
@@ -23,14 +24,17 @@ public class MemberGroupDto {
 
     private LocalDateTime joinClosedTime;
 
+    private GroupAutoJoin groupAutoJoin;
+
     @Builder
     @QueryProjection
-    public MemberGroupDto(Long id, String name, MemberGroupVisibility visibility, Integer maxMember, LocalDateTime joinClosedTime) {
+    public GroupForPageDto(Long id, String name, MemberGroupVisibility visibility, Integer maxMember, LocalDateTime joinClosedTime, GroupAutoJoin groupAutoJoin) {
         this.id = id;
         this.name = name;
         this.visibility = visibility;
         this.maxMember = maxMember;
         this.joinClosedTime = joinClosedTime;
+        this.groupAutoJoin = groupAutoJoin;
     }
 
 

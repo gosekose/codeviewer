@@ -16,7 +16,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class MemberGroupCreateService {
+public class GroupCreateService {
 
     @Value("${file.dir}")
     private String fileDir;

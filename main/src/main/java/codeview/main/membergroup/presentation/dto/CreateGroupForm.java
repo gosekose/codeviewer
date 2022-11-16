@@ -1,6 +1,7 @@
 package codeview.main.membergroup.presentation.dto;
 
-import codeview.main.membergroup.domain.MemberGroupVisibility;
+import codeview.main.membergroup.domain.eumerate.GroupAutoJoin;
+import codeview.main.membergroup.domain.eumerate.MemberGroupVisibility;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,9 @@ public class CreateGroupForm {
 
     @NotNull(message = "공개 여부는 필수입니다.")
     private MemberGroupVisibility memberGroupVisibility;
+
+    @NotNull(message = "자동 가입 설정 여부는 필수입니다.")
+    private GroupAutoJoin groupAutoJoin;
 
     @Future(message = "현재 시간 이후만 체크 가능합니다.")
     private LocalDateTime joinClosedTime;

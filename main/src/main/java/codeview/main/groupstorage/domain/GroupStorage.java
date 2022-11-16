@@ -3,13 +3,17 @@ package codeview.main.groupstorage.domain;
 import codeview.main.auth.domain.BaseEntity;
 import codeview.main.member.domain.Member;
 import codeview.main.membergroup.domain.MemberGroup;
-import codeview.main.membergroup.domain.MemberGroupAuthority;
+import codeview.main.membergroup.domain.eumerate.MemberGroupAuthority;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity @AllArgsConstructor
+@Entity
+@Getter
+@AllArgsConstructor
 @NoArgsConstructor
 public class GroupStorage extends BaseEntity {
 
@@ -28,5 +32,10 @@ public class GroupStorage extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private MemberGroupAuthority memberGroupAuthority;
 
-
+    @Builder
+    public GroupStorage(MemberGroup memberGroup, Member member, MemberGroupAuthority memberGroupAuthority) {
+        this.memberGroup = memberGroup;
+        this.member = member;
+        this.memberGroupAuthority = memberGroupAuthority;
+    }
 }

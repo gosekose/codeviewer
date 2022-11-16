@@ -3,11 +3,12 @@ package codeview.main.membergroup.presentation;
 import codeview.main.auth.domain.users.PrincipalUser;
 import codeview.main.member.application.MemberService;
 import codeview.main.member.domain.Member;
-import codeview.main.membergroup.application.MemberGroupService;
+import codeview.main.membergroup.application.GroupService;
 import codeview.main.membergroup.domain.MemberGroup;
-import codeview.main.membergroup.infra.dao.MemberGroupSearchCondition;
+import codeview.main.membergroup.presentation.dao.MemberGroupSearchCondition;
 import codeview.main.membergroup.infra.repository.MemberGroupQueryDslRepository;
-import codeview.main.membergroup.presentation.dto.MemberGroupDto;
+import codeview.main.membergroup.presentation.dto.GroupForPageDto;
+import codeview.main.membergroup.presentation.util.MemberGroupsPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -25,12 +26,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/api/v1/groups")
 @RequiredArgsConstructor
 @Slf4j
-public class MemberGroupMainController {
+public class GroupMainController {
 
     private final MemberGroupQueryDslRepository memberGroupQueryDslRepository;
     private final MemberService memberService;
 
-    private final MemberGroupService memberGroupService;
+    private final GroupService groupService;
 
     @GetMapping
     public String index(Model model) {
@@ -48,19 +49,12 @@ public class MemberGroupMainController {
         Member member = memberService.findByRegisterId(principalUser.getProviderUser().getId());
         condition.setMember(member);
 
-        Page<MemberGroupDto> memberGroupDtos = memberGroupQueryDslRepository.searchPageComplex(condition, pageable);
+        Page<GroupForPageDto> groupForPageDto = MemberGroupsPage.getMemberGroupsPage(memberGroupQueryDslRepository, condition, pageable, model);
 
-        int start = (int) (Math.floor(memberGroupDtos.getTotalElements() / 10) * 10 + 1);
-        int last = start + 9 < memberGroupDtos.getTotalPages() ? start + 9 : memberGroupDtos.getTotalPages();
+        log.info("memberGroupDtos.getTotalPages() = {}", ((Page<?>) groupForPageDto).getTotalPages());
+        log.info("memberGroupDtos.getTotalElements() = {}", groupForPageDto.getTotalElements());
 
-        model.addAttribute("memberGroups", memberGroupDtos);
-        model.addAttribute("start", start);
-        model.addAttribute("last", last);
-
-        log.info("memberGroupDtos.getTotalPages() = {}", ((Page<?>) memberGroupDtos).getTotalPages());
-        log.info("memberGroupDtos.getTotalElements() = {}", memberGroupDtos.getTotalElements());
-
-        return "groups/my-group-list";
+        return "groups/admins/my-group-list";
     }
 
 
@@ -69,9 +63,9 @@ public class MemberGroupMainController {
             Model model, @PathVariable("groupId") Integer groupId,
             @AuthenticationPrincipal PrincipalUser principalUser) {
 
-        MemberGroup memberGroup = memberGroupService.findById(Long.valueOf(groupId));
+        MemberGroup memberGroup = groupService.findById(Long.valueOf(groupId));
 
-        MemberGroupDto memberGroupDto = MemberGroupDto.builder()
+        GroupForPageDto groupForPageDto = GroupForPageDto.builder()
                 .id(memberGroup.getId())
                 .name(memberGroup.getName())
                 .maxMember(memberGroup.getMaxMember())
@@ -79,10 +73,10 @@ public class MemberGroupMainController {
                 .joinClosedTime(memberGroup.getJoinClosedTime())
                 .build();
 
-        model.addAttribute("memberGroupDto", memberGroupDto);
+        model.addAttribute("memberGroupDto", groupForPageDto);
         model.addAttribute("groupId", groupId);
 
-        log.info("memberGroupDto = {}", memberGroupDto);
+        log.info("groupForPageDto = {}", groupForPageDto);
 
         return "problems/my-problems";
     }
