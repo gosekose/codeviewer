@@ -17,8 +17,9 @@ public enum CacheType {
     PROBLEM("problem", 5 * 60, 10000),
 
     PROBLEMSEARCH("problemSearch", 5 * 60, 10000),
-    MYPROBLEMSEARCH("myProblemSearch", 5 * 60, 10000);
-
+    MYPROBLEMSEARCH("myProblemSearch", 5 * 60, 10000),
+    MEMBERAllSOLVESEARCH("memberAllSolveSearch", 30, 10000),
+    MEMBERSOLVESEARCH("memberSolveSearch", 30, 10000);
 
     private final String cacheName;     // 캐시 이름
     private final int expireAfterWrite; // 만료시간
