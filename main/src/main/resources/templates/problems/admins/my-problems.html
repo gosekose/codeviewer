@@ -25,7 +25,7 @@
 
 <nav id="navScroll" class="navbar navbar-expand-lg navbar-light fixed-top" tabindex="0">
     <div class="container">
-        <a class="navbar-brand pe-4 fs-4" href="/">
+        <a class="navbar-brand pe-4 fs-4" href="/static">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-layers-half"
                  viewbox="0 0 16 16">
                 <path
@@ -83,7 +83,7 @@
 
         <div class="container position-relative">
             <div class="col-12 col-lg-8 mt-0 h-100 position-absolute top-0 end-0 bg-cover" data-aos="fade-left"
-                 style="background-image: url(/static/img/webp/interior11.webp);">
+                 style="background-image: url(/img/webp/interior11.webp);">
 
             </div>
             <div class="row">
@@ -131,7 +131,7 @@
                                         d="M7 5.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 1 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0zM7 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm-1.496-.854a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0l-.5-.5a.5.5 0 0 1 .708-.708l.146.147 1.146-1.147a.5.5 0 0 1 .708 0z" />
                             </svg>
                         </div>
-                        <div class="col-md-9 flex-fill nav-link" th:href="@{/api/v1/problem/list}" style=" cursor: pointer;" onclick="location.href='/api/v1/groups/list';">
+                        <div class="col-md-9 flex-fill nav-link" th:href="@{/api/v1/problem/list}" style=" cursor: pointer;" onclick="problemListCall()">
                             <h3 class="h5 my-2">문제 관리</h3>
                             <p> 문제 관리 및 수정할 수 있습니다. </p>
                         </div>
@@ -256,9 +256,11 @@
 
 
     function problemCreateCall() {
-
         location.href='/api/v1/groups/admin/' + groupId + '/problems/new'
+    }
 
+    function problemListCall() {
+        location.href='/api/v1/groups/admin/' + groupId + '/problems'
     }
 
 </script>

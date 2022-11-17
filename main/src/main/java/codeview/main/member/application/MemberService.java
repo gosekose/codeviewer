@@ -49,7 +49,7 @@ public class MemberService {
     }
 
 
-    @Transactional(readOnly = false)
+    @Transactional
     public void register(String registrationId, ProviderUser providerUser) {
 
         Member member = Member.builder()

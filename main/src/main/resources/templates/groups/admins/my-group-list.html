@@ -1,4 +1,4 @@
-<!doctype html>
+<!doctype html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 <html class="h-100" lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
@@ -13,9 +13,9 @@
     <meta name="HandheldFriendly" content="true">
 
     <title>CODEVIEWER</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <link rel="stylesheet" th:href="@{/css/theme.min.css}">
-    <link rel="stylesheet" th:href="@{/css/webfont.css}">
+    <link rel="stylesheet" th:href="@{/static/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/static/css/theme.min.css}">
+    <link rel="stylesheet" th:href="@{/static/css/webfont.css}">
 
     <style>
     </style>
@@ -26,7 +26,7 @@
 
 <nav id="navScroll" class="navbar navbar-expand-lg navbar-light fixed-top" tabindex="0">
     <div class="container">
-        <a class="navbar-brand pe-4 fs-4" href="/static">
+        <a class="navbar-brand pe-4 fs-4" href="/">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-layers-half"
                  viewbox="0 0 16 16">
                 <path
@@ -84,7 +84,7 @@
 
         <div class="container position-relative">
             <div class="col-12 col-lg-8 mt-0 h-100 position-absolute top-0 end-0 bg-cover" data-aos="fade-left"
-                 style="background-image: url(/img/webp/interior11.webp);">
+                 style="background-image: url(/static/img/webp/interior11.webp);">
 
             </div>
             <div class="row">
@@ -122,8 +122,12 @@
                 <td th:text="${group.joinClosedTime}"></td>
                 <td th:text="${group.groupAutoJoin}"></td>
                 <td>
+                    <a href="#" th:href="@{/api/v1/groups/admin/{id}/members (id=${group.id})}"
+                       class="btn btn-primary" role="button">회원 관리</a>
+                </td>
+                <td>
                     <a href="#" th:href="@{/api/v1/groups/admin/{id} (id=${group.id})}"
-                       class="btn btn-primary" role="button">그룹 이동</a>
+                       class="btn btn-primary" role="button">문제 관리</a>
                 </td>
                 <td>
                     <a href="#" th:href="@{/api/v1/groups/admin/edit/{id} (id=${group.id})}"
@@ -207,8 +211,8 @@
     </div>
 </footer>
 
-<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/js/aos.js}"></script>
+<script th:src="@{/static/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/static/js/aos.js}"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script>
     AOS.init({
