@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 @Slf4j
 @Controller
@@ -47,22 +45,8 @@ public class IndexController {
 
             Member member = memberService.findByRegisterId(principalUser.getProviderUser().getId());
 
-            log.info("memberId = {}", member.getId());
-            log.info("SecurityContextHolder.getContext().getAuthentication().getPrincipal() = {}", SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-            log.info("SecurityContextHolder.getContext().getAuthentication().getDetails() = {}", SecurityContextHolder.getContext().getAuthentication().getDetails());
-
-            HttpSession session = request.getSession();
-
-            log.info("session.getId() = {}", session.getId());
-            log.info("SecurityContextHolder.getContext().getAuthentication().getName() = {}", SecurityContextHolder.getContext().getAuthentication().getName());
-
-
-            log.info("principalUser.getProviderUser().getProvider().toUpperCase() = {}",
-                    principalUser.getProviderUser().getProvider().toUpperCase());
-
-
             model.addAttribute("user", userName);
-            model.addAttribute("provider", principalUser.getProviderUser().getProvider().toUpperCase());
+//            model.addAttribute("provider", principalUser.getProviderUser().getProvider().toUpperCase());
         }
 
         model.addAttribute("_csrf", csrfProviderService.createCsrf(request));

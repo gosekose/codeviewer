@@ -22,7 +22,7 @@ public class GroupStorage extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_classes_id")
+    @JoinColumn(name = "member_group_id")
     private MemberGroup memberGroup;
 
     @ManyToOne(fetch = FetchType.LAZY)

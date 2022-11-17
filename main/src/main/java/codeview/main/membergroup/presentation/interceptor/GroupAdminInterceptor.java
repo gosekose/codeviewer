@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -34,8 +35,6 @@ public class GroupAdminInterceptor implements HandlerInterceptor {
         log.info("pathVariables = {}", pathVariables);
 
         String email = request.getUserPrincipal().getName();
-//        String[] uri = request.getRequestURI().split("/");
-//        Long uriId = Long.valueOf(Integer.parseInt(uri[uri.length - 1]));
         Long uriId = Long.valueOf(String.valueOf(pathVariables.get("groupId")));
         log.info("uriId = {}", uriId);
 
@@ -43,7 +42,10 @@ public class GroupAdminInterceptor implements HandlerInterceptor {
             Member member = memberService.findByEmail(email);
             Member creator = groupService.findById(uriId).getCreator();
 
-            if (member.getId() != creator.getId()) {
+            log.info("member.getId() = {}", member.getId());
+            log.info("creator.getId() = {}", creator.getId());
+
+            if (!Objects.equals(member.getId(), creator.getId())) {
                 response.sendRedirect("/api/v1/groups/admin/errors?status=403");
                 return false;
             }

@@ -30,7 +30,6 @@ public class ProblemCreateService {
     private final ProblemIoExampleRepository problemIoExampleRepository;
     private final ProblemDescriptionRepository problemDescriptionRepository;
 
-    @Transactional
     private void saveProblemIoExample(ProblemCreateVO problemCreateVO, Problem problem, int i) {
         problemIoExampleRepository.save(
                 ProblemIoExample.builder()
@@ -42,7 +41,6 @@ public class ProblemCreateService {
         );
     }
 
-    @Transactional
     private void saveProblemDescription(ProblemCreateVO problemCreateVO, Problem problem, int i) {
         problemDescriptionRepository.save(
                 ProblemDescription.builder()
@@ -51,6 +49,7 @@ public class ProblemCreateService {
                         .description(problemCreateVO.getDescriptions().get(i))
                         .build());
     }
+
 
     public Problem getProblem(Integer groupId, ProblemCreateVO problemCreateVO) throws IOException {
 
@@ -70,6 +69,7 @@ public class ProblemCreateService {
         return problem;
     }
 
+    @Transactional
     public void saveProblemData(ProblemCreateVO problemCreateVO, Problem problem) {
 
         if (problemCreateVO.getDescriptions() != null) {

@@ -34,7 +34,7 @@ public class InitDb {
 
         public void dbInit() {
 
-            for (int i=0; i<10; i++) {
+            for (int i=0; i<100; i++) {
 
                 String uuid = UUID.randomUUID().toString();
 
@@ -46,9 +46,11 @@ public class InitDb {
                         .registerId(uuid)
                         .build();
 
+                member.updateProfile(UUID.randomUUID().toString(), 20, "studhent", null, null, "iise", UUID.randomUUID().toString());
+
                 em.persist(member);
 
-                for (int j=0; j<10; j++) {
+                for (int j=0; j<5; j++) {
 
                     uuid = UUID.randomUUID().toString();
                     em.persist(MemberGroup.builder()
@@ -70,7 +72,7 @@ public class InitDb {
             String schoolAddress;
 
             em.persist(School.builder().schoolMembership("membership").name("서울과학기술대학교").address("서울특별시 노원구 공릉로 232").build());
-            for(int i=2; i<=100; i ++) {
+            for(int i=2; i<=10; i ++) {
                 if (i % 6 == 0) {
                     schoolAddress = "서울특별시";
                 } else if (i % 6 == 1) {

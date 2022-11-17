@@ -1,4 +1,4 @@
-<!doctype html>
+<!doctype html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 <html class="h-100" lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
@@ -13,9 +13,9 @@
     <meta name="HandheldFriendly" content="true">
 
     <title>CODEVIEWER</title>
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <link rel="stylesheet" th:href="@{/css/theme.min.css}">
-    <link rel="stylesheet" th:href="@{/css/webfont.css}">
+    <link rel="stylesheet" th:href="@{/static/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/static/css/theme.min.css}">
+    <link rel="stylesheet" th:href="@{/static/css/webfont.css}">
 
     <style>
     </style>
@@ -26,7 +26,7 @@
 
 <nav id="navScroll" class="navbar navbar-expand-lg navbar-light fixed-top" tabindex="0">
     <div class="container">
-        <a class="navbar-brand pe-4 fs-4" href="/static">
+        <a class="navbar-brand pe-4 fs-4" href="/">
             <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-layers-half"
                  viewbox="0 0 16 16">
                 <path
@@ -84,7 +84,7 @@
 
         <div class="container position-relative">
             <div class="col-12 col-lg-8 mt-0 h-100 position-absolute top-0 end-0 bg-cover" data-aos="fade-left"
-                 style="background-image: url(/img/webp/interior11.webp);">
+                 style="background-image: url(/static/img/webp/interior11.webp);">
 
             </div>
             <div class="row">
@@ -104,33 +104,34 @@
         <table class="table">
             <thead>
             <tr>
-                <th>회원 순번</th>
+                <th>회원 아이디</th>
                 <th>회원 이름</th>
                 <th>학과</th>
                 <th>학번</th>
-                <th>그룹 직위</th>
-                <th>가입 시간</th>
-                <td></td>
-                <td></td>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
             </tr>
             </thead>
             <tr th:each="member: ${members.getContent()}">
-                <td th:text="">#</td>
+                <td th:text="${member.id}"></td>
                 <td th:text="${member.name}"></td>
                 <td th:text="${member.department}"></td>
-                <td th:text="${member.studentId}"></td>
-                <td th:text="${member.status}"></td>
+                <td th:text="${member.privateIdInSchool}"></td>
+                <td th:text="${member.memberGroupAuthority}"></td>
                 <td th:text="${member.joinTime}"></td>
                 <td>
-                    <a href="#" th:href="@{/api/v1/groups/admin/{groupId}/members/{memberId} (groupId=${group.id}, memberId=${member.Id})}"
+                    <a href="#" th:href="@{/api/v1/groups/admin/{groupId}/members/{memberId} (groupId=${groupId}, memberId=${member.id})}"
                        class="btn btn-primary" role="button">회원 정보</a>
                 </td>
                 <td>
-                    <a href="#" th:href="@{/api/v1/groups/admin/{groupId}/members/{memberId}/manager/new (groupId=${group.id}, memberId=${member.Id})}"
-                       class="btn btn-primary" role="button">매니저 등록</a>
+                    <a href="#" th:href="@{/api/v1/groups/admin/{groupId}/members/{memberId}/manager/new (groupId=${groupId}, memberId=${member.id})}"
+                       class="btn btn-primary" role="button">권한 수정</a>
                 </td>
                 <td>
-                    <a href="#" th:href="@{/api/v1/groups/admin/{groupId}/members/{memberId}/kickout (groupId=${group.id}, memberId=${member.Id})}"
+                    <a href="#" th:href="@{/api/v1/groups/admin/{groupId}/members/{memberId}/kickout (groupId=${groupId}, memberId=${member.id})}"
                        class="btn btn-primary" role="button">회원 강퇴</a>
                 </td>
             </tr>
@@ -211,8 +212,8 @@
     </div>
 </footer>
 
-<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/js/aos.js}"></script>
+<script th:src="@{/static/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/static/js/aos.js}"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script>
     AOS.init({

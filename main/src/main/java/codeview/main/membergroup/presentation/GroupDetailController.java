@@ -4,11 +4,11 @@ import codeview.main.auth.domain.users.PrincipalUser;
 import codeview.main.member.application.MemberService;
 import codeview.main.member.domain.Member;
 import codeview.main.membergroup.application.GroupService;
+import codeview.main.membergroup.application.MemberGroupsPageService;
 import codeview.main.membergroup.domain.MemberGroup;
 import codeview.main.membergroup.presentation.dao.MemberGroupSearchCondition;
-import codeview.main.membergroup.infra.repository.MemberGroupQueryDslRepository;
 import codeview.main.membergroup.presentation.dto.GroupForPageDto;
-import codeview.main.membergroup.presentation.util.MemberGroupsPage;
+import codeview.main.membergroup.presentation.util.MemberGroupsPageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,9 +26,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/api/v1/groups")
 @RequiredArgsConstructor
 @Slf4j
-public class GroupMainController {
+public class GroupDetailController {
 
-    private final MemberGroupQueryDslRepository memberGroupQueryDslRepository;
+    private final MemberGroupsPageService memberGroupsPageService;
     private final MemberService memberService;
 
     private final GroupService groupService;
@@ -49,10 +49,9 @@ public class GroupMainController {
         Member member = memberService.findByRegisterId(principalUser.getProviderUser().getId());
         condition.setMember(member);
 
-        Page<GroupForPageDto> groupForPageDto = MemberGroupsPage.getMemberGroupsPage(memberGroupQueryDslRepository, condition, pageable, model);
+        Page<GroupForPageDto> memberGroupsPage = memberGroupsPageService.getMyMemberGroupsPage(condition, pageable);
 
-        log.info("memberGroupDtos.getTotalPages() = {}", ((Page<?>) groupForPageDto).getTotalPages());
-        log.info("memberGroupDtos.getTotalElements() = {}", groupForPageDto.getTotalElements());
+        MemberGroupsPageUtil.modelPagingAndModel(memberGroupsPage, model);
 
         return "groups/admins/my-group-list";
     }
@@ -78,7 +77,7 @@ public class GroupMainController {
 
         log.info("groupForPageDto = {}", groupForPageDto);
 
-        return "problems/my-problems";
+        return "problems/admins/my-problems";
     }
 
 

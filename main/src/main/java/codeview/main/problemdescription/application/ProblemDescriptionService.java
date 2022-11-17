@@ -19,7 +19,7 @@ public class ProblemDescriptionService {
 
     private final ProblemDescriptionRepository problemDescriptionRepository;
 
-    @Transactional(readOnly = false)
+    @Transactional
     public Long save(ProblemDescription problemDescription) {
         ProblemDescription savedProblemDescription = problemDescriptionRepository.save(problemDescription);
         return savedProblemDescription.getId();
