@@ -8,6 +8,7 @@ import codeview.main.problemdescription.domain.ProblemDescription;
 import codeview.main.problemdescription.domain.ProblemIoExample;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
@@ -22,10 +23,10 @@ public class ProblemPage {
     private final ProblemDescriptionService problemDescriptionService;
     private final ProblemIoExampleService problemIoExampleService;
 
+    @Cacheable(cacheNames = "problem", key = "#problemId")
     public void getProblemPage(Model model, Integer groupId, Integer problemId) {
 
         Problem problem = problemService.findById(Long.valueOf(problemId));
-
         List<ProblemDescription> descriptions = problemDescriptionService.findAllByProblem(problem);
         List<ProblemIoExample> ioExamples = problemIoExampleService.findAllByProblem(problem);
 

@@ -11,13 +11,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
 @Controller
-@RequestMapping("/api/v1/groups/{groupId}/problems/{problemId}")
+@RequestMapping("/api/v1/groups/{groupId}/problems")
 @RequiredArgsConstructor
 public class ProblemMemberUiController {
 
     private final ProblemPage problemPage;
 
-    @GetMapping
+
+//    @GetMapping
+//    public String getProblemList(
+//            Model model,
+//            ProblemListSearchCondition condition,
+//            Pageable pageable) {
+//
+//
+//
+//    }
+
+
+    @GetMapping("/{problemId}")
     public String getProblemPage(
             @PathVariable("groupId") Integer groupId,
             @PathVariable("problemId") Integer problemId,

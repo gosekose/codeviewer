@@ -1,9 +1,15 @@
 package codeview.main.problem.application;
 
 import codeview.main.problem.domain.Problem;
+import codeview.main.problem.infra.repository.ProblemQueryDslRepositoryImpl;
 import codeview.main.problem.infra.repository.ProblemRepository;
+import codeview.main.problem.infra.repository.query.ProblemListPageDto;
+import codeview.main.problem.infra.repository.query.ProblemListSearchCondition;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +22,7 @@ import java.util.Optional;
 public class ProblemService {
 
     private final ProblemRepository problemRepository;
+    private final ProblemQueryDslRepositoryImpl problemQueryDslRepository;
 
     @Transactional(readOnly = false)
     public Long save(Problem problem) {
@@ -34,5 +41,9 @@ public class ProblemService {
 
     }
 
+    @Cacheable(cacheNames = "problemSearch", key = "#pageable.pageNumber")
+    public Page<ProblemListPageDto> getSearchProblems(ProblemListSearchCondition condition, Pageable pageable) {
+        return problemQueryDslRepository.searchPageComplex(condition, pageable);
+    }
 
 }

@@ -1,9 +1,14 @@
 package codeview.main.problem.presentation;
 
 import codeview.main.common.application.CsrfProviderService;
+import codeview.main.problem.application.ProblemService;
+import codeview.main.problem.infra.repository.query.ProblemListPageDto;
+import codeview.main.problem.infra.repository.query.ProblemListSearchCondition;
 import codeview.main.problem.presentation.utils.ProblemPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +25,8 @@ public class ProblemAdminUiController {
 
     private final ProblemPage problemPage;
     private final CsrfProviderService csrfProviderService;
+
+    private final ProblemService problemService;
 
     @GetMapping("/new")
     public String getCreateProblem(
@@ -47,10 +54,16 @@ public class ProblemAdminUiController {
     }
 
     @GetMapping
-    public String getProblemsAdminPage(@PathVariable("groupId") Integer groupId, Model model) {
+    public String getProblemsAdminPage(@PathVariable("groupId") Integer groupId,
+                                       Model model,
+                                       ProblemListSearchCondition condition,
+                                       Pageable pageable) {
 
+        Page<ProblemListPageDto> searchProblems = problemService.getSearchProblems(condition, pageable);
+        model.addAttribute("groupId", groupId);
+        model.addAttribute("problems", searchProblems);
 
-        return "problems/admins/";
+        return "problems/admins/my-problem-list";
     }
 
 

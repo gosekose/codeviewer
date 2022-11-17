@@ -8,6 +8,7 @@ import codeview.main.problem.domain.embedded.ProblemFile;
 import codeview.main.problem.domain.embedded.ShellFile;
 import codeview.main.problem.domain.embedded.SolvePython;
 import codeview.main.problemdescription.domain.ProblemDescription;
+import codeview.main.problemdescription.domain.ProblemIoExample;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -36,6 +37,10 @@ public class Problem extends BaseEntity {
 
     @OneToMany(mappedBy = "problem")
     private List<ProblemDescription> problemDescriptions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "problem")
+    private List<ProblemIoExample> problemIoExamples = new ArrayList<>();
+
     private String name;
 
     @Embedded
