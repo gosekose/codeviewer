@@ -27,7 +27,8 @@ public class Solve extends BaseEntity {
     private Member member;
 
     private String codeAddress;
-    private Boolean solveStatus;
+
+    private int score;
 
 
 }
