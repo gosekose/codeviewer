@@ -60,7 +60,7 @@ public class InitDb {
                             .joinClosedTime(LocalDateTime.now())
                             .description("")
                             .maxMember(20)
-                            .member(member)
+                            .creator(member)
                             .build());
                 }
             }

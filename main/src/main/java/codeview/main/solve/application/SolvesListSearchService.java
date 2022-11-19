@@ -1,8 +1,8 @@
-package codeview.main.Solve.application;
+package codeview.main.solve.application;
 
-import codeview.main.Solve.infra.repository.SolveQueryDslRepositoryImpl;
-import codeview.main.Solve.infra.repository.query.SolvesOfProblemCondition;
-import codeview.main.Solve.infra.repository.query.SolvesOfProblemDto;
+import codeview.main.solve.infra.repository.SolveQueryDslRepositoryImpl;
+import codeview.main.solve.infra.repository.query.SolvesOfProblemCondition;
+import codeview.main.solve.infra.repository.query.SolvesOfProblemDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;

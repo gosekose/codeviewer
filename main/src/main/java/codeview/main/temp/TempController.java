@@ -51,7 +51,7 @@ public class TempController {
             }
 
             MemberGroup memberGroup = MemberGroup.builder()
-                    .member(member)
+                    .creator(member)
                     .maxMember(i + 20)
                     .description("")
                     .name(groupNames[randomName])

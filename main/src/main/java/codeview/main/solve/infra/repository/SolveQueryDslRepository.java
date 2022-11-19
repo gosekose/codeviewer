@@ -1,8 +1,8 @@
-package codeview.main.Solve.infra.repository;
+package codeview.main.solve.infra.repository;
 
-import codeview.main.Solve.domain.Solve;
-import codeview.main.Solve.infra.repository.query.SolvesOfProblemCondition;
-import codeview.main.Solve.infra.repository.query.SolvesOfProblemDto;
+import codeview.main.solve.domain.Solve;
+import codeview.main.solve.infra.repository.query.SolvesOfProblemCondition;
+import codeview.main.solve.infra.repository.query.SolvesOfProblemDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;

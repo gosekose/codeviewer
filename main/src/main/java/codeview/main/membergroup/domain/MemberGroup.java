@@ -59,10 +59,10 @@ public class MemberGroup extends BaseEntity {
     private List<GroupJoinRequest> groupJoinRequests = new ArrayList<>();
 
     @Builder
-    public MemberGroup(Member member, String name, Integer maxMember, MemberGroupVisibility memberGroupVisibility,
+    public MemberGroup(Member creator, String name, Integer maxMember, MemberGroupVisibility memberGroupVisibility,
                        LocalDateTime joinClosedTime, String description, String skillTag, String password,
                        GroupAutoJoin groupAutoJoin) {
-        this.creator = member;
+        this.creator = creator;
         this.name = name;
         this.maxMember = maxMember;
         this.memberGroupVisibility = memberGroupVisibility;

@@ -21,7 +21,7 @@ public class ProblemMemberUiController {
 //    @GetMapping
 //    public String getProblemList(
 //            Model model,
-//            ProblemListSearchCondition condition,
+//            ProblemDetailPageCond condition,
 //            Pageable pageable) {
 //
 //

@@ -1,4 +1,4 @@
-package codeview.main.Solve.infra.repository.query;
+package codeview.main.solve.infra.repository.query;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;

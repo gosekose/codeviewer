@@ -37,7 +37,7 @@ class MemberGroupRepositoryTest {
             em.persist(member);
 
             MemberGroup memberGroup = MemberGroup.builder()
-                    .member(member)
+                    .creator(member)
                     .name(UUID.randomUUID().toString())
                     .memberGroupVisibility(MemberGroupVisibility.VISIBLE)
                     .joinClosedTime(LocalDateTime.now())
@@ -70,7 +70,7 @@ class MemberGroupRepositoryTest {
 
         for(int i=0; i<40; i++) {
             memberGroupRepository.save(MemberGroup.builder()
-                    .member(member)
+                    .creator(member)
                     .name(String.valueOf(i))
                     .maxMember(30)
                     .description("tttt")
@@ -79,7 +79,7 @@ class MemberGroupRepositoryTest {
 
         for(int i=0; i<10; i++) {
             memberGroupRepository.save(MemberGroup.builder()
-                    .member(member2)
+                    .creator(member2)
                     .name(String.valueOf(i))
                     .maxMember(30)
                     .description("tttt")

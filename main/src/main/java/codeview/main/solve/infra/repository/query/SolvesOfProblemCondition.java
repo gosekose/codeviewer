@@ -1,4 +1,4 @@
-package codeview.main.Solve.infra.repository.query;
+package codeview.main.solve.infra.repository.query;
 
 import lombok.Data;
 
