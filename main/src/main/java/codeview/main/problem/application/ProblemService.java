@@ -3,8 +3,8 @@ package codeview.main.problem.application;
 import codeview.main.problem.domain.Problem;
 import codeview.main.problem.infra.repository.ProblemQueryDslRepositoryImpl;
 import codeview.main.problem.infra.repository.ProblemRepository;
-import codeview.main.problem.infra.repository.query.ProblemListPageDto;
-import codeview.main.problem.infra.repository.query.ProblemListSearchCondition;
+import codeview.main.problem.infra.repository.query.ProblemDetailPageCond;
+import codeview.main.problem.infra.repository.query.ProblemDetailPageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -42,8 +42,8 @@ public class ProblemService {
     }
 
     @Cacheable(cacheNames = "problemSearch", key = "#pageable.pageNumber")
-    public Page<ProblemListPageDto> getSearchProblems(ProblemListSearchCondition condition, Pageable pageable) {
-        return problemQueryDslRepository.searchPageComplex(condition, pageable);
+    public Page<ProblemDetailPageDto> getSearchProblems(ProblemDetailPageCond condition, Pageable pageable) {
+        return problemQueryDslRepository.searchDetailPageComplex(condition, pageable);
     }
 
 }

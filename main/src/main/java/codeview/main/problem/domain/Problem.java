@@ -1,6 +1,6 @@
 package codeview.main.problem.domain;
 
-import codeview.main.Solve.domain.Solve;
+import codeview.main.solve.domain.Solve;
 import codeview.main.auth.domain.BaseEntity;
 import codeview.main.membergroup.domain.MemberGroup;
 import codeview.main.problem.domain.embedded.InputFile;

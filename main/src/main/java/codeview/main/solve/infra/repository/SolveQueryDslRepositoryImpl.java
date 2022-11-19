@@ -1,9 +1,9 @@
-package codeview.main.Solve.infra.repository;
+package codeview.main.solve.infra.repository;
 
-import codeview.main.Solve.domain.Solve;
-import codeview.main.Solve.infra.repository.query.QSolvesOfProblemPageDto;
-import codeview.main.Solve.infra.repository.query.SolvesOfProblemCondition;
-import codeview.main.Solve.infra.repository.query.SolvesOfProblemDto;
+import codeview.main.solve.domain.Solve;
+import codeview.main.solve.infra.repository.query.QSolvesOfProblemDto;
+import codeview.main.solve.infra.repository.query.SolvesOfProblemCondition;
+import codeview.main.solve.infra.repository.query.SolvesOfProblemDto;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static codeview.main.Solve.domain.QSolve.solve;
+import static codeview.main.solve.domain.QSolve.solve;
 import static codeview.main.member.domain.QMember.member;
 import static codeview.main.problem.domain.QProblem.problem;
 
@@ -42,7 +42,7 @@ public class SolveQueryDslRepositoryImpl implements SolveQueryDslRepository{
     public List<SolvesOfProblemDto> searchSolvesOfProblemDto(SolvesOfProblemCondition condition) {
         return query
                 .select(
-                        new QSolvesOfProblemPageDto(
+                        new QSolvesOfProblemDto(
                                 solve.id,
                                 problem.id,
                                 problem.name,
@@ -66,7 +66,7 @@ public class SolveQueryDslRepositoryImpl implements SolveQueryDslRepository{
 
         List<SolvesOfProblemDto> content = query
                 .select(
-                        new QSolvesOfProblemPageDto(
+                        new QSolvesOfProblemDto(
                                 solve.id,
                                 problem.id,
                                 problem.name,

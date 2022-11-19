@@ -1,9 +1,10 @@
-package codeview.main.Solve.domain;
+package codeview.main.solve.domain;
 
 import codeview.main.auth.domain.BaseEntity;
 import codeview.main.member.domain.Member;
 import codeview.main.problem.domain.Problem;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,4 +32,11 @@ public class Solve extends BaseEntity {
     private int score;
 
 
+    @Builder
+    public Solve(Problem problem, Member member, String codeAddress, int score) {
+        this.problem = problem;
+        this.member = member;
+        this.codeAddress = codeAddress;
+        this.score = score;
+    }
 }

@@ -40,7 +40,7 @@ public class GroupCreateService {
                 .description(form.getDescription())
                 .joinClosedTime(form.getJoinClosedTime())
                 .skillTag(form.getSkillTag())
-                .member(member)
+                .creator(member)
                 .password(form.getPassword())
                 .memberGroupVisibility(form.getMemberGroupVisibility())
                 .build();

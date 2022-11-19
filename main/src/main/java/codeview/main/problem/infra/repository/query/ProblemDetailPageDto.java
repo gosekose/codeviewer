@@ -7,7 +7,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ProblemListPageDto {
+public class ProblemDetailPageDto {
 
     private Long problemId;
     private String name;
@@ -19,8 +19,8 @@ public class ProblemListPageDto {
 
     @Builder
     @QueryProjection
-    public ProblemListPageDto(Long problemId, String name, String originalProblemFileName,
-                              String originalShellFileName, String originalInputsFileName, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public ProblemDetailPageDto(Long problemId, String name, String originalProblemFileName,
+                                String originalShellFileName, String originalInputsFileName, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.problemId = problemId;
         this.name = name;
         this.originalProblemFileName = originalProblemFileName;
