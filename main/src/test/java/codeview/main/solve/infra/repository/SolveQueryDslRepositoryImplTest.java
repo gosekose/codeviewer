@@ -9,8 +9,9 @@ import codeview.main.membergroup.infra.repository.MemberGroupRepository;
 import codeview.main.problem.domain.Problem;
 import codeview.main.problem.infra.repository.ProblemRepository;
 import codeview.main.solve.domain.Solve;
+import codeview.main.solve.infra.repository.query.MemberSolveInfoCondition;
+import codeview.main.solve.infra.repository.query.MemberSolveInfoDto;
 import codeview.main.solve.infra.repository.query.SolvesOfProblemCondition;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
@@ -42,6 +45,8 @@ class SolveQueryDslRepositoryImplTest {
     static Long solveMemberId;
     static Long groupId;
 
+    static Long problemIdOfNoSolve;
+
     @Test
     public void 해결검색_by_problemId() throws Exception {
 //
@@ -53,7 +58,7 @@ class SolveQueryDslRepositoryImplTest {
         List<Solve> solves = solveQueryDslRepository.searchAllSolve(condition);
 
         //then
-        Assertions.assertThat(solves.size()).isEqualTo(3);
+        assertThat(solves.size()).isEqualTo(3);
     }
 
     @Test
@@ -66,11 +71,140 @@ class SolveQueryDslRepositoryImplTest {
         List<Solve> solves = solveQueryDslRepository.searchAllSolve(condition);
 
         //then
-        Assertions.assertThat(solves.size()).isEqualTo(12);
+        assertThat(solves.size()).isEqualTo(12);
     }
+
+    @Test
+    public void 해결검색_by_problemId_and_memberId() throws Exception {
+        //given
+        SolvesOfProblemCondition condition = new SolvesOfProblemCondition();
+        condition.setProblemId(problemId);
+        condition.setMemberId(solveMemberId);
+
+        //when
+        List<Solve> solves = solveQueryDslRepository.searchAllSolve(condition);
+
+        //then
+        assertThat(solves.size()).isEqualTo(3);
+    }
+
+    @Test
+    public void 해결검색_by_problemId_and_memberId_90점이상() throws Exception {
+        //given
+        SolvesOfProblemCondition condition = new SolvesOfProblemCondition();
+        condition.setProblemId(problemId);
+        condition.setMemberId(solveMemberId);
+        condition.setGoeScore(90);
+
+        //when
+        List<Solve> solves = solveQueryDslRepository.searchAllSolve(condition);
+
+        //then
+        assertThat(solves.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void 해결검색_by_problemId_and_memberId_90점이하() throws Exception {
+        //given
+        SolvesOfProblemCondition condition = new SolvesOfProblemCondition();
+        condition.setProblemId(problemId);
+        condition.setMemberId(solveMemberId);
+        condition.setLoeScore(90);
+
+        //when
+        List<Solve> solves = solveQueryDslRepository.searchAllSolve(condition);
+
+        //then
+        assertThat(solves.size()).isEqualTo(3);
+    }
+
+    @Test
+    public void 해결검색_해결X() throws Exception {
+        //given
+        SolvesOfProblemCondition condition = new SolvesOfProblemCondition();
+        condition.setProblemId(problemIdOfNoSolve);
+
+        //when
+        List<Solve> solves = solveQueryDslRepository.searchAllSolve(condition);
+
+        //then
+        assertThat(solves.size()).isEqualTo(0);
+
+    }
+
+    /**
+     * searchMemberSolvesCrossJoin
+     */
+    @Test
+    public void 그룹회원_info_by_memberId_groupId() throws Exception {
+        //given
+        MemberSolveInfoCondition condition = new MemberSolveInfoCondition();
+        condition.setGroupId(groupId);
+        condition.setMemberId(solveMemberId);
+
+        //when
+        List<MemberSolveInfoDto> memberSolveInfoDtos = solveQueryDslRepository.searchMemberSolvesCrossJoin(condition);
+
+        //then
+        assertThat(memberSolveInfoDtos.size()).isEqualTo(6);
+        assertThat(memberSolveInfoDtos.get(0).getProblemId()).isEqualTo(memberSolveInfoDtos.get(1).getProblemId());
+        assertThat(memberSolveInfoDtos.get(0).getCreatedAt()).isBefore(memberSolveInfoDtos.get(1).getCreatedAt());
+        assertThat(memberSolveInfoDtos.get(0).getScore()).isEqualTo(30);
+    }
+    /**
+     * searchMemberSolves
+     */
+    @Test
+    public void 그룹회원_info_by_memberId_groupId_problemId() throws Exception {
+        //given
+        MemberSolveInfoCondition condition = new MemberSolveInfoCondition();
+        condition.setGroupId(groupId);
+        condition.setMemberId(solveMemberId);
+        condition.setProblemId(problemId);
+
+        //when
+        List<MemberSolveInfoDto> memberSolveInfoDtos = solveQueryDslRepository.searchMemberSolves(condition);
+
+        //then
+        assertThat(memberSolveInfoDtos.size()).isEqualTo(3);
+        assertThat(memberSolveInfoDtos.get(0).getProblemId()).isEqualTo(memberSolveInfoDtos.get(1).getProblemId());
+        assertThat(memberSolveInfoDtos.get(0).getCreatedAt()).isBefore(memberSolveInfoDtos.get(1).getCreatedAt());
+        assertThat(memberSolveInfoDtos.get(0).getScore()).isEqualTo(30);
+
+    }
+
+
 
     @BeforeEach
     public void doinit() {
+
+        /**
+         *
+         * member => creator (그룹 개설자 + 문제 출제자)
+         * solveMember => creator가 낸 문제 해결한 사람
+         * newSolveMember => creator가 낸 문제를 해결한 다른 사람
+         *
+         * group1
+         * 회원: solveMember
+         * 문제: problem1, problem2
+         * 정답: 문제 당 sovle1, solve2, sovle3 => 6개
+         *
+         * group2
+         * 회원: solveMember
+         * 문제: problem1, problem2
+         * 정답: 문제 당 sovle1, solve2, sovle3 => 6개
+         *
+         *
+         * group3
+         * 회원: newSolveMember
+         * 문제: problem1, problem2
+         * 정답: 문제 당 sovle1, solve2, sovle3 => 6개
+         *
+         *
+         * group4
+         * 회원: 없음
+         * 문제: problem1, problem2
+         */
 
         Member member = Member.builder()
                 .registerId(String.valueOf(10)).picture(UUID.randomUUID().toString())
@@ -96,7 +230,7 @@ class SolveQueryDslRepositoryImplTest {
         memberRepository.save(newSolveMember);
 
         for(int i=0; i<4; i++) {
-            if (i % 4 == 0) {
+            if (i == 0) {
 
                 MemberGroup group1 = MemberGroup.builder().creator(member).maxMember(20)
                         .description(String.valueOf(i)).joinClosedTime(LocalDateTime.now())
@@ -120,7 +254,7 @@ class SolveQueryDslRepositoryImplTest {
                     }
                 }
 
-            } else if (i % 4 == 1) {
+            } else if (i == 1) {
                 MemberGroup group2 = MemberGroup.builder().creator(member)
                         .maxMember(20).description(String.valueOf(i))
                         .joinClosedTime(LocalDateTime.now()).name("TEST1")
@@ -143,7 +277,7 @@ class SolveQueryDslRepositoryImplTest {
                 }
 
 
-            } else if (i % 4 == 2) {
+            } else if (i == 2) {
 
 
                 MemberGroup group3 = MemberGroup.builder().creator(member)
@@ -178,6 +312,7 @@ class SolveQueryDslRepositoryImplTest {
                     Problem problem = Problem.builder()
                             .memberGroup(group4).name("problem"+j).build();
                     problemRepository.save(problem);
+                    problemIdOfNoSolve = problem.getId();
                 }
             }
 
