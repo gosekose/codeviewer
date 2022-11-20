@@ -1,4 +1,4 @@
-package codeview.main.membergroup.presentation;
+package codeview.main.membergroup.presentation.controller;
 
 import codeview.main.auth.domain.users.PrincipalUser;
 import codeview.main.member.application.MemberService;

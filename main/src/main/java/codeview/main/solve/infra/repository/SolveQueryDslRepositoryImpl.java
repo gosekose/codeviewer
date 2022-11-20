@@ -1,9 +1,7 @@
 package codeview.main.solve.infra.repository;
 
 import codeview.main.solve.domain.Solve;
-import codeview.main.solve.infra.repository.query.QSolvesOfProblemDto;
-import codeview.main.solve.infra.repository.query.SolvesOfProblemCondition;
-import codeview.main.solve.infra.repository.query.SolvesOfProblemDto;
+import codeview.main.solve.infra.repository.query.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -15,9 +13,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static codeview.main.solve.domain.QSolve.solve;
 import static codeview.main.member.domain.QMember.member;
 import static codeview.main.problem.domain.QProblem.problem;
+import static codeview.main.solve.domain.QSolve.solve;
 
 @Repository
 @RequiredArgsConstructor
@@ -100,6 +98,52 @@ public class SolveQueryDslRepositoryImpl implements SolveQueryDslRepository{
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
+    @Override
+    public List<MemberSolveInfoDto> searchMemberSolvesCrossJoin(MemberSolveInfoCondition condition) {
+
+        return query
+                .select(
+                    new QMemberSolveInfoDto(
+                                solve.id,
+                                solve.problem.id,
+                                solve.problem.name,
+                                solve.score,
+                                solve.createdAt))
+                .from(solve)
+                .join(problem).on(
+                        solve.problem.id.eq(problem.id),
+                        problem.memberGroup.id.eq(condition.getGroupId()))
+                .where(
+                        memberIdEq(condition.getMemberId())
+                )
+                .orderBy(solve.problem.id.asc(), solve.createdAt.asc())
+                .fetch();
+    }
+
+    @Override
+    public List<MemberSolveInfoDto> searchMemberSolves(MemberSolveInfoCondition condition) {
+        return query
+                .select(
+                        new QMemberSolveInfoDto(
+                                solve.id,
+                                solve.problem.id,
+                                solve.problem.name,
+                                solve.score,
+                                solve.createdAt))
+                .from(solve)
+                .join(solve.problem, problem).on(
+                        problem.memberGroup.id.eq(condition.getGroupId()))
+                .where(
+                        problemIdEq(condition.getProblemId()),
+                        memberIdEq(condition.getMemberId())
+                )
+                .orderBy(solve.problem.id.asc(), solve.createdAt.asc())
+                .fetch();
+    }
+
+    private BooleanExpression groupIdEq(Long groupId) {
+        return groupId != null ? solve.problem.memberGroup.id.eq(groupId) : null;
+    }
 
     private BooleanExpression scoreLoe(Integer score) {
         return score != null ? solve.score.loe(score) : null;

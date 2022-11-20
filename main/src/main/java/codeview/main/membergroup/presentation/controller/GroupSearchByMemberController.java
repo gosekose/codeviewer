@@ -1,4 +1,4 @@
-package codeview.main.membergroup.presentation;
+package codeview.main.membergroup.presentation.controller;
 
 import codeview.main.membergroup.application.MemberGroupsPageService;
 import codeview.main.membergroup.domain.eumerate.MemberGroupVisibility;

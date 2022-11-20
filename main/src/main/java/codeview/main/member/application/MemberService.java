@@ -3,10 +3,15 @@ package codeview.main.member.application;
 import codeview.main.auth.domain.users.social.ProviderUser;
 import codeview.main.member.domain.Member;
 import codeview.main.member.infra.MemberRepository;
+import codeview.main.member.infra.repository.MemberQueryDslRepositoryImpl;
+import codeview.main.member.infra.repository.query.GroupMemberInfo;
+import codeview.main.member.infra.repository.query.GroupMemberInfoCondition;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -15,6 +20,7 @@ import java.util.Optional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final MemberQueryDslRepositoryImpl memberQueryDslRepository;
 
     public Member find(Long id) {
 
@@ -63,6 +69,13 @@ public class MemberService {
 
         memberRepository.save(member);
     }
+
+
+    @Cacheable(value = "myMemberGroupInfo", key = "#condition.memberId")
+    public List<GroupMemberInfo> getGroupMemberInfo(GroupMemberInfoCondition condition) {
+        return memberQueryDslRepository.searchMemberInfoUsingGroup(condition);
+    }
+
 
 //    public void update(Long id, UpdateMemberRequest memberReq) {
 //

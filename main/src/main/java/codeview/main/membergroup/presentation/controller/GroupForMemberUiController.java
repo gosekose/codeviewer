@@ -1,4 +1,4 @@
-package codeview.main.membergroup.presentation;
+package codeview.main.membergroup.presentation.controller;
 
 import org.springframework.stereotype.Controller;
 

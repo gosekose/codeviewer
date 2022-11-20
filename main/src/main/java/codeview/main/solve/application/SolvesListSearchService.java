@@ -1,6 +1,8 @@
 package codeview.main.solve.application;
 
 import codeview.main.solve.infra.repository.SolveQueryDslRepositoryImpl;
+import codeview.main.solve.infra.repository.query.MemberSolveInfoCondition;
+import codeview.main.solve.infra.repository.query.MemberSolveInfoDto;
 import codeview.main.solve.infra.repository.query.SolvesOfProblemCondition;
 import codeview.main.solve.infra.repository.query.SolvesOfProblemDto;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +31,16 @@ public class SolvesListSearchService {
     @Cacheable(cacheNames = "memberSolveSearch", key="#condition.problemId + #condition.memberId")
     public List<SolvesOfProblemDto> getSolvesOfProblem(SolvesOfProblemCondition condition, Pageable pageable) {
         return solveQueryDslRepository.searchSolvesOfProblemDto(condition);
+    }
+
+    @Cacheable(cacheNames = "myGroupMemberSolveInfoCrossJoin", key="#condition.groupId + #condition.memberId")
+    public List<MemberSolveInfoDto> getMemberSolveInfoCrossJoin(MemberSolveInfoCondition condition) {
+        return solveQueryDslRepository.searchMemberSolvesCrossJoin(condition);
+    }
+
+    @Cacheable(cacheNames = "myGroupMemberSolveInfo", key="#condition.groupId + #condition.problemId + #condition.memberId")
+    public List<MemberSolveInfoDto> getMemberSolveInfo(MemberSolveInfoCondition condition) {
+        return solveQueryDslRepository.searchMemberSolvesCrossJoin(condition);
     }
 
 }
