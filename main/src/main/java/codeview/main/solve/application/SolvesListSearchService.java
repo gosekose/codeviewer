@@ -1,10 +1,7 @@
 package codeview.main.solve.application;
 
 import codeview.main.solve.infra.repository.SolveQueryDslRepositoryImpl;
-import codeview.main.solve.infra.repository.query.MemberSolveInfoCondition;
-import codeview.main.solve.infra.repository.query.MemberSolveInfoDto;
-import codeview.main.solve.infra.repository.query.SolvesOfProblemCondition;
-import codeview.main.solve.infra.repository.query.SolvesOfProblemDto;
+import codeview.main.solve.infra.repository.query.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -33,14 +30,25 @@ public class SolvesListSearchService {
         return solveQueryDslRepository.searchSolvesOfProblemDto(condition);
     }
 
-    @Cacheable(cacheNames = "myGroupMemberSolveInfoCrossJoin", key="#condition.groupId + #condition.memberId")
-    public List<MemberSolveInfoDto> getMemberSolveInfoCrossJoin(MemberSolveInfoCondition condition) {
-        return solveQueryDslRepository.searchMemberSolvesCrossJoin(condition);
+    @Cacheable(cacheNames = "myGroupMemberSolveNoProblemId", key="#condition.groupId + #condition.memberId")
+    public List<MemberSolveInfoDto> getMemberSolveInfoNoProblemId(MemberSolveInfoCondition condition) {
+        return solveQueryDslRepository.searchMemberSolvesNoProblemId(condition);
     }
 
     @Cacheable(cacheNames = "myGroupMemberSolveInfo", key="#condition.groupId + #condition.problemId + #condition.memberId")
     public List<MemberSolveInfoDto> getMemberSolveInfo(MemberSolveInfoCondition condition) {
-        return solveQueryDslRepository.searchMemberSolvesCrossJoin(condition);
+        return solveQueryDslRepository.searchMemberSolvesNoProblemId(condition);
+    }
+
+    @Cacheable(cacheNames = "mySolveChart", key = "#condition.problemId + #condition.memberId")
+    public List<SolvesOfProblemChartMyScoreDto> getSolvesOfProblemChartMyScoreDto(MemberSolveInfoCondition condition) {
+        return solveQueryDslRepository.searchMemberSolvesMyChartDto(condition);
+    }
+
+
+    @Cacheable(cacheNames = "otherSolveChart", key = "#condition.problemId + #condition.solveCount")
+    public List<SolvesOfProblemChartOtherScoreDto> getSolvesOfProblemChartOtherScoreDto(MemberSolveInfoCondition condition) {
+        return solveQueryDslRepository.searchMemberSolvesOtherChartDto(condition);
     }
 
 }

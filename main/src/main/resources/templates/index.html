@@ -245,30 +245,30 @@
   </script>
 
   <script>
-    let scrollpos = window.scrollY;
-    const header = document.querySelector(".navbar");
-    const header_height = header.offsetHeight;
-
-    const add_class_on_scroll = () => header.classList.add("scrolled", "shadow-sm");
-    const remove_class_on_scroll = () => header.classList.remove("scrolled", "shadow-sm");
-
-    window.addEventListener('scroll', function () {
-      scrollpos = window.scrollY;
-
-      if (scrollpos >= header_height) { add_class_on_scroll(); }
-      else { remove_class_on_scroll(); }
-
-      console.log(scrollpos);
-    })
-
-    function  token() {
-      fetch("/token").then(response => {
-        response.json().then(function (data) {
-          console.log("tokenValue = " + data.tokenValue);
-          window.localStorage.setItem("access_token", data.tokenValue);
-        })
-      })
-    }
+    // let scrollpos = window.scrollY;
+    // const header = document.querySelector(".navbar");
+    // const header_height = header.offsetHeight;
+    //
+    // const add_class_on_scroll = () => header.classList.add("scrolled", "shadow-sm");
+    // const remove_class_on_scroll = () => header.classList.remove("scrolled", "shadow-sm");
+    //
+    // window.addEventListener('scroll', function () {
+    //   scrollpos = window.scrollY;
+    //
+    //   if (scrollpos >= header_height) { add_class_on_scroll(); }
+    //   else { remove_class_on_scroll(); }
+    //
+    //   console.log(scrollpos);
+    // })
+    //
+    // function  token() {
+    //   fetch("/token").then(response => {
+    //     response.json().then(function (data) {
+    //       console.log("tokenValue = " + data.tokenValue);
+    //       window.localStorage.setItem("access_token", data.tokenValue);
+    //     })
+    //   })
+    // }
 
     function ajaxCall() {
       const token = $("meta[name='_csrf']").attr("content");

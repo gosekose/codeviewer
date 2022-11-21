@@ -11,9 +11,13 @@
   <meta name="author" content="Holger Koenemann">
   <meta name="generator" content="Eleventy v2.0.0">
   <meta name="HandheldFriendly" content="true">
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <meta name="groupId" th:content="${groupId}"/>
+  <meta name="memberId" th:content="${memberId}"/>
 
   <title>CODEVIEWER</title>
-  <link rel="stylesheet" th:href="@{/static/css/bootstrap.min.css}">
+  <link rel="stylesheet" th:href="@{/static/css/bootstrap.min.css}" >
   <link rel="stylesheet" th:href="@{/static/css/theme.min.css}">
   <link rel="stylesheet" th:href="@{/static/css/webfont.css}">
 
@@ -101,10 +105,23 @@
 
 <main>
   <div class="container py-vh-6">
-    <table class="table">
+
+    <div class="row d-flex justify-content-between align-items-center">
+
+<!--      <div class="col-lg-5">-->
+<!--        <div class="col-md-2" data-aos="fade-up" data-aos-delay="200" >-->
+<!--          <img class="card-img-top img-fluid rounded shadow" th:if="${memberInfo.getMemberImage() != null}" th:src="${memberInfo.memberImage}" alt="profile" width="1164"-->
+<!--               height="776">-->
+<!--          <img class="card-img-top img-fluid rounded shadow" th:if="${memberInfo.getMemberImage() == null}" th:src="@{/static/img/profile/simple-profile.png}" alt="profile"-->
+<!--               width="1164" height="776">-->
+<!--          <div class="card-body">-->
+<!--            <p class="card-title" th:text="${memberInfo.memberName}">이름</p>-->
+<!--          </div>-->
+<!--        </div>-->
+
+    <table class="table" style="margin-top: 25px">
       <thead>
       <tr>
-        <th>회원 이름</th>
         <th>학교</th>
         <th>학과</th>
         <th>학번</th>
@@ -112,26 +129,58 @@
         <th>가입 시간</th>
       </tr>
       </thead>
-      <tr th:each="member: ${memberInfo}">
-        <td th:text="${member.memberName}"></td>
-        <td th:text="${member.schoolName}"></td>
-        <td th:text="${member.department}"></td>
-        <td th:text="${member.privateIdInSchool}"></td>
-        <td th:text="${member.memberGroupAuthority}"></td>
-        <td th:text="${member.joinTime}"></td>
+        <td th:text="${memberInfo.schoolName}"></td>
+        <td th:text="${memberInfo.department}"></td>
+        <td th:text="${memberInfo.privateIdInSchool}"></td>
+        <td th:text="${memberInfo.memberGroupAuthority}"></td>
+        <td th:text="${memberInfo.joinTime}"></td>
+    </table>
+
+    <table class="table" style="margin-top: 25px">
+      <thead>
+      <tr>
+        <th>문제 번호</th>
+        <th>문제 이름</th>
+        <th>시도 횟수</th>
+        <th>최고 점수</th>
+        <th>마지막 변경 시간</th>
+        <td></td>
+      </tr>
+      </thead>
+      <tr th:each="solve: ${solves}">
+        <td th:text="${solve.problemId}"></td>
+        <td th:text="${solve.problemName}"></td>
+        <td th:text="${solve.triedSolveCount}"></td>
+        <td th:text="${solve.maxScore}"></td>
+        <td th:text="${solve.lastModifiedTime}"></td>
+      <td>
+        <button type="button" onclick="chartShowFnc(this)" class="btn btn-primary" th:value="${solve.problemId}">차트 확인</button>
+      </td>
       </tr>
     </table>
+
+      <div class="col-lg-6">
+        <div class="container">
+          <canvas id="myChart1"></canvas>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="container">
+          <canvas id="myChart2"></canvas>
+        </div>
+      </div>
+    </div>
 
     <nav style="text-align: center;">
       <ul class="pagination">
 
       </ul>
     </nav>
+  </div>
 
   </div>
 </main>
-
-
 
 
 <footer>
@@ -197,9 +246,13 @@
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script th:src="@{/static/js/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/static/js/aos.js}"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
 <script>
   AOS.init({
     duration: 800, // values from 0 to 3000, with step 50ms
@@ -207,24 +260,174 @@
 </script>
 
 <script>
-  let scrollpos = window.scrollY;
-  const header = document.querySelector(".navbar");
-  const header_height = header.offsetHeight;
 
-  const add_class_on_scroll = () => header.classList.add("scrolled", "shadow-sm");
-  const remove_class_on_scroll = () => header.classList.remove("scrolled", "shadow-sm");
+  let chartData = {};
+  let chartSolveId = [];
+  let chartOneLabel = [];
+  let chartMyScore = [];
+  let chartOtherScore = [];
 
-  window.addEventListener('scroll', function () {
-    scrollpos = window.scrollY;
+  function chartShowFnc(arg) {
 
-    if (scrollpos >= header_height) { add_class_on_scroll(); }
-    else { remove_class_on_scroll(); }
+    const token = $("meta[name='_csrf']").attr("content");
+    const header = $("meta[name='_csrf_header']").attr("content");
 
-    console.log(scrollpos);
-  })
+    const problemId = $(arg).val();
+    const groupId = $("meta[name='groupId']").attr("content");
+    const memberId = $("meta[name='memberId']").attr("content");
+
+    $.ajax({
+      type: 'GET',
+      contentType: 'application/json',
+      url: '/api/v1/groups/admin/' + groupId + '/members/' + memberId + '/' + problemId +'/chart',
+      beforeSend: function(xhr) {
+        xhr.setRequestHeader(header, token);
+      },
+      async: true,
+      cache: true,
+      success: function(data) {
+        console.log("success");
+        console.log(data);
+        chartData = data;
+
+      },
+
+      error: function(xhr, status, error) {
+        console.log('error:' + error);
+        console.log('status:' + status);
+        console.log('compile.error');
+      }
+    })
+  }
+
+  function chartDraw(chartData) {
+
+    for(let i=0; i<chartData.myChart.length; i++) {
+      chartSolveId.push(chartData.myChart[i].solveId);
+      chartOneLabel.push(chartData.myChart[i].number);
+      chartMyScore.push(chartData.myChart[i].myScore);
+    }
+
+    for(let i=0; i<chartData.otherChart.length; i++) {
+      chartOtherScore.push(chartData.otherChart[i].otherScore);
+    }
+
+  }
+
 
 
 </script>
+
+<!-- 차트 -->
+<script>
+
+  function chartDrawCall1(data) {
+
+    const colors = ['gray','gray','black','#c3e6cb','#dc3545','#6c757d'];
+    // const datas = [589, 445, ...] 선언하고 아래서 datas 변수만 써줘도 된다.
+
+    var ctx = document.getElementById('myChart2');
+
+    var chartData = {
+      labels: ["S", "M", "T", "W", "T", "F", "S"],
+      datasets: [{
+        data: [589, 445, 483, 503, 689, 692, 634],
+        backgroundColor: 'transparent',
+        borderColor: colors[2],
+        borderWidth: 3,
+        pointBackgroundColor: colors[0]
+      },
+        {
+          data: [346, 503, 609, 503, 589, 483, 445],
+          backgroundColor: colors[1],
+          borderColor: colors[0],
+          borderWidth: 3,
+          pointBackgroundColor: colors[0]
+        }
+      ]
+    };
+
+    var myChart = new Chart(ctx, {
+      // 챠트 종류를 선택
+      type: 'line',
+
+      // 챠트를 그릴 데이타
+      data: chartData,
+
+      // 옵션
+      options: {
+        legend: {
+          display: false
+        }
+      }
+    });
+
+
+  }
+
+  var ctx = document.getElementById('myChart1').getContext('2d');
+  var chart = new Chart(ctx, {
+    // 챠트 종류를 선택
+    type: 'line',
+
+    // 챠트를 그릴 데이타
+    data: {
+      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+      datasets: [{
+        label: 'My First dataset',
+        backgroundColor: 'transparent',
+        borderColor: 'black',
+        data: [0, 10, 5, 2, 20, 30, 45]
+      }]
+    },
+    // 옵션
+    options: {}
+  });
+</script>
+
+<script>
+
+  const colors = ['gray','gray','black','#c3e6cb','#dc3545','#6c757d'];
+  // const datas = [589, 445, ...] 선언하고 아래서 datas 변수만 써줘도 된다.
+
+  var ctx = document.getElementById('myChart2');
+
+  var chartData = {
+    labels: ["S", "M", "T", "W", "T", "F", "S"],
+    datasets: [{
+      data: [589, 445, 483, 503, 689, 692, 634],
+      backgroundColor: 'transparent',
+      borderColor: colors[2],
+      borderWidth: 3,
+      pointBackgroundColor: colors[0]
+    },
+      {
+        data: [346, 503, 609, 503, 589, 483, 445],
+        backgroundColor: colors[1],
+        borderColor: colors[0],
+        borderWidth: 3,
+        pointBackgroundColor: colors[0]
+      }
+    ]
+  };
+
+  var myChart = new Chart(ctx, {
+    // 챠트 종류를 선택
+    type: 'line',
+
+    // 챠트를 그릴 데이타
+    data: chartData,
+
+    // 옵션
+    options: {
+      legend: {
+        display: false
+      }
+    }
+  });
+
+</script>
+
 
 </body>
 

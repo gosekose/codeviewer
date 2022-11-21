@@ -8,8 +8,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 import static codeview.main.groupstorage.domain.QGroupStorage.groupStorage;
 import static codeview.main.member.domain.QMember.member;
 import static codeview.main.school.domain.QSchool.school;
@@ -21,11 +19,12 @@ public class MemberQueryDslRepositoryImpl implements MemberQueryDslRepository {
     private final JPAQueryFactory query;
 
     @Override
-    public List<GroupMemberInfo> searchMemberInfoUsingGroup(GroupMemberInfoCondition condition) {
+    public GroupMemberInfo searchMemberInfoUsingGroup(GroupMemberInfoCondition condition) {
         return query
                 .select(
                         new QGroupMemberInfo(
                                 member.memberName,
+                                member.picture,
                                 school.name,
                                 member.department,
                                 member.privateIdInSchool,
@@ -38,7 +37,8 @@ public class MemberQueryDslRepositoryImpl implements MemberQueryDslRepository {
                 .where(
                         memberIdEq(condition.getMemberId())
                 )
-                .fetch();
+                .fetchOne();
+
     }
 
     private BooleanExpression memberIdEq(Long memberId) {

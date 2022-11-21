@@ -1,5 +1,6 @@
 package codeview.main.membergroup.presentation.controller;
 
+import codeview.main.common.application.CsrfProviderService;
 import codeview.main.member.application.MemberService;
 import codeview.main.member.infra.repository.query.GroupMemberInfo;
 import codeview.main.member.infra.repository.query.GroupMemberInfoCondition;
@@ -14,43 +15,40 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
 @Slf4j
 @RequestMapping("/api/v1/groups/admin/{groupId}/members/{memberId}")
 @RequiredArgsConstructor
-public class groupMemberInfoController {
+public class GroupMemberInfoController {
 
+
+    private final CsrfProviderService csrfProviderService;
     private final MemberService memberService;
     private final SolvesListSearchService solvesListSearchService;
 
     @GetMapping
-    public String getMemberInfo(@PathVariable("groupId") String groupId,
-                                @PathVariable("memberId") String memberId,
+    public String getMemberInfo(@PathVariable("groupId") Integer groupId,
+                                @PathVariable("memberId") Integer memberId,
+                                HttpServletRequest request,
                                 GroupMemberInfoCondition groupCondition,
-                                MemberSolveInfoCondition solveCondition,
+                                MemberSolveInfoCondition memberSolveInfoCondition,
                                 Model model) {
 
-        groupCondition.setMemberId(Long.valueOf(memberId));
-        groupCondition.setGroupId(Long.valueOf(groupId));
+        groupCondition.updateGroupMember(groupId, memberId);
+        memberSolveInfoCondition.updateGroupMember(groupId, memberId);
 
-        solveCondition.setMemberId(Long.valueOf(memberId));
-        solveCondition.setGroupId(Long.valueOf(groupId));
+        GroupMemberInfo groupMemberInfo = memberService.getGroupMemberInfo(groupCondition);
+        List<MemberSolveInfoDto> memberSolveInfoNoProblemId = solvesListSearchService.getMemberSolveInfoNoProblemId(memberSolveInfoCondition);
 
-        List<GroupMemberInfo> groupMemberInfo = memberService.getGroupMemberInfo(groupCondition);
-        List<MemberSolveInfoDto> memberSolveInfoCrossJoin = solvesListSearchService.getMemberSolveInfoCrossJoin(solveCondition);
-
-        solveCondition.setProblemId(3L);
-        List<MemberSolveInfoDto> memberSolveInfo = solvesListSearchService.getMemberSolveInfo(solveCondition);
-
-        log.info("memberInfo.size = {}", groupMemberInfo.size());
-        log.info("memberSolveInfoCrossJoin.size = {}", memberSolveInfoCrossJoin.size());
-        log.info("memberSolveInfo.size = {}", memberSolveInfo.size());
-
+        model.addAttribute("_csrf", csrfProviderService.createCsrf(request));
         model.addAttribute("memberInfo", groupMemberInfo);
-        model.addAttribute("solveInfo", memberSolveInfoCrossJoin);
-        model.addAttribute("memberSolveInfo", memberSolveInfo);
+        model.addAttribute("solves", memberSolveInfoNoProblemId);
+
+        model.addAttribute("groupId", groupId);
+        model.addAttribute("memberId", memberId);
 
         return "groups/admins/my-group-member-info";
     }

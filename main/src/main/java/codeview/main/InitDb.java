@@ -32,9 +32,15 @@ public class InitDb {
 
         private final EntityManager em;
 
+        /**
+         *
+         * member 100명
+         * memberGroup 5개
+         *
+         */
         public void dbInit() {
 
-            for (int i=0; i<100; i++) {
+            for (int i=0; i<10; i++) {
 
                 String uuid = UUID.randomUUID().toString();
 

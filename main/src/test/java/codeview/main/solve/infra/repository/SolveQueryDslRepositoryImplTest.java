@@ -9,9 +9,7 @@ import codeview.main.membergroup.infra.repository.MemberGroupRepository;
 import codeview.main.problem.domain.Problem;
 import codeview.main.problem.infra.repository.ProblemRepository;
 import codeview.main.solve.domain.Solve;
-import codeview.main.solve.infra.repository.query.MemberSolveInfoCondition;
-import codeview.main.solve.infra.repository.query.MemberSolveInfoDto;
-import codeview.main.solve.infra.repository.query.SolvesOfProblemCondition;
+import codeview.main.solve.infra.repository.query.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,9 +130,6 @@ class SolveQueryDslRepositoryImplTest {
 
     }
 
-    /**
-     * searchMemberSolvesCrossJoin
-     */
     @Test
     public void 그룹회원_info_by_memberId_groupId() throws Exception {
         //given
@@ -143,13 +138,11 @@ class SolveQueryDslRepositoryImplTest {
         condition.setMemberId(solveMemberId);
 
         //when
-        List<MemberSolveInfoDto> memberSolveInfoDtos = solveQueryDslRepository.searchMemberSolvesCrossJoin(condition);
+        List<MemberSolveInfoDto> memberSolveInfoDtos = solveQueryDslRepository.searchMemberSolvesNoProblemId(condition);
 
         //then
-        assertThat(memberSolveInfoDtos.size()).isEqualTo(6);
-        assertThat(memberSolveInfoDtos.get(0).getProblemId()).isEqualTo(memberSolveInfoDtos.get(1).getProblemId());
-        assertThat(memberSolveInfoDtos.get(0).getCreatedAt()).isBefore(memberSolveInfoDtos.get(1).getCreatedAt());
-        assertThat(memberSolveInfoDtos.get(0).getScore()).isEqualTo(30);
+        assertThat(memberSolveInfoDtos.size()).isEqualTo(2);
+        assertThat(memberSolveInfoDtos.get(0).getMaxScore()).isEqualTo(90);
     }
     /**
      * searchMemberSolves
@@ -163,13 +156,46 @@ class SolveQueryDslRepositoryImplTest {
         condition.setProblemId(problemId);
 
         //when
-        List<MemberSolveInfoDto> memberSolveInfoDtos = solveQueryDslRepository.searchMemberSolves(condition);
+        List<MemberSolveInfoDto> memberSolveInfoDtos = solveQueryDslRepository.searchMemberSolvesByProblemId(condition);
 
         //then
         assertThat(memberSolveInfoDtos.size()).isEqualTo(3);
-        assertThat(memberSolveInfoDtos.get(0).getProblemId()).isEqualTo(memberSolveInfoDtos.get(1).getProblemId());
-        assertThat(memberSolveInfoDtos.get(0).getCreatedAt()).isBefore(memberSolveInfoDtos.get(1).getCreatedAt());
-        assertThat(memberSolveInfoDtos.get(0).getScore()).isEqualTo(30);
+        assertThat(memberSolveInfoDtos.get(0).getLastModifiedTime()).isBefore(memberSolveInfoDtos.get(1).getLastModifiedTime());
+        assertThat(memberSolveInfoDtos.get(0).getMaxScore()).isEqualTo(30);
+
+    }
+
+    @Test
+    public void 내스코어_평균() throws Exception {
+        //given
+        MemberSolveInfoCondition condition = new MemberSolveInfoCondition();
+        condition.setProblemId(problemId);
+        condition.setMemberId(solveMemberId);
+
+        //when
+        List<SolvesOfProblemChartMyScoreDto> solvesOfProblemChartMyScoreDtos = solveQueryDslRepository.searchMemberSolvesMyChartDto(condition);
+
+        //then
+        assertThat(solvesOfProblemChartMyScoreDtos.size()).isEqualTo(3);
+
+    }
+
+    @Test
+    public void 다른스코어_평균() throws Exception {
+        //given
+        MemberSolveInfoCondition condition = new MemberSolveInfoCondition();
+        condition.setProblemId(problemId);
+        condition.setSolveCount(2);
+
+        //when
+        List<SolvesOfProblemChartOtherScoreDto> solvesOfProblemChartOtherScoreDtos = solveQueryDslRepository.searchMemberSolvesOtherChartDto(condition);
+
+        //then
+        assertThat(solvesOfProblemChartOtherScoreDtos.size()).isEqualTo(2);
+        assertThat(solvesOfProblemChartOtherScoreDtos.get(0).getNumber()).isEqualTo(0);
+        assertThat(solvesOfProblemChartOtherScoreDtos.get(1).getNumber()).isEqualTo(1);
+        assertThat(solvesOfProblemChartOtherScoreDtos.get(1).getOtherScore()).isEqualTo(60.0);
+
 
     }
 
@@ -249,7 +275,7 @@ class SolveQueryDslRepositoryImplTest {
                     problemId = problem.getId();
 
                     for(int k=1; k<=3; k++) {
-                        Solve solve = Solve.builder().member(solveMember).problem(problem).score(k * 30).build();
+                        Solve solve = Solve.builder().member(solveMember).number(k-1).problem(problem).score(k * 30).build();
                         solveRepository.save(solve);
                     }
                 }

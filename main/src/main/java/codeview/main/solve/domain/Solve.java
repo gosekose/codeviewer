@@ -27,16 +27,23 @@ public class Solve extends BaseEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    private int number;
+
     private String codeAddress;
 
     private int score;
 
 
     @Builder
-    public Solve(Problem problem, Member member, String codeAddress, int score) {
+    public Solve(Problem problem, Member member, int number, String codeAddress, int score) {
         this.problem = problem;
         this.member = member;
+        this.number = number;
         this.codeAddress = codeAddress;
         this.score = score;
+    }
+
+    public void updateNumber(int number) {
+        this.number = number;
     }
 }
