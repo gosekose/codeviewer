@@ -11,7 +11,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -72,7 +71,7 @@ public class MemberService {
 
 
     @Cacheable(value = "myMemberGroupInfo", key = "#condition.memberId")
-    public List<GroupMemberInfo> getGroupMemberInfo(GroupMemberInfoCondition condition) {
+    public GroupMemberInfo getGroupMemberInfo(GroupMemberInfoCondition condition) {
         return memberQueryDslRepository.searchMemberInfoUsingGroup(condition);
     }
 

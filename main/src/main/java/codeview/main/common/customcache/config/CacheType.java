@@ -17,8 +17,13 @@ public enum CacheType {
     PROBLEM("problem", 5 * 60, 10000),
 
     MYGROUPMEMBERINFO("myMemberGroupInfo", 5 * 60, 10000),
-    MYGROUPMEMBERSOLVEINFOCROSSJOIN("myGroupMemberSolveInfoCrossJoin", 5 * 60, 10000),
+    MYGROUPMEMBERSOLVENOPROBLEMID("myGroupMemberSolveNoProblemId", 5 * 60, 10000),
     MYGROUPMEMBERSOLVEINFO("myGroupMemberSolveInfo", 5 * 60, 10000),
+
+    MYSOLVECHART("mySolveChart", 5 * 60, 10000),
+    OTHERSOLVECHART("otherSolveChart", 5 * 60, 10000),
+
+
     PROBLEMSEARCH("problemSearch", 5 * 60, 10000),
     MYPROBLEMSEARCH("myProblemSearch", 5 * 60, 10000),
     MEMBERAllSOLVESEARCH("memberAllSolveSearch", 30, 10000),

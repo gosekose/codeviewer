@@ -99,29 +99,28 @@ public class SolveQueryDslRepositoryImpl implements SolveQueryDslRepository{
     }
 
     @Override
-    public List<MemberSolveInfoDto> searchMemberSolvesCrossJoin(MemberSolveInfoCondition condition) {
+    public List<MemberSolveInfoDto> searchMemberSolvesNoProblemId(MemberSolveInfoCondition condition) {
 
         return query
                 .select(
                     new QMemberSolveInfoDto(
-                                solve.id,
-                                solve.problem.id,
-                                solve.problem.name,
-                                solve.score,
-                                solve.createdAt))
+                            solve.problem.id,
+                            solve.id.count(),
+                            solve.problem.name,
+                            solve.score.max(),
+                            solve.createdAt.max()))
                 .from(solve)
-                .join(problem).on(
-                        solve.problem.id.eq(problem.id),
-                        problem.memberGroup.id.eq(condition.getGroupId()))
+                .innerJoin(solve.problem, problem)
+                .on(problem.memberGroup.id.eq(condition.getGroupId()))
                 .where(
                         memberIdEq(condition.getMemberId())
                 )
-                .orderBy(solve.problem.id.asc(), solve.createdAt.asc())
+                .groupBy(problem.id)
                 .fetch();
     }
 
     @Override
-    public List<MemberSolveInfoDto> searchMemberSolves(MemberSolveInfoCondition condition) {
+    public List<MemberSolveInfoDto> searchMemberSolvesByProblemId(MemberSolveInfoCondition condition) {
         return query
                 .select(
                         new QMemberSolveInfoDto(
@@ -139,6 +138,43 @@ public class SolveQueryDslRepositoryImpl implements SolveQueryDslRepository{
                 )
                 .orderBy(solve.problem.id.asc(), solve.createdAt.asc())
                 .fetch();
+    }
+
+    @Override
+    public List<SolvesOfProblemChartMyScoreDto> searchMemberSolvesMyChartDto(MemberSolveInfoCondition condition) {
+
+        return query
+                .select(
+                        new QSolvesOfProblemChartMyScoreDto(
+                                solve.id,
+                                solve.number,
+                                solve.score))
+                .from(solve)
+                .innerJoin(solve.problem, problem)
+                .on(solve.problem.id.eq(condition.getProblemId()))
+                .where(
+                        memberIdEq(condition.getMemberId())
+                )
+                .orderBy(solve.number.asc())
+                .fetch();
+    }
+
+    @Override
+    public List<SolvesOfProblemChartOtherScoreDto> searchMemberSolvesOtherChartDto(MemberSolveInfoCondition condition) {
+        return query
+                .select(
+                        new QSolvesOfProblemChartOtherScoreDto(
+                                solve.number,
+                                solve.score.avg()
+                        ))
+                .from(solve)
+                .innerJoin(solve.problem, problem)
+                .on(solve.problem.id.eq(condition.getProblemId()))
+                .groupBy(solve.number)
+                .orderBy(solve.number.asc())
+                .limit(condition.getSolveCount())
+                .fetch();
+
     }
 
     private BooleanExpression groupIdEq(Long groupId) {

@@ -9,21 +9,20 @@ import java.time.LocalDateTime;
 @Data
 public class MemberSolveInfoDto {
 
-    private Long solveId;
     private Long problemId;
+    private Long triedSolveCount;
     private String problemName;
-    private Integer score;
-    private LocalDateTime createdAt;
+    private Integer maxScore;
+    private LocalDateTime lastModifiedTime;
 
 
     @Builder
     @QueryProjection
-
-    public MemberSolveInfoDto(Long solveId, Long problemId, String problemName, Integer score, LocalDateTime createdAt) {
-        this.solveId = solveId;
+    public MemberSolveInfoDto(Long problemId, Long triedSolveCount, String problemName, Integer maxScore, LocalDateTime lastModifiedTime) {
         this.problemId = problemId;
+        this.triedSolveCount = triedSolveCount;
         this.problemName = problemName;
-        this.score = score;
-        this.createdAt = createdAt;
+        this.maxScore = maxScore;
+        this.lastModifiedTime = lastModifiedTime;
     }
 }

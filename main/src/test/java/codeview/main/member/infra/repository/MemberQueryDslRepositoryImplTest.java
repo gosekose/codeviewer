@@ -18,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @SpringBootTest
@@ -45,14 +44,13 @@ class MemberQueryDslRepositoryImplTest {
 
         //when
 
-        List<GroupMemberInfo> groupMemberInfos = memberQueryDslRepository.searchMemberInfoUsingGroup(condition);
+        GroupMemberInfo groupMemberInfos = memberQueryDslRepository.searchMemberInfoUsingGroup(condition);
 
         //then
-        Assertions.assertThat(groupMemberInfos.get(0).getMemberName()).isEqualTo("koseyun");
-        Assertions.assertThat(groupMemberInfos.get(0).getMemberGroupAuthority()).isEqualTo(MemberGroupAuthority.USER);
-        Assertions.assertThat(groupMemberInfos.get(0).getDepartment()).isEqualTo("1111");
-        Assertions.assertThat(groupMemberInfos.get(0).getPrivateIdInSchool()).isEqualTo("1111");
-        Assertions.assertThat(groupMemberInfos.size()).isEqualTo(1);
+        Assertions.assertThat(groupMemberInfos.getMemberName()).isEqualTo("koseyun");
+        Assertions.assertThat(groupMemberInfos.getMemberGroupAuthority()).isEqualTo(MemberGroupAuthority.USER);
+        Assertions.assertThat(groupMemberInfos.getDepartment()).isEqualTo("1111");
+        Assertions.assertThat(groupMemberInfos.getPrivateIdInSchool()).isEqualTo("1111");
 
     }
 

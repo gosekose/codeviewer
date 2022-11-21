@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 public class GroupMemberInfo {
 
     private String memberName;
+
+    private String memberImage;
     private String schoolName;
     private String department;
     private String privateIdInSchool;
@@ -19,8 +21,9 @@ public class GroupMemberInfo {
 
     @Builder
     @QueryProjection
-    public GroupMemberInfo(String memberName, String schoolName, String department, String privateIdInSchool, MemberGroupAuthority memberGroupAuthority, LocalDateTime joinTime) {
+    public GroupMemberInfo(String memberName, String memberImage, String schoolName, String department, String privateIdInSchool, MemberGroupAuthority memberGroupAuthority, LocalDateTime joinTime) {
         this.memberName = memberName;
+        this.memberImage = memberImage;
         this.schoolName = schoolName;
         this.department = department;
         this.privateIdInSchool = privateIdInSchool;
