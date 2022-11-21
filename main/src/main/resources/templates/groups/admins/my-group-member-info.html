@@ -261,7 +261,7 @@
 
 <script>
 
-  let chartData = {};
+  let chartAjaxData = {};
   let chartSolveId = [];
   let chartOneLabel = [];
   let chartMyScore = [];
@@ -288,7 +288,8 @@
       success: function(data) {
         console.log("success");
         console.log(data);
-        chartData = data;
+        chartAjaxData = data;
+        chartDraw(chartAjaxData);
 
       },
 
@@ -300,28 +301,51 @@
     })
   }
 
-  function chartDraw(chartData) {
+  function chartDraw(chartAjaxData) {
 
-    for(let i=0; i<chartData.myChart.length; i++) {
-      chartSolveId.push(chartData.myChart[i].solveId);
-      chartOneLabel.push(chartData.myChart[i].number);
-      chartMyScore.push(chartData.myChart[i].myScore);
+    chartSolveId = [];
+    chartOneLabel = [];
+    chartMyScore = [];
+    chartOtherScore = [];
+
+    for(let i=0; i<chartAjaxData.myChart.length; i++) {
+      chartSolveId.push(chartAjaxData.myChart[i].solveId);
+      chartOneLabel.push(chartAjaxData.myChart[i].number + 1);
+      chartMyScore.push(chartAjaxData.myChart[i].myScore);
     }
 
-    for(let i=0; i<chartData.otherChart.length; i++) {
-      chartOtherScore.push(chartData.otherChart[i].otherScore);
+    for(let i=0; i<chartAjaxData.otherChart.length; i++) {
+      chartOtherScore.push(chartAjaxData.otherChart[i].otherScore);
     }
 
+    chartDrawCall1(chartSolveId, chartOneLabel, chartMyScore)
+    chartDrawCall2(chartSolveId, chartOneLabel, chartMyScore, chartOtherScore)
   }
 
 
+  function chartDrawCall1(chartSolveId, chartOneLabel, chartMyScore) {
 
-</script>
+    var ctx = document.getElementById('myChart1').getContext('2d');
+    var chart = new Chart(ctx, {
+      // 챠트 종류를 선택
+      type: 'line',
 
-<!-- 차트 -->
-<script>
+      // 챠트를 그릴 데이타
+      data: {
+        labels: chartOneLabel,
+        datasets: [{
+          label: '점수 통계',
+          backgroundColor: 'transparent',
+          borderColor: 'black',
+          data: chartMyScore
+        }]
+      },
+      // 옵션
+      options: {}
+    });
+  }
 
-  function chartDrawCall1(data) {
+  function chartDrawCall2(chartSolveId, chartOneLabel, chartMyScore, chartOtherScore) {
 
     const colors = ['gray','gray','black','#c3e6cb','#dc3545','#6c757d'];
     // const datas = [589, 445, ...] 선언하고 아래서 datas 변수만 써줘도 된다.
@@ -329,16 +353,16 @@
     var ctx = document.getElementById('myChart2');
 
     var chartData = {
-      labels: ["S", "M", "T", "W", "T", "F", "S"],
+      labels: chartOneLabel,
       datasets: [{
-        data: [589, 445, 483, 503, 689, 692, 634],
+        data: chartMyScore,
         backgroundColor: 'transparent',
         borderColor: colors[2],
         borderWidth: 3,
         pointBackgroundColor: colors[0]
       },
         {
-          data: [346, 503, 609, 503, 589, 483, 445],
+          data: chartOtherScore,
           backgroundColor: colors[1],
           borderColor: colors[0],
           borderWidth: 3,
@@ -362,72 +386,9 @@
       }
     });
 
-
   }
 
-  var ctx = document.getElementById('myChart1').getContext('2d');
-  var chart = new Chart(ctx, {
-    // 챠트 종류를 선택
-    type: 'line',
-
-    // 챠트를 그릴 데이타
-    data: {
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-      datasets: [{
-        label: 'My First dataset',
-        backgroundColor: 'transparent',
-        borderColor: 'black',
-        data: [0, 10, 5, 2, 20, 30, 45]
-      }]
-    },
-    // 옵션
-    options: {}
-  });
 </script>
-
-<script>
-
-  const colors = ['gray','gray','black','#c3e6cb','#dc3545','#6c757d'];
-  // const datas = [589, 445, ...] 선언하고 아래서 datas 변수만 써줘도 된다.
-
-  var ctx = document.getElementById('myChart2');
-
-  var chartData = {
-    labels: ["S", "M", "T", "W", "T", "F", "S"],
-    datasets: [{
-      data: [589, 445, 483, 503, 689, 692, 634],
-      backgroundColor: 'transparent',
-      borderColor: colors[2],
-      borderWidth: 3,
-      pointBackgroundColor: colors[0]
-    },
-      {
-        data: [346, 503, 609, 503, 589, 483, 445],
-        backgroundColor: colors[1],
-        borderColor: colors[0],
-        borderWidth: 3,
-        pointBackgroundColor: colors[0]
-      }
-    ]
-  };
-
-  var myChart = new Chart(ctx, {
-    // 챠트 종류를 선택
-    type: 'line',
-
-    // 챠트를 그릴 데이타
-    data: chartData,
-
-    // 옵션
-    options: {
-      legend: {
-        display: false
-      }
-    }
-  });
-
-</script>
-
 
 </body>
 

@@ -106,14 +106,14 @@ public class TempController {
                     Solve solve1 = Solve.builder()
                             .member(solveMember1)
                             .number(countSolve1)
-                            .score(s * 15)
+                            .score(s * 15 + ((int) (Math.random() * 25)))
                             .problem(problem)
                             .build();
 
                     Solve solve2 = Solve.builder()
                             .member(solveMember2)
                             .number(countSolve2)
-                            .score(s * 20)
+                            .score(s * 20 + ((int) (Math.random() * 25)))
                             .problem(problem)
                             .build();
 
