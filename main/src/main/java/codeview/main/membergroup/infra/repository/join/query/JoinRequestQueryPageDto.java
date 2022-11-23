@@ -1,4 +1,4 @@
-package codeview.main.membergroup.infra.repository.query.dto;
+package codeview.main.membergroup.infra.repository.join.query;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;

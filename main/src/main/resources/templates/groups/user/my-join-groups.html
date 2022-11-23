@@ -1,4 +1,4 @@
-<!doctype html>
+<!doctype html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
 <html class="h-100" lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
@@ -11,9 +11,6 @@
     <meta name="author" content="Holger Koenemann">
     <meta name="generator" content="Eleventy v2.0.0">
     <meta name="HandheldFriendly" content="true">
-    <meta name="_csrf" th:content="${_csrf.token}"/>
-    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-    <meta name="memberId" th:content="${memberId}"/>
 
     <title>CODEVIEWER</title>
     <link rel="stylesheet" th:href="@{/static/css/bootstrap.min.css}">
@@ -83,6 +80,8 @@
 </nav>
 
 <main>
+
+
     <div class="w-100 overflow-hidden bg-gray-100" id="top">
 
         <div class="container position-relative">
@@ -103,66 +102,32 @@
 </main>
 
 <main>
+
     <div class="container py-vh-6">
-        <div>
-            <button type="button" class="btn btn-outline-dark">전체 그룹</button>
-            <button type="button" class="btn btn-outline-dark">가입한 그룹</button>
-            <button type="button" class="btn btn-outline-dark">미가입 그룹</button>
-        </div>
+
         <table class="table">
             <thead>
             <tr>
                 <th>그룹 번호</th>
-                <th>그룹명</th>
-                <th>공개 여부</th>
-                <th>최대 멤버</th>
-                <th>가입 신청 마감 시간</th>
-                <td></td>
+                <th>그룹 이름</th>
+                <th>그룹장 이름</th>
+                <th>그룹장 학교</th>
+                <th>그룹장 학과</th>
                 <td></td>
             </tr>
             </thead>
-            <tr th:each="group: ${memberGroups.getContent()}">
-                <td th:text="${group.id}"></td>
-                <td th:text="${group.name}"></td>
-                <td th:text="${group.visibility}"></td>
-                <td th:text="${group.maxMember}"></td>
-                <td th:text="${group.joinClosedTime}"></td>
-<!--                <td>-->
-<!--                    <a href="#" th:href="@{/api/v1/groups/{id}/join (id=${group.id})}"-->
-<!--                       class="btn btn-primary" role="button">그룹 가입 신청</a>-->
-<!--                </td>-->
+            <tr th:each="group: ${groupList.getContent()}">
+                <td th:text="${group.groupId}"></td>
+                <td th:text="${group.groupName}"></td>
+                <td th:text="${group.creatorName}"></td>
+                <td th:text="${group.creatorSchoolName}"></td>
+                <td th:text="${group.creatorPrivateIdInSchool}"></td>
                 <td>
-                    <button type="button" onclick="groupJoin(this)" class="btn btn-primary"
-                            data-toggle="modal" data-target="#joinModal" th:value="${group.id}">그룹 가입 신청</button>
+<!--                    <a href="#" th:href="@{/api/v1/groups/admin/{id}/members (id=${group.id})}"-->
+<!--                       class="btn btn-primary" role="button">회원 관리</a>-->
                 </td>
-<!--                <td>-->
-<!--                    <a href="#" th:href="@{/api/v1/groups/admin/edit/{id} (id=${group.id})}"-->
-<!--                       class="btn btn-primary" role="button">그룹 수정</a>-->
-<!--                </td>-->
             </tr>
         </table>
-
-
-        <!-- Modal -->
-        <div class="modal fade" id="joinModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        ...
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <nav style="text-align: center;">
             <ul class="pagination">
@@ -246,62 +211,6 @@
     AOS.init({
         duration: 800, // values from 0 to 3000, with step 50ms
     });
-
-    function groupJoin(arg) {
-
-        const token = $("meta[name='_csrf']").attr("content");
-        const header = $("meta[name='_csrf_header']").attr("content");
-
-        const groupId = $(arg).val();
-        const memberId = $("meta[name='memberId']").attr("content");
-
-        const jsonData = {
-            "groupId" : groupId,
-            "memberId" : memberId
-        }
-
-
-        $.ajax({
-            type: 'POST',
-            contentType: 'application/json',
-            url: '/api/v1/groups/' + groupId + '/join',
-            beforeSend: function(xhr) {
-                xhr.setRequestHeader(header, token);
-            },
-            data: JSON.stringify(jsonData),
-            async: true,
-            cache: true,
-            success: function(data) {
-                console.log("success");
-                console.log(data);
-
-                if (data == true) {
-                    alert("신청이 완료 되었습니다.");
-                    location.href= window.location.href;
-                } else {
-                    alert("이미 신청이 완료 되었습니다.");
-                }
-            },
-
-            error: function(xhr, status, error) {
-                console.log('error:' + error);
-                console.log('status:' + status);
-                console.log('compile.error');
-            }
-        })
-    }
-
-
-    $('#joinModal').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget) // Button that triggered the modal
-        var recipient = button.data('whatever') // Extract info from data-* attributes
-        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-        var modal = $(this)
-        modal.find('.modal-title').text('New message to ' + recipient)
-        modal.find('.modal-body input').val(recipient)
-    })
-
 </script>
 
 

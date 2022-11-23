@@ -6,10 +6,10 @@ import codeview.main.member.domain.Member;
 import codeview.main.membergroup.domain.GroupJoinRequest;
 import codeview.main.membergroup.domain.MemberGroup;
 import codeview.main.membergroup.domain.eumerate.GroupJoinStatus;
-import codeview.main.membergroup.infra.repository.GroupJoinQueryDslRepositoryImpl;
-import codeview.main.membergroup.infra.repository.GroupJoinRequestRepository;
-import codeview.main.membergroup.infra.repository.query.dto.JoinRequestCondition;
-import codeview.main.membergroup.infra.repository.query.dto.JoinRequestQueryPageDto;
+import codeview.main.membergroup.infra.repository.join.GroupJoinQueryDslRepositoryImpl;
+import codeview.main.membergroup.infra.repository.join.GroupJoinRequestRepository;
+import codeview.main.membergroup.infra.repository.join.query.JoinRequestCondition;
+import codeview.main.membergroup.infra.repository.join.query.JoinRequestQueryPageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -112,13 +112,14 @@ public class GroupJoinService {
      * 해당 그룹의 호스트가 새로운 회원의 요청을 거절한 경우, 요청 미신청 변경
      * @return
      */
+    @Transactional
     public Long deniedRequestGroupJoin(Member member, MemberGroup memberGroup) {
 
         // 해당 요청 request 요청 승인 변경
         GroupJoinRequest groupJoinRequest = groupJoinRequestRepository.findByMemberAndMemberGroup(member, memberGroup);
 
         if (groupJoinRequest.getDenialCount() < 2) {
-            groupJoinRequest.updateGroupStatus(GroupJoinStatus.WAIT);
+            groupJoinRequest.updateGroupStatus(null);
 
         } else {
             groupJoinRequest.updateGroupStatus(GroupJoinStatus.NOTJOIN);

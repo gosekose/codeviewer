@@ -1,4 +1,4 @@
-package codeview.main.groupstorage.infra.repository.query;
+package codeview.main.groupstorage.infra.repository.query.member;
 
 import codeview.main.member.domain.Member;
 import codeview.main.membergroup.domain.MemberGroup;

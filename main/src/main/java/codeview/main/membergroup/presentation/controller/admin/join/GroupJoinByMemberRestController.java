@@ -1,4 +1,4 @@
-package codeview.main.membergroup.presentation.controller.join;
+package codeview.main.membergroup.presentation.controller.admin.join;
 
 import codeview.main.auth.domain.users.PrincipalUser;
 import codeview.main.member.application.MemberService;

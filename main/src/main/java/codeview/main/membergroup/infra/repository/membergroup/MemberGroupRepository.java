@@ -1,4 +1,4 @@
-package codeview.main.membergroup.infra.repository;
+package codeview.main.membergroup.infra.repository.membergroup;
 
 import codeview.main.member.domain.Member;
 import codeview.main.membergroup.domain.MemberGroup;

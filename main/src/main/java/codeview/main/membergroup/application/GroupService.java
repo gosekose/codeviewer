@@ -2,7 +2,7 @@ package codeview.main.membergroup.application;
 
 import codeview.main.member.domain.Member;
 import codeview.main.membergroup.domain.MemberGroup;
-import codeview.main.membergroup.infra.repository.MemberGroupRepository;
+import codeview.main.membergroup.infra.repository.membergroup.MemberGroupRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,4 +1,4 @@
-package codeview.main.membergroup.infra.repository.query.dto;
+package codeview.main.membergroup.infra.repository.join.query;
 
 import codeview.main.member.domain.Member;
 import codeview.main.membergroup.domain.eumerate.GroupJoinStatus;

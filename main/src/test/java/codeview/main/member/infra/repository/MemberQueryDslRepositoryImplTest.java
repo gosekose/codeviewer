@@ -9,7 +9,7 @@ import codeview.main.member.infra.repository.query.GroupMemberInfoCondition;
 import codeview.main.membergroup.domain.MemberGroup;
 import codeview.main.membergroup.domain.eumerate.MemberGroupAuthority;
 import codeview.main.membergroup.domain.eumerate.MemberGroupVisibility;
-import codeview.main.membergroup.infra.repository.MemberGroupRepository;
+import codeview.main.membergroup.infra.repository.membergroup.MemberGroupRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
