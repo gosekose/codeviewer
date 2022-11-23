@@ -101,8 +101,6 @@ public class ProblemQueryDslRepositoryImpl implements ProblemQueryDslRepository 
                                 problem.id,
                                 problem.name,
                                 problem.problemFile.problemUploadName,
-                                problem.shellFile.shellUploadName,
-                                problem.inputFile.inputUploadName,
                                 problem.createdAt,
                                 problem.modifiedAt))
                 .from(problem)

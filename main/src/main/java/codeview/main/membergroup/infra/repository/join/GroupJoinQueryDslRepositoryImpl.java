@@ -1,8 +1,8 @@
-package codeview.main.membergroup.infra.repository;
+package codeview.main.membergroup.infra.repository.join;
 
-import codeview.main.membergroup.infra.repository.query.dto.JoinRequestCondition;
-import codeview.main.membergroup.infra.repository.query.dto.JoinRequestQueryPageDto;
-import codeview.main.membergroup.infra.repository.query.dto.QJoinRequestQueryPageDto;
+import codeview.main.membergroup.infra.repository.join.query.JoinRequestCondition;
+import codeview.main.membergroup.infra.repository.join.query.JoinRequestQueryPageDto;
+import codeview.main.membergroup.infra.repository.join.query.QJoinRequestQueryPageDto;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

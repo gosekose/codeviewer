@@ -1,4 +1,4 @@
-package codeview.main.membergroup.presentation.controller.memberinfo;
+package codeview.main.membergroup.presentation.controller.admin.memberinfo;
 
 import codeview.main.member.application.MemberService;
 import codeview.main.membergroup.presentation.dao.SolveChartInfo;

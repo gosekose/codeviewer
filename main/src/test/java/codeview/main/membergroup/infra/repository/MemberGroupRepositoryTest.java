@@ -3,6 +3,7 @@ package codeview.main.membergroup.infra.repository;
 import codeview.main.member.domain.Member;
 import codeview.main.membergroup.domain.MemberGroup;
 import codeview.main.membergroup.domain.eumerate.MemberGroupVisibility;
+import codeview.main.membergroup.infra.repository.membergroup.MemberGroupRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

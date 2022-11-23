@@ -16,7 +16,9 @@ public class GroupAdminConfig implements WebMvcConfigurer {
                 .order(1)
                 .addPathPatterns("/api/v1/groups/admin/**")
                 .excludePathPatterns("/static/**", "/css/**", "/*.icon", "/error", "/js/**",
-                        "/api/v1/groups/admin/errors");
+                        "/api/v1/groups/admin/errors",
+                        "/api/v1/groups/admin/list",
+                        "/api/v1/groups/admin/new");
     }
 
     @Bean

@@ -8,7 +8,7 @@ import codeview.main.membergroup.application.GroupService;
 import codeview.main.membergroup.domain.MemberGroup;
 import codeview.main.membergroup.domain.eumerate.GroupAutoJoin;
 import codeview.main.membergroup.domain.eumerate.MemberGroupVisibility;
-import codeview.main.membergroup.infra.repository.MemberGroupRepository;
+import codeview.main.membergroup.infra.repository.membergroup.MemberGroupRepository;
 import codeview.main.problem.application.ProblemService;
 import codeview.main.problem.domain.Problem;
 import codeview.main.solve.domain.Solve;

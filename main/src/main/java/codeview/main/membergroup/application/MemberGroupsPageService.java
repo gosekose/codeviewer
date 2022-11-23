@@ -1,6 +1,6 @@
 package codeview.main.membergroup.application;
 
-import codeview.main.membergroup.infra.repository.MemberGroupQueryDslRepositoryImpl;
+import codeview.main.membergroup.infra.repository.membergroup.MemberGroupQueryDslRepositoryImpl;
 import codeview.main.membergroup.presentation.dao.MemberGroupSearchCondition;
 import codeview.main.membergroup.presentation.dto.GroupForPageDto;
 import lombok.RequiredArgsConstructor;

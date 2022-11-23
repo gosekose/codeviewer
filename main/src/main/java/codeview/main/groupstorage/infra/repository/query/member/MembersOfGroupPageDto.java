@@ -1,4 +1,4 @@
-package codeview.main.groupstorage.presentation.dto;
+package codeview.main.groupstorage.infra.repository.query.member;
 
 import codeview.main.membergroup.domain.eumerate.MemberGroupAuthority;
 import com.querydsl.core.annotations.QueryProjection;

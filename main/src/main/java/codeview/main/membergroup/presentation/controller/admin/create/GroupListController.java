@@ -1,4 +1,4 @@
-package codeview.main.membergroup.presentation.controller;
+package codeview.main.membergroup.presentation.controller.admin.create;
 
 import codeview.main.auth.domain.users.PrincipalUser;
 import codeview.main.member.application.MemberService;
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/api/v1/groups")
 @RequiredArgsConstructor
 @Slf4j
-public class GroupDetailController {
+public class GroupListController {
 
     private final MemberGroupsPageService memberGroupsPageService;
     private final MemberService memberService;
@@ -40,7 +40,7 @@ public class GroupDetailController {
     }
 
 
-    @GetMapping("/list")
+    @GetMapping("/admin/list")
     public String getGroupList(Model model,
                                MemberGroupSearchCondition condition,
                                @AuthenticationPrincipal PrincipalUser principalUser,

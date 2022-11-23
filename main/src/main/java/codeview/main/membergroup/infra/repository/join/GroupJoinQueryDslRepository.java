@@ -1,7 +1,7 @@
-package codeview.main.membergroup.infra.repository;
+package codeview.main.membergroup.infra.repository.join;
 
-import codeview.main.membergroup.infra.repository.query.dto.JoinRequestCondition;
-import codeview.main.membergroup.infra.repository.query.dto.JoinRequestQueryPageDto;
+import codeview.main.membergroup.infra.repository.join.query.JoinRequestCondition;
+import codeview.main.membergroup.infra.repository.join.query.JoinRequestQueryPageDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;

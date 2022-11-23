@@ -5,7 +5,7 @@ import codeview.main.member.domain.Member;
 import codeview.main.member.infra.MemberRepository;
 import codeview.main.membergroup.domain.MemberGroup;
 import codeview.main.membergroup.domain.eumerate.MemberGroupVisibility;
-import codeview.main.membergroup.infra.repository.MemberGroupRepository;
+import codeview.main.membergroup.infra.repository.membergroup.MemberGroupRepository;
 import codeview.main.problem.domain.Problem;
 import codeview.main.problem.infra.repository.ProblemRepository;
 import codeview.main.solve.domain.Solve;

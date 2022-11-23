@@ -4,7 +4,7 @@ import codeview.main.common.application.FolderMaker;
 import codeview.main.member.domain.Member;
 import codeview.main.member.infra.MemberRepository;
 import codeview.main.membergroup.domain.MemberGroup;
-import codeview.main.membergroup.infra.repository.MemberGroupRepository;
+import codeview.main.membergroup.infra.repository.membergroup.MemberGroupRepository;
 import codeview.main.membergroup.presentation.dto.CreateGroupForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

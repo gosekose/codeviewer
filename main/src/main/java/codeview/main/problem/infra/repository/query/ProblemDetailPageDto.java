@@ -12,20 +12,16 @@ public class ProblemDetailPageDto {
     private Long problemId;
     private String name;
     private String originalProblemFileName;
-    private String originalShellFileName;
-    private String originalInputsFileName;
     private LocalDateTime createdAt;
     private LocalDateTime modifiedAt;
 
     @Builder
     @QueryProjection
     public ProblemDetailPageDto(Long problemId, String name, String originalProblemFileName,
-                                String originalShellFileName, String originalInputsFileName, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+                                LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.problemId = problemId;
         this.name = name;
         this.originalProblemFileName = originalProblemFileName;
-        this.originalShellFileName = originalShellFileName;
-        this.originalInputsFileName = originalInputsFileName;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
     }

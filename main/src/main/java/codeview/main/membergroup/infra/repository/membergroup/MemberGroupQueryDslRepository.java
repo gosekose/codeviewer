@@ -1,4 +1,4 @@
-package codeview.main.membergroup.infra.repository;
+package codeview.main.membergroup.infra.repository.membergroup;
 
 import codeview.main.membergroup.domain.MemberGroup;
 import codeview.main.membergroup.presentation.dao.MemberGroupSearchCondition;

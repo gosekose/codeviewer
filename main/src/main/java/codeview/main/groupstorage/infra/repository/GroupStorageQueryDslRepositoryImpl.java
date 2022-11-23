@@ -1,9 +1,12 @@
 package codeview.main.groupstorage.infra.repository;
 
 import codeview.main.groupstorage.domain.GroupStorage;
-import codeview.main.groupstorage.infra.repository.query.MembersOfGroupCondition;
-import codeview.main.groupstorage.presentation.dto.MembersOfGroupPageDto;
-import codeview.main.groupstorage.presentation.dto.QMembersOfGroupPageDto;
+import codeview.main.groupstorage.infra.repository.query.list.GroupStorageListCondition;
+import codeview.main.groupstorage.infra.repository.query.list.GroupStorageListDto;
+import codeview.main.groupstorage.infra.repository.query.list.QGroupStorageListDto;
+import codeview.main.groupstorage.infra.repository.query.member.MembersOfGroupCondition;
+import codeview.main.groupstorage.infra.repository.query.member.MembersOfGroupPageDto;
+import codeview.main.groupstorage.infra.repository.query.member.QMembersOfGroupPageDto;
 import codeview.main.member.domain.Member;
 import codeview.main.membergroup.domain.MemberGroup;
 import codeview.main.membergroup.domain.eumerate.MemberGroupAuthority;
@@ -20,16 +23,18 @@ import java.util.List;
 
 import static codeview.main.groupstorage.domain.QGroupStorage.groupStorage;
 import static codeview.main.member.domain.QMember.member;
+import static codeview.main.membergroup.domain.QMemberGroup.memberGroup;
+import static codeview.main.school.domain.QSchool.school;
 
 @Repository
 @RequiredArgsConstructor
 public class GroupStorageQueryDslRepositoryImpl implements GroupStorageQueryDslRepository{
 
-    private final JPAQueryFactory jpaQueryFactory;
+    private final JPAQueryFactory query;
 
     @Override
     public List<GroupStorage> search(MembersOfGroupCondition condition) {
-        return jpaQueryFactory.selectFrom(groupStorage)
+        return query.selectFrom(groupStorage)
                 .where(
                         memberEq(condition.getMember()),
                         memberGroupEq(condition.getMemberGroup()),
@@ -39,9 +44,9 @@ public class GroupStorageQueryDslRepositoryImpl implements GroupStorageQueryDslR
     }
 
     @Override
-    public Page<MembersOfGroupPageDto> searchPageComplex(MembersOfGroupCondition condition, Pageable pageable) {
+    public Page<MembersOfGroupPageDto> searchMemberOfGroupComplex(MembersOfGroupCondition condition, Pageable pageable) {
 
-        List<MembersOfGroupPageDto> content = jpaQueryFactory
+        List<MembersOfGroupPageDto> content = query
                 .select(
                         new QMembersOfGroupPageDto(
                                 member.id,
@@ -60,7 +65,7 @@ public class GroupStorageQueryDslRepositoryImpl implements GroupStorageQueryDslR
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Long> countQuery = jpaQueryFactory
+        JPAQuery<Long> countQuery = query
                 .select(groupStorage.count())
                 .from(groupStorage)
                 .where(
@@ -71,6 +76,37 @@ public class GroupStorageQueryDslRepositoryImpl implements GroupStorageQueryDslR
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
+    @Override
+    public Page<GroupStorageListDto> searchGroupListComplex(GroupStorageListCondition condition, Pageable pageable) {
+        List<GroupStorageListDto> content =  query
+                .select(
+                        new QGroupStorageListDto(
+                                memberGroup.id,
+                                memberGroup.name,
+                                memberGroup.creator.memberName,
+                                memberGroup.creator.school.name,
+                                memberGroup.creator.department))
+                .from(groupStorage)
+                .innerJoin(groupStorage.memberGroup, memberGroup)
+                .innerJoin(memberGroup.creator, member)
+                .innerJoin(member.school, school)
+                .where(
+                        memberEq(condition.getMember()))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Long> countQuery = query
+                .select(groupStorage.count())
+                .from(groupStorage)
+                .innerJoin(groupStorage.memberGroup, memberGroup)
+                .innerJoin(memberGroup.creator, member)
+                .innerJoin(member.school, school)
+                .where(
+                        memberEq(condition.getMember()));
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
+    }
 
     private BooleanExpression memberAuthEq(MemberGroupAuthority memberGroupAuthority) {
         return memberGroupAuthority != null ? groupStorage.memberGroupAuthority.eq(memberGroupAuthority) : null;

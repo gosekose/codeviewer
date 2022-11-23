@@ -1,4 +1,4 @@
-package codeview.main.membergroup.presentation.controller;
+package codeview.main.membergroup.presentation.controller.admin.create;
 
 import codeview.main.auth.domain.users.PrincipalUser;
 import codeview.main.member.application.MemberService;
@@ -23,7 +23,7 @@ import java.util.Map;
 @Slf4j
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/api/v1/groups/new")
+@RequestMapping("/api/v1/groups/admin/new")
 public class GroupCreateController {
 
     private final GroupCreateService groupCreateService;

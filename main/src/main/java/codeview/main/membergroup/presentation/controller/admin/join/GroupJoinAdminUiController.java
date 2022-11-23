@@ -1,11 +1,11 @@
-package codeview.main.membergroup.presentation.controller.join;
+package codeview.main.membergroup.presentation.controller.admin.join;
 
 import codeview.main.auth.domain.users.PrincipalUser;
 import codeview.main.member.application.MemberService;
 import codeview.main.member.domain.Member;
 import codeview.main.membergroup.application.GroupJoinService;
-import codeview.main.membergroup.infra.repository.query.dto.JoinRequestCondition;
-import codeview.main.membergroup.infra.repository.query.dto.JoinRequestQueryPageDto;
+import codeview.main.membergroup.infra.repository.join.query.JoinRequestCondition;
+import codeview.main.membergroup.infra.repository.join.query.JoinRequestQueryPageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

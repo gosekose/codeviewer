@@ -1,4 +1,4 @@
-package codeview.main.membergroup.presentation.controller;
+package codeview.main.membergroup.presentation.controller.user.search;
 
 import codeview.main.auth.domain.users.PrincipalUser;
 import codeview.main.common.application.CsrfProviderService;

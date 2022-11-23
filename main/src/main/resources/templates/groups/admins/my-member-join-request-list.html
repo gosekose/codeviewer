@@ -274,9 +274,9 @@
       data: JSON.stringify(jsonData),
       async: true,
       cache: true,
-      success: function(data) {
+      success: function() {
         console.log("success");
-        console.log(data);
+        reload();
 
       },
 
@@ -284,12 +284,16 @@
         console.log('error:' + error);
         console.log('status:' + status);
         console.log('compile.error');
+        location.reload();
       }
     })
 
 
   }
 
+  function reload() {
+    location.reload();
+  }
 
 
 </script>
