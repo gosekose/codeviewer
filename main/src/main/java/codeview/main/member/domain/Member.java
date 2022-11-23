@@ -100,4 +100,6 @@ public class Member extends BaseEntity {
             this.realPayment -= realPayment;
         }
     }
+
+    public void updateSchool(School school) { this.school = school; }
 }

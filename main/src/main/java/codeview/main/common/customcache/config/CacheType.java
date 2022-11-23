@@ -23,6 +23,9 @@ public enum CacheType {
     MYSOLVECHART("mySolveChart", 5 * 60, 10000),
     OTHERSOLVECHART("otherSolveChart", 5 * 60, 10000),
 
+    JOINREQUEST("joinRequest", 5 * 60, 10000),
+
+
 
     PROBLEMSEARCH("problemSearch", 5 * 60, 10000),
     MYPROBLEMSEARCH("myProblemSearch", 5 * 60, 10000),

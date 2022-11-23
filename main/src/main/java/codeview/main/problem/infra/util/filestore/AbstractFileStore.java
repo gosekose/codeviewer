@@ -8,7 +8,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
 
 @Slf4j
 public abstract class AbstractFileStore implements FileStore {
@@ -17,7 +16,7 @@ public abstract class AbstractFileStore implements FileStore {
     private String fileDir;
 
     @Override
-    public UploadFile storeFile(MultipartFile multipartFile, String groupId) throws IOException {
+    public UploadFile storeFile(MultipartFile multipartFile, String groupId, String uuid) throws IOException {
 
         if (multipartFile.isEmpty()) {
             return null;
@@ -26,7 +25,7 @@ public abstract class AbstractFileStore implements FileStore {
         String originalFileName = multipartFile.getOriginalFilename();
         log.info("originalFileName = {}", originalFileName);
 
-        String newProblemFolder = createNewProblemFolder(groupId);
+        String newProblemFolder = createNewProblemFolder(groupId, uuid);
         log.info("newProblemFolder = {}", newProblemFolder);
 
         String storeFileName = createStoreFileName(newProblemFolder, originalFileName);
@@ -46,9 +45,9 @@ public abstract class AbstractFileStore implements FileStore {
     }
 
     @Override
-    public String createNewProblemFolder(String groupId) {
+    public String createNewProblemFolder(String groupId, String uuid) {
 
-        return FolderMaker.folderMaker(fileDir + "/" + groupId, String.valueOf(UUID.randomUUID()));
+        return FolderMaker.folderMaker(fileDir + "/" + groupId, uuid);
 
 
     }

@@ -16,4 +16,8 @@ public interface GroupJoinRequestRepository extends JpaRepository<GroupJoinReque
             @Param("member") Member member,
             @Param("memberGroup") MemberGroup memberGroup);
 
+    @Query("select g from GroupJoinRequest g where g.id = :joinId")
+    GroupJoinRequest findJoinId(@Param("joinId") Long id);
+
+
 }
