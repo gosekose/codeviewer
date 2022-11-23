@@ -1,14 +1,12 @@
 package codeview.main.problem.domain;
 
-import codeview.main.solve.domain.Solve;
 import codeview.main.auth.domain.BaseEntity;
 import codeview.main.membergroup.domain.MemberGroup;
-import codeview.main.problem.domain.embedded.InputFile;
 import codeview.main.problem.domain.embedded.ProblemFile;
-import codeview.main.problem.domain.embedded.ShellFile;
 import codeview.main.problem.domain.embedded.SolvePython;
 import codeview.main.problemdescription.domain.ProblemDescription;
 import codeview.main.problemdescription.domain.ProblemIoExample;
+import codeview.main.solve.domain.Solve;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -45,10 +43,7 @@ public class Problem extends BaseEntity {
 
     @Embedded
     private ProblemFile problemFile;
-    @Embedded
-    private ShellFile shellFile;
-    @Embedded
-    private InputFile inputFile = new InputFile();
+
     private LocalDateTime openTime;
     private LocalDateTime closedTime;
 
@@ -58,12 +53,12 @@ public class Problem extends BaseEntity {
     private SolvePython solvePython;
 
     @Builder
-    public Problem(MemberGroup memberGroup, String name, ProblemFile problemFile, ShellFile shellFile, InputFile inputFile, LocalDateTime openTime, LocalDateTime closedTime) {
+    public Problem(MemberGroup memberGroup, String name, ProblemFile problemFile, LocalDateTime openTime, LocalDateTime closedTime) {
         this.memberGroup = memberGroup;
         this.name = name;
         this.problemFile = problemFile;
-        this.shellFile = shellFile;
-        this.inputFile = inputFile;
+//        this.shellFile = shellFile;
+//        this.inputFile = inputFile;
         this.openTime = openTime;
         this.closedTime = closedTime;
     }

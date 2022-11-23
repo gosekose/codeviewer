@@ -1,4 +1,4 @@
-package codeview.main.membergroup.presentation.controller;
+package codeview.main.membergroup.presentation.controller.join;
 
 import codeview.main.auth.domain.users.PrincipalUser;
 import codeview.main.member.application.MemberService;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/groups/{groupId}/join")
+@RequestMapping("/api/v1/groups")
 @RequiredArgsConstructor
 public class GroupJoinByMemberRestController {
 
@@ -24,7 +24,7 @@ public class GroupJoinByMemberRestController {
     private final GroupService groupService;
     private final GroupJoinService groupJoinService;
 
-    @PostMapping
+    @PostMapping("/{groupId}/join")
     private ResponseEntity<Boolean> postJoinGroup(@PathVariable("groupId") Integer groupId,
                                                   @AuthenticationPrincipal PrincipalUser principalUser,
                                                   @RequestBody JoinRequestDao joinRequestDao) {
@@ -39,5 +39,8 @@ public class GroupJoinByMemberRestController {
         return new ResponseEntity<>(joinStatus, HttpStatus.OK);
 
     }
+
+    ///api/v1/groups/admin/
+
 
 }

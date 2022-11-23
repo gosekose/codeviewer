@@ -9,10 +9,11 @@ import java.io.IOException;
 @Component
 public interface FileStore {
 
-    UploadFile storeFile(MultipartFile multipartFile, String groupId) throws IOException;
+    UploadFile storeFile(MultipartFile multipartFile, String groupId, String newProblemFolder) throws IOException;
 
     String createStoreFileName(String newProblemPath, String originalFileName);
 
-    String createNewProblemFolder(String groupId);
+    String createNewProblemFolder(String groupId, String uuid);
+
 
 }

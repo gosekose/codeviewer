@@ -64,6 +64,9 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 
 	runtimeOnly 'com.h2database:h2'
+
+	compile group: 'commons-fileupload', name: 'commons-fileupload', version: '1.4'
+	compile group: 'commons-io', name: 'commons-io', version: '2.4'
 }
 
 tasks.named('test') {

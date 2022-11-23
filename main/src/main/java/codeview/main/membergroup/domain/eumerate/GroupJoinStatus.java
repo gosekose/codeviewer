@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum GroupJoinStatus {
-    WAIT("대기"),
-    JOIN("승인"),
-    NOTJOIN("미신청");
+    WAIT("WAIT"),
+    JOIN("JOIN"),
+    NOTJOIN("NOTJOIN");
 
 
     private final String name;

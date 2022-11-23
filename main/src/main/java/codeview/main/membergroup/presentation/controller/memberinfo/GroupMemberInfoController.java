@@ -1,4 +1,4 @@
-package codeview.main.membergroup.presentation.controller;
+package codeview.main.membergroup.presentation.controller.memberinfo;
 
 import codeview.main.common.application.CsrfProviderService;
 import codeview.main.member.application.MemberService;

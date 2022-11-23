@@ -94,20 +94,51 @@
               </div>
               </div>
 
-              <div class="mb-3">
-                <label class="form-label">쉘 파일 업로드
-                  <input type="file" class="form-control form-control-lg" name="shellFile" id="shellFile">
-                </label>
-              </div>
+<!--              <div class="mb-3">-->
+<!--                <label class="form-label">쉘 파일 업로드-->
+<!--                  <input type="file" class="form-control form-control-lg" name="shellFile" id="shellFile">-->
+<!--                </label>-->
+<!--              </div>-->
 
-              <div class="mb-3">
-                <label class="form-label">인풋 파일 업로드
-                  <input type="file" class="form-control form-control-lg" name="inputFile" id="inputFile">
-                </label>
-              </div>
+<!--              <div class="mb-3">-->
+<!--                <label class="form-label">인풋 파일 업로드-->
+<!--                  <input type="file" class="form-control form-control-lg" name="inputFile" id="inputFile">-->
+<!--                </label>-->
+<!--              </div>-->
 
-            <button type="button" id="ajaxProblemCall" onclick="ajaxCall()" class="btn btn-primary btn-xl">등록</button>
+            <button type="button" id="ajaxProblemCall" onclick="ajaxCall()" class="btn btn-primary btn-xl">문제 등록</button>
           </form>
+
+          </br>
+          </br>
+          <div id="ajaxIoUnzipFile">
+          </div>
+          </br>
+          </br>
+          <form id="problemIoZipForm" class="row" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label class="form-label">입출력 파일 업로드
+                <input type="file" class="form-control form-control-lg" name="ioZipFile" id="ioZipFile">
+              </label>
+            </div>
+            <button type="button" id="ajaxProblemZipCall" onclick="ajaxZipCall()" class="btn btn-primary btn-xl">입출력 파일 등록</button>
+          </form>
+
+          </br>
+          <form id="inputDockerTestForm" class="row" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label class="form-label">문제 파일
+                <input type="file" class="form-control form-control-lg" name="mainSource" id="mainSource">
+              </label>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">입출력 파일
+                <input type="file" class="form-control form-control-lg" name="ioFileZip" id="ioFileZip">
+              </label>
+            </div>
+            <button type="button" id="inputDockerTest" onclick="ajaxDockerCall()" class="btn btn-primary btn-xl">도커 테스트</button>
+          </form>
+
         </div>
       </main>
     </div>
@@ -119,42 +150,27 @@
   <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
   <script>
 
+    let ajaxIoFilePath = []
+    const token = $("meta[name='_csrf']").attr("content");
+    const header = $("meta[name='_csrf_header']").attr("content");
+    const groupId = $("meta[name='groupId']").attr("content");
+
     $(document).ready(function() {
       $('#addDescriptionParam').click(function() {
         const html = '<br/>  ' +
-                '<label class="form-label">문제 설명\n' +
-                '<input type="text" class="form-control form-control-lg" name="descriptions">\n' +
-                '</label>'
-
-        $('#addDescriptionForm').append(html);
-      });
-    });
+                '<label class="form-label">문제 설명\n' + '<input type="text" class="form-control form-control-lg" name="descriptions">\n' + '</label>'
+        $('#addDescriptionForm').append(html);});});
 
     $(document).ready(function() {
       $('#addSampleParam').click(function() {
-        const html = '<br/>                 ' +
-                '<label class="form-label">인풋\n' +
-                '<input type="text" class="form-control form-control-lg" name="inputs">\n' +
-                '</label>\n' +
-                '<label class="form-label">아웃풋\n' +
-                '<input type="text" class="form-control form-control-lg" name="outputs">\n' +
-                '</label>'
-        $('#addSampleForm').append(html);
-      });
-    });
+        const html = '<br/>                 ' + '<label class="form-label">인풋\n' + '<input type="text" class="form-control form-control-lg" name="inputs">\n' + '</label>\n' +
+                '<label class="form-label">아웃풋\n' + '<input type="text" class="form-control form-control-lg" name="outputs">\n' + '</label>'
+        $('#addSampleForm').append(html);});});
 
 
     function ajaxCall() {
-      const token = $("meta[name='_csrf']").attr("content");
-      const header = $("meta[name='_csrf_header']").attr("content");
-
-      const groupId = $("meta[name='groupId']").attr("content");
-
       const form = $("#problemCreateForm")[0];
-
       const formData = new FormData(form);
-
-      console.log(formData);
 
       $.ajax({
         type: 'POST',
@@ -164,60 +180,93 @@
         enctype : 'multipart/form-data',
         url: '/api/v1/groups/admin/' + groupId + '/problems/new',
         data: formData,
-        beforeSend: function(xhr) {
-          xhr.setRequestHeader(header, token);
-        },
+        beforeSend: function(xhr) {xhr.setRequestHeader(header, token);},
         async: true,
         cache: true,
         success: function(data) {
-          console.log(data.problemId);
           location.href = "/api/v1/groups/admin/" + groupId + "/problems/" + data.problemId;
         },
 
         error: function(xhr, status, error) {
           console.log('error:' + error);
-          console.log('status:' + status);
-          console.log('compile.error');
-        }
-      })
-    }
+        }})}
 
 
     jQuery.fn.serializeObject = function() {
       let obj = null;
-      try {
-        if (this[0].tagName && this[0].tagName.toUpperCase() == "FORM") {
-          const arr = this.serializeArray();
-          if (arr) {
-            obj = {};
-            jQuery.each(arr, function() {
+      try { if (this[0].tagName && this[0].tagName.toUpperCase() == "FORM") {
+          const arr = this.serializeArray(); if (arr) { obj = {}; jQuery.each(arr, function() {
+              if (this.name === "descriptions" || this.name === "inputs" || this.name === "outputs") {if (typeof obj[this.name] != "object") {
+                if (obj[this.name] == null) { obj[this.name] = []} }obj[this.name].push(this.value)} else { obj[this.name] = this.value }}); } }
+      } catch (e) { alert(e.message); } finally { }
+      return obj;};
 
-              if (this.name === "descriptions" || this.name === "inputs" || this.name === "outputs") {
 
-                if (typeof obj[this.name] != "object") {
-                  if (obj[this.name] == null) {
-                    obj[this.name] = []
-                  }
-                }
-                obj[this.name].push(this.value)
+    function ajaxZipCall() {
+      const form = $("#problemIoZipForm")[0];
+      const formData = new FormData(form);
 
-              } else {
-                obj[this.name] = this.value
-              }
+      $.ajax({
+        type: 'POST',
+        contentType: false,
+        processData: false,
+        cache: false,
+        enctype : 'multipart/form-data',
+        url: '/api/v1/groups/admin/' + groupId + '/problems/upload/io',
+        data: formData,
+        beforeSend: function(xhr) {xhr.setRequestHeader(header, token);},
+        async: true,
+        cache: true,
+        success: function(data) {
+          console.log(data);
+          ajaxIoFilePath = data;
 
-            });
-          }//if ( arr ) {
+          $("#ajaxIoUnzipFile").html(""); // 태그 초기화
+            $(document).ready(function() {
+              for (let i=0; i<ajaxIoFilePath.inputs.length; i++) {
+                $('#ajaxIoUnzipFile').each(function () {
+                  const html = '<a href=' + '"' + ajaxIoFilePath.inputs[i] + '"' + 'download="io.in" >' + '업로드 파일' + '</a>'
+                  $('#ajaxIoUnzipFile').append(html);
+                }); } });
+
+            $(document).ready(function() {
+              for (let i=0; i<ajaxIoFilePath.outputs.length; i++) {
+                $('#ajaxIoUnzipFile').each(function() {
+                  const html = '<a href=' + '"' + ajaxIoFilePath.outputs[i] + '"' + '>' + ' 파일' + '</a>'
+                  $('#ajaxIoUnzipFile').append(html);
+                });}});},
+
+        error: function(xhr, status, error) {
+          console.log('error:' + error);
         }
-      } catch (e) {
-        alert(e.message);
-      } finally {
-      }
+      })
+    }
 
-      return obj;
-    };
+    function ajaxDockerCall() {
+      const form = $("#inputDockerTestForm")[0];
+      const formData = new FormData(form);
 
+      $.ajax({
+        type: 'POST',
+        contentType: false,
+        processData: false,
+        cache: false,
+        enctype : 'multipart/form-data',
+        url: '/api/v1/groups/admin/' + groupId + '/problems/upload/docker',
+        data: formData,
+        beforeSend: function(xhr) {xhr.setRequestHeader(header, token);},
+        async: true,
+        cache: true,
+        success: function(data) {
+          console.log(data);
+        },
 
-
+        error: function(xhr, status, error) {
+          console.log('error:' + error);
+          console.log('status:' + status);
+        }
+      })
+    }
 
   </script>
 

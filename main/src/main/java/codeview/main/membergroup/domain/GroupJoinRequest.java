@@ -27,14 +27,20 @@ public class GroupJoinRequest {
     @Enumerated(EnumType.STRING)
     private GroupJoinStatus groupJoinStatus;
 
+    private int denialCount;
+
     @Builder
-    public GroupJoinRequest(Member member, MemberGroup memberGroup, GroupJoinStatus groupJoinStatus) {
+    public GroupJoinRequest(Member member, MemberGroup memberGroup, GroupJoinStatus groupJoinStatus, int denialCount) {
         this.member = member;
         this.memberGroup = memberGroup;
         this.groupJoinStatus = groupJoinStatus;
+        this.denialCount = denialCount;
     }
 
     public void updateGroupStatus(GroupJoinStatus groupJoinStatus) {
+
         this.groupJoinStatus = groupJoinStatus;
+        this.denialCount++;
     }
+
 }
