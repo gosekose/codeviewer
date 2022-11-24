@@ -12,6 +12,7 @@ import codeview.main.membergroup.infra.repository.join.query.JoinRequestConditio
 import codeview.main.membergroup.infra.repository.join.query.JoinRequestQueryPageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ public class GroupJoinService {
     private final GroupJoinRequestRepository groupJoinRequestRepository;
 
     private final GroupJoinQueryDslRepositoryImpl groupJoinQueryDslRepository;
+
 
 
     /**
@@ -71,6 +73,7 @@ public class GroupJoinService {
         return saveJoinRequest.getId();
     }
 
+    @Cacheable(cacheNames = "groupJoinRequest", key="#id")
     public GroupJoinRequest findById(Long id) {
         Optional<GroupJoinRequest> optionalGroupJoinRequest = groupJoinRequestRepository.findById(id);
 
@@ -150,10 +153,14 @@ public class GroupJoinService {
      * @return
      */
     @Transactional
-    public Long deniedRequestGroupJoin(Member member, MemberGroup memberGroup) {
+    public Long deniedRequestGroupJoin(Member member, MemberGroup memberGroup) throws IllegalAccessException {
 
         // 해당 요청 request 요청 승인 변경
         GroupJoinRequest groupJoinRequest = groupJoinRequestRepository.findByMemberAndMemberGroup(member, memberGroup);
+
+        if (groupJoinRequest == null) {
+            throw new IllegalAccessException("허용되지 않는 접근입니다.");
+        }
 
         if (groupJoinRequest.getDenialCount() < 2) {
             groupJoinRequest.updateGroupStatus(null);
@@ -162,8 +169,8 @@ public class GroupJoinService {
             groupJoinRequest.updateGroupStatus(NOTJOIN);
         }
 
-
         return groupJoinRequest.getId();
     }
+
 
 }

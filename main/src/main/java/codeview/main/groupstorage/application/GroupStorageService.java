@@ -46,4 +46,9 @@ public class GroupStorageService {
 
     }
 
+    @Transactional
+    public void deleteMemberAtMemberGroup(Member member, MemberGroup memberGroup) {
+        groupStorageRepository.deleteByMemberAndMemberGroupJpql(member, memberGroup);
+    }
+
 }
