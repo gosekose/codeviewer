@@ -3,7 +3,6 @@ package codeview.main.membergroup.application;
 import codeview.main.common.application.FolderMaker;
 import codeview.main.member.application.MemberService;
 import codeview.main.member.domain.Member;
-import codeview.main.member.infra.MemberRepository;
 import codeview.main.membergroup.domain.MemberGroup;
 import codeview.main.membergroup.infra.repository.membergroup.MemberGroupRepository;
 import codeview.main.membergroup.presentation.dto.CreateGroupForm;
@@ -27,7 +26,6 @@ public class GroupService {
     private String fileDir;
 
     private final MemberGroupRepository memberGroupRepository;
-    private final MemberRepository memberRepository;
     private final MemberService memberService;
 
     public List<MemberGroup> findAllByMember(Member member) {

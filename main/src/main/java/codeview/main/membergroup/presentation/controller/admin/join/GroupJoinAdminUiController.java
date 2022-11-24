@@ -26,6 +26,7 @@ public class GroupJoinAdminUiController {
 
     private final MemberService memberService;
     private final GroupJoinService groupJoinService;
+    
 
     @GetMapping
     public String responseJoinRequest(

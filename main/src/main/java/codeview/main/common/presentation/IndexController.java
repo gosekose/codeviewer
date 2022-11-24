@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
 @Controller
@@ -31,7 +30,6 @@ public class IndexController {
     @GetMapping("/")
     public String index(Model model, Authentication authentication,
                         HttpServletRequest request,
-                        HttpServletResponse response,
                         @AuthenticationPrincipal PrincipalUser principalUser) {
 
         if (authentication != null) {

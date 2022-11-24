@@ -46,6 +46,7 @@ public class GroupMemberInfoController {
             @PathVariable("groupId") Integer groupId,
             @PageableDefault Pageable pageable,
             MembersOfGroupCondition condition,
+            HttpServletRequest request,
             Model model) {
 
         MemberGroup memberGroup = groupService.findById(Long.valueOf(groupId));
@@ -53,6 +54,7 @@ public class GroupMemberInfoController {
 
         Page<MembersOfGroupPageDto> membersOfGroupByPage = GroupStoragePage.getMembersOfGroupByPage(groupStorageQueryDslRepository, condition, pageable, model);
 
+        model.addAttribute("_csrf", csrfProviderService.createCsrf(request));
         model.addAttribute("groupId", memberGroup.getId());
 
         return "groups/admins/my-group-members";
