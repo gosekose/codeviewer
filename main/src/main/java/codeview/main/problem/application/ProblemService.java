@@ -3,8 +3,10 @@ package codeview.main.problem.application;
 import codeview.main.problem.domain.Problem;
 import codeview.main.problem.infra.repository.ProblemQueryDslRepositoryImpl;
 import codeview.main.problem.infra.repository.ProblemRepository;
-import codeview.main.problem.infra.repository.query.ProblemDetailPageCond;
+import codeview.main.problem.infra.repository.query.ProblemDetailPageCondition;
 import codeview.main.problem.infra.repository.query.ProblemDetailPageDto;
+import codeview.main.problem.infra.repository.query.ProblemSearchPageCondition;
+import codeview.main.problem.infra.repository.query.ProblemSearchPageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -24,7 +26,7 @@ public class ProblemService {
     private final ProblemRepository problemRepository;
     private final ProblemQueryDslRepositoryImpl problemQueryDslRepository;
 
-    @Transactional(readOnly = false)
+    @Transactional
     public Long save(Problem problem) {
         Problem savedProblem = problemRepository.save(problem);
         return savedProblem.getId();
@@ -41,9 +43,14 @@ public class ProblemService {
 
     }
 
-    @Cacheable(cacheNames = "problemSearch", key = "#pageable.pageNumber")
-    public Page<ProblemDetailPageDto> getSearchProblems(ProblemDetailPageCond condition, Pageable pageable) {
+    @Cacheable(cacheNames = "problemSearch",
+            key = "#condition.memberGroup + #condition.creator + #condition.myMember + #condition.name + pageable.pageNumber")
+    public Page<ProblemDetailPageDto> getDetailProblems(ProblemDetailPageCondition condition, Pageable pageable) {
         return problemQueryDslRepository.searchDetailPageComplex(condition, pageable);
+    }
+
+    public Page<ProblemSearchPageDto> getProblemSearchPage(ProblemSearchPageCondition condition, Pageable pageable) {
+        return problemQueryDslRepository.searchProblemPageComplex(condition, pageable);
     }
 
 }

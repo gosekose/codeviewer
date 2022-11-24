@@ -6,7 +6,7 @@ import codeview.main.member.domain.Member;
 import codeview.main.membergroup.application.GroupJoinService;
 import codeview.main.membergroup.application.GroupService;
 import codeview.main.membergroup.domain.MemberGroup;
-import codeview.main.membergroup.presentation.dao.JoinRequestDao;
+import codeview.main.membergroup.infra.repository.join.query.JoinRequestDao;
 import groovy.util.logging.Slf4j;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

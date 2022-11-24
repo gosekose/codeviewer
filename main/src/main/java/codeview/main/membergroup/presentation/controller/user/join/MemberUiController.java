@@ -37,6 +37,6 @@ public class MemberUiController {
         Page<GroupStorageListDto> groupStorageListForMember = groupStorageService.getGroupStorageListForMember(condition, pageable);
         model.addAttribute("groupList", groupStorageListForMember);
 
-        return "groups/user/my-join-groups";
+        return "groups/users/my-join-groups";
     }
 }

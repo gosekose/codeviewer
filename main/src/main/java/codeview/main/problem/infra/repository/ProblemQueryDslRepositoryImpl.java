@@ -27,7 +27,7 @@ public class ProblemQueryDslRepositoryImpl implements ProblemQueryDslRepository 
     private final JPAQueryFactory query;
 
     @Override
-    public List<ProblemSearchPageDto> searchProblem(ProblemSearchPageCond condition) {
+    public List<ProblemSearchPageDto> searchProblem(ProblemSearchPageCondition condition) {
 
         return query
                 .select(
@@ -53,7 +53,7 @@ public class ProblemQueryDslRepositoryImpl implements ProblemQueryDslRepository 
 
 
     @Override
-    public Page<ProblemSearchPageDto> searchProblemPageComplex(ProblemSearchPageCond condition, Pageable pageable) {
+    public Page<ProblemSearchPageDto> searchProblemPageComplex(ProblemSearchPageCondition condition, Pageable pageable) {
 
         List<ProblemSearchPageDto> content = query
                 .select(
@@ -93,7 +93,7 @@ public class ProblemQueryDslRepositoryImpl implements ProblemQueryDslRepository 
     }
 
     @Override
-    public Page<ProblemDetailPageDto> searchDetailPageComplex(ProblemDetailPageCond condition, Pageable pageable) {
+    public Page<ProblemDetailPageDto> searchDetailPageComplex(ProblemDetailPageCondition condition, Pageable pageable) {
 
         List<ProblemDetailPageDto> content = query
                 .select(

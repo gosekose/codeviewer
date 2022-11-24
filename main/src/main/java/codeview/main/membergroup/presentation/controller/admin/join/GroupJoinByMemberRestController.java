@@ -6,13 +6,16 @@ import codeview.main.member.domain.Member;
 import codeview.main.membergroup.application.GroupJoinService;
 import codeview.main.membergroup.application.GroupService;
 import codeview.main.membergroup.domain.MemberGroup;
-import codeview.main.membergroup.presentation.dao.JoinRequestDao;
+import codeview.main.membergroup.domain.eumerate.GroupJoinStatus;
+import codeview.main.membergroup.infra.repository.join.query.JoinRequestDao;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import static codeview.main.membergroup.domain.eumerate.GroupAutoJoin.ON;
 
 @Slf4j
 @RestController
@@ -25,22 +28,29 @@ public class GroupJoinByMemberRestController {
     private final GroupJoinService groupJoinService;
 
     @PostMapping("/{groupId}/join")
-    private ResponseEntity<Boolean> postJoinGroup(@PathVariable("groupId") Integer groupId,
+    private ResponseEntity<GroupJoinStatus> postJoinGroup(@PathVariable("groupId") Integer groupId,
                                                   @AuthenticationPrincipal PrincipalUser principalUser,
                                                   @RequestBody JoinRequestDao joinRequestDao) {
+
+        GroupJoinStatus joinStatus;
 
         MemberGroup memberGroup = groupService.findById(Long.valueOf(joinRequestDao.getGroupId()));
         Member member = memberService.find(Long.valueOf(joinRequestDao.getMemberId()));
 
-        boolean joinStatus = groupJoinService.requestGroupJoin(member, memberGroup);
+        if (memberGroup.getGroupAutoJoin().equals(ON)) {
 
-        log.info("joinStatus = {}", joinStatus);
+            joinStatus = groupJoinService.saveAutoRequestGroupJoin(member, memberGroup);
+
+
+        } else {
+
+            joinStatus = groupJoinService.requestGroupJoin(member, memberGroup);
+            log.info("joinStatus = {}", joinStatus);
+
+        }
 
         return new ResponseEntity<>(joinStatus, HttpStatus.OK);
-
     }
-
-    ///api/v1/groups/admin/
 
 
 }

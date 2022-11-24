@@ -1,4 +1,4 @@
-package codeview.main.problem.presentation;
+package codeview.main.problem.presentation.controller.admin;
 
 import codeview.main.problem.application.ProblemCreateService;
 import codeview.main.problem.application.ProblemService;

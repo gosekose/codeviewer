@@ -1,4 +1,4 @@
-package codeview.main.membergroup.presentation.dao;
+package codeview.main.membergroup.infra.repository.join.query;
 
 import lombok.Data;
 

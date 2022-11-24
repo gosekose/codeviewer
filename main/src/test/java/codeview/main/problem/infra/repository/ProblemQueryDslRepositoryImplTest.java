@@ -8,7 +8,7 @@ import codeview.main.membergroup.domain.MemberGroup;
 import codeview.main.membergroup.domain.eumerate.MemberGroupVisibility;
 import codeview.main.membergroup.infra.repository.membergroup.MemberGroupRepository;
 import codeview.main.problem.domain.Problem;
-import codeview.main.problem.infra.repository.query.ProblemSearchPageCond;
+import codeview.main.problem.infra.repository.query.ProblemSearchPageCondition;
 import codeview.main.problem.infra.repository.query.ProblemSearchPageDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -71,11 +71,11 @@ class ProblemQueryDslRepositoryImplTest {
 
 
         //given
-        ProblemSearchPageCond condition1 = new ProblemSearchPageCond();
+        ProblemSearchPageCondition condition1 = new ProblemSearchPageCondition();
         condition1.setMemberId(member.getId());
         condition1.setCreatorName("kww");
 
-        ProblemSearchPageCond condition2 = new ProblemSearchPageCond();
+        ProblemSearchPageCondition condition2 = new ProblemSearchPageCondition();
         condition2.setMemberId(member.getId());
         condition2.setCreatorName("ko");
 

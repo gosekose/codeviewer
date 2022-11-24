@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import static codeview.main.membergroup.domain.eumerate.GroupJoinStatus.*;
+
 @Service
 @Slf4j
 @Transactional(readOnly = true)
@@ -38,10 +40,10 @@ public class GroupJoinService {
      * member가 요청 memberGroup의 회원이 아니라면, 신청 상태로 저장 후 true
      * 만약 회원이거나 이미 요청 상태라면, 신청 상태 유지 후 false
      *
-     * @return boolean
+     * @return GroupJoinStatus
      */
     @Transactional
-    public boolean requestGroupJoin(Member member, MemberGroup memberGroup) {
+    public GroupJoinStatus requestGroupJoin(Member member, MemberGroup memberGroup) {
         GroupStorage groupStorage = groupStorageService.findByMemberAndMemberGroup(member, memberGroup);
 
         if (groupStorage == null) {
@@ -53,14 +55,14 @@ public class GroupJoinService {
                                 .member(member)
                                 .denialCount(0)
                                 .memberGroup(memberGroup)
-                                .groupJoinStatus(GroupJoinStatus.WAIT)
+                                .groupJoinStatus(WAIT)
                                 .build()
                 );
 
-                return true;
+                return WAIT;
             }
         }
-        return false;
+        return ALREADY;
     }
 
     @Transactional
@@ -100,10 +102,45 @@ public class GroupJoinService {
 
         // 해당 요청 request 요청 승인 변경
         GroupJoinRequest groupJoinRequest = groupJoinRequestRepository.findByMemberAndMemberGroup(member, memberGroup);
-        groupJoinRequest.updateGroupStatus(GroupJoinStatus.JOIN);
+        groupJoinRequest.updateGroupStatus(JOIN);
 
         return groupStorageId;
     }
+
+    /**
+     *
+     * 자동 가입 auto 설정
+     *
+     * @param member 회원
+     * @param memberGroup 가입 그룹
+     * @return 그룹 가입 상태
+     */
+    @Transactional
+    public GroupJoinStatus saveAutoRequestGroupJoin(Member member, MemberGroup memberGroup) {
+
+        GroupJoinRequest findGroupJoinReq = groupJoinRequestRepository.findByMemberAndMemberGroup(member, memberGroup);
+
+        if (findGroupJoinReq != null) {
+            if (findGroupJoinReq.getGroupJoinStatus().equals(NOTJOIN)) {
+                return NOTJOIN;
+            }
+        }
+
+        groupStorageService.save(member, memberGroup);
+
+        // 해당 요청 request 요청 승인 변경
+        groupJoinRequestRepository.save(
+                GroupJoinRequest.builder()
+                        .member(member)
+                        .denialCount(0)
+                        .memberGroup(memberGroup)
+                        .groupJoinStatus(JOIN)
+                        .build());
+
+        return JOIN;
+    }
+
+
 
     /**
      *
@@ -122,7 +159,7 @@ public class GroupJoinService {
             groupJoinRequest.updateGroupStatus(null);
 
         } else {
-            groupJoinRequest.updateGroupStatus(GroupJoinStatus.NOTJOIN);
+            groupJoinRequest.updateGroupStatus(NOTJOIN);
         }
 
 

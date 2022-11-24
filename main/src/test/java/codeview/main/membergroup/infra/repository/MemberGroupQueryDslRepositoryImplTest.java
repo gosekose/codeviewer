@@ -5,7 +5,7 @@
 //import codeview.main.member.infra.MemberRepository;
 //import codeview.main.membergroup.domain.MemberGroup;
 //import codeview.main.membergroup.domain.eumerate.MemberGroupVisibility;
-//import codeview.main.membergroup.presentation.dao.MemberGroupSearchCondition;
+//import codeview.main.membergroup.infra.repository.membergroup.query.MemberGroupSearchCondition;
 //import codeview.main.membergroup.presentation.dto.GroupForPageDto;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;

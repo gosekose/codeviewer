@@ -5,7 +5,7 @@ import codeview.main.membergroup.domain.MemberGroup;
 import lombok.Data;
 
 @Data
-public class ProblemDetailPageCond {
+public class ProblemDetailPageCondition {
 
     private Member creator;
     private MemberGroup memberGroup;
