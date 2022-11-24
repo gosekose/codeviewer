@@ -92,9 +92,9 @@
               <div class="mb-3">
                 <div>
                   <label class="form-label">자동 가입 설정</label>
-                  <input type="radio" class="form-check-inline" value="ON" name="groupAutoJoin" checked="checked">
+                  <input th:for="groupAutoJoin" type="radio" class="form-check-inline" value="ON" name="groupAutoJoin" checked="checked">
                   <label class="form-label">자동 가입 해제</label>
-                  <input type="radio" class="form-check-inline" value="OFF" name="groupAutoJoin">
+                  <input th:for="groupAutoJoin" type="radio" class="form-check-inline" value="OFF" name="groupAutoJoin">
                 </div>
               </div>
 

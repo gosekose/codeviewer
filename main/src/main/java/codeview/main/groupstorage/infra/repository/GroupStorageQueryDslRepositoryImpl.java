@@ -88,10 +88,11 @@ public class GroupStorageQueryDslRepositoryImpl implements GroupStorageQueryDslR
                                 memberGroup.creator.department))
                 .from(groupStorage)
                 .innerJoin(groupStorage.memberGroup, memberGroup)
-                .innerJoin(memberGroup.creator, member)
-                .innerJoin(member.school, school)
+                .innerJoin(groupStorage.member, member)
+                .leftJoin(memberGroup.creator.school, school)
                 .where(
-                        memberEq(condition.getMember()))
+                        memberEq(condition.getMember())
+                )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -100,10 +101,11 @@ public class GroupStorageQueryDslRepositoryImpl implements GroupStorageQueryDslR
                 .select(groupStorage.count())
                 .from(groupStorage)
                 .innerJoin(groupStorage.memberGroup, memberGroup)
-                .innerJoin(memberGroup.creator, member)
-                .innerJoin(member.school, school)
+                .innerJoin(groupStorage.member, member)
+                .leftJoin(memberGroup.creator.school, school)
                 .where(
-                        memberEq(condition.getMember()));
+                        memberEq(condition.getMember())
+                );
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }

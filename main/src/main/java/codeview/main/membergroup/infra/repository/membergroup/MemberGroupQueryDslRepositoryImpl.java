@@ -4,7 +4,7 @@ import codeview.main.member.domain.Member;
 import codeview.main.membergroup.domain.eumerate.GroupAutoJoin;
 import codeview.main.membergroup.domain.MemberGroup;
 import codeview.main.membergroup.domain.eumerate.MemberGroupVisibility;
-import codeview.main.membergroup.presentation.dao.MemberGroupSearchCondition;
+import codeview.main.membergroup.infra.repository.membergroup.query.MemberGroupSearchCondition;
 import codeview.main.membergroup.presentation.dto.GroupForPageDto;
 import codeview.main.membergroup.presentation.dto.QGroupForPageDto;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -24,14 +24,14 @@ import static codeview.main.membergroup.domain.QMemberGroup.memberGroup;
 @RequiredArgsConstructor
 public class MemberGroupQueryDslRepositoryImpl implements MemberGroupQueryDslRepository {
 
-    private final JPAQueryFactory jpaQueryFactory;
+    private final JPAQueryFactory query;
 
 
     @Override
     public List<MemberGroup> search(MemberGroupSearchCondition condition) {
-        return jpaQueryFactory.selectFrom(memberGroup)
+        return query.selectFrom(memberGroup)
                 .where(
-                        memberEq(condition.getMember()),
+                        adminEq(condition.getAdmin()),
                         visibilityEq(condition.getVisibility()),
                         nameContains(condition.getName())
                 )
@@ -41,12 +41,19 @@ public class MemberGroupQueryDslRepositoryImpl implements MemberGroupQueryDslRep
     @Override
     public Page<GroupForPageDto> searchPageComplex(MemberGroupSearchCondition condition, Pageable pageable) {
 
-        List<GroupForPageDto> content = jpaQueryFactory
-                .select(new QGroupForPageDto(memberGroup.id, memberGroup.name, memberGroup.memberGroupVisibility,
-                        memberGroup.maxMember, memberGroup.joinClosedTime, memberGroup.groupAutoJoin))
+        List<GroupForPageDto> content = query
+                .select(
+                        new QGroupForPageDto(
+                                memberGroup.id,
+                                memberGroup.name,
+                                memberGroup.memberGroupVisibility,
+                                memberGroup.maxMember,
+                                memberGroup.joinClosedTime,
+                                memberGroup.groupAutoJoin))
                 .from(memberGroup)
                 .where(
-                        memberEq(condition.getMember()),
+                        memberNe(condition.getCreator()),
+                        adminEq(condition.getAdmin()),
                         visibilityEq(condition.getVisibility()),
                         nameContains(condition.getName()),
                         groupJoinEq(condition.getGroupAutoJoin())
@@ -55,11 +62,12 @@ public class MemberGroupQueryDslRepositoryImpl implements MemberGroupQueryDslRep
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Long> countQuery = jpaQueryFactory
+        JPAQuery<Long> countQuery = query
                 .select(memberGroup.count())
                 .from(memberGroup)
                 .where(
-                        memberEq(condition.getMember()),
+                        memberNe(condition.getCreator()),
+                        adminEq(condition.getAdmin()),
                         visibilityEq(condition.getVisibility()),
                         nameContains(condition.getName()),
                         groupJoinEq(condition.getGroupAutoJoin())
@@ -68,9 +76,13 @@ public class MemberGroupQueryDslRepositoryImpl implements MemberGroupQueryDslRep
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
-    private BooleanExpression memberEq(Member member) {
-        return member != null ? memberGroup.creator.eq(member) : null;
+    private BooleanExpression adminEq(Member admin) {
+        return admin != null ? memberGroup.creator.eq(admin) : null;
     }
+    private BooleanExpression memberNe(Member member) {
+        return member != null ? memberGroup.creator.ne(member) : null;
+    }
+
 
     private BooleanExpression nameContains(String name) {
         return name != null ? memberGroup.name.contains(name) : null;

@@ -1,9 +1,9 @@
-package codeview.main.problem.presentation;
+package codeview.main.problem.presentation.controller.admin;
 
 import codeview.main.common.application.CsrfProviderService;
 import codeview.main.problem.application.ProblemService;
 import codeview.main.problem.infra.repository.query.ProblemDetailPageDto;
-import codeview.main.problem.infra.repository.query.ProblemDetailPageCond;
+import codeview.main.problem.infra.repository.query.ProblemDetailPageCondition;
 import codeview.main.problem.presentation.utils.ProblemPage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,10 +56,10 @@ public class ProblemAdminUiController {
     @GetMapping
     public String getProblemsAdminPage(@PathVariable("groupId") Integer groupId,
                                        Model model,
-                                       ProblemDetailPageCond condition,
+                                       ProblemDetailPageCondition condition,
                                        Pageable pageable) {
 
-        Page<ProblemDetailPageDto> searchProblems = problemService.getSearchProblems(condition, pageable);
+        Page<ProblemDetailPageDto> searchProblems = problemService.getDetailProblems(condition, pageable);
         model.addAttribute("groupId", groupId);
         model.addAttribute("problems", searchProblems);
 

@@ -1,4 +1,4 @@
-package codeview.main.membergroup.presentation.dao;
+package codeview.main.membergroup.infra.repository.membergroup.query;
 
 import codeview.main.member.domain.Member;
 import codeview.main.membergroup.domain.eumerate.GroupAutoJoin;
@@ -13,7 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MemberGroupSearchCondition {
 
-    private Member member;
+    private Member creator;
+    private Member admin;
     private String name;
     private MemberGroupVisibility visibility;
     private GroupAutoJoin groupAutoJoin;

@@ -11,6 +11,10 @@ public enum CacheType {
      *  클라이언트가 새로운 그룹을 생성하면, 캐시를 제거한 후, 새로운 데이터 받기
      *
      */
+
+    MEMBER("member", 5 * 60, 10000),
+    MEMBERGROUP("memberGroup", 5 * 60, 10000),
+
     GROUPSEARCH("groupSearch", 5 * 60, 10000),
     MYGROUPSEARCH("myGroupSearch", 5 * 60, 10000),
 

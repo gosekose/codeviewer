@@ -4,9 +4,9 @@ import codeview.main.auth.domain.users.PrincipalUser;
 import codeview.main.member.application.MemberService;
 import codeview.main.member.domain.Member;
 import codeview.main.membergroup.application.GroupService;
-import codeview.main.membergroup.application.MemberGroupsPageService;
+import codeview.main.membergroup.application.GroupsGetMemberPageService;
 import codeview.main.membergroup.domain.MemberGroup;
-import codeview.main.membergroup.presentation.dao.MemberGroupSearchCondition;
+import codeview.main.membergroup.infra.repository.membergroup.query.MemberGroupSearchCondition;
 import codeview.main.membergroup.presentation.dto.GroupForPageDto;
 import codeview.main.membergroup.presentation.util.MemberGroupsPageUtil;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Slf4j
 public class GroupListController {
 
-    private final MemberGroupsPageService memberGroupsPageService;
+    private final GroupsGetMemberPageService groupsGetMemberPageService;
     private final MemberService memberService;
 
     private final GroupService groupService;
@@ -46,10 +46,10 @@ public class GroupListController {
                                @AuthenticationPrincipal PrincipalUser principalUser,
                                @PageableDefault Pageable pageable) {
 
-        Member member = memberService.findByRegisterId(principalUser.getProviderUser().getId());
-        condition.setMember(member);
+        Member admin = memberService.findByRegisterId(principalUser.getProviderUser().getId());
+        condition.setAdmin(admin);
 
-        Page<GroupForPageDto> memberGroupsPage = memberGroupsPageService.getMyMemberGroupsPage(condition, pageable);
+        Page<GroupForPageDto> memberGroupsPage = groupsGetMemberPageService.getMyMemberGroupsPage(condition, pageable);
 
         MemberGroupsPageUtil.modelPagingAndModel(memberGroupsPage, model);
 

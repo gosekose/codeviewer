@@ -121,10 +121,10 @@
                 <td th:text="${group.groupName}"></td>
                 <td th:text="${group.creatorName}"></td>
                 <td th:text="${group.creatorSchoolName}"></td>
-                <td th:text="${group.creatorPrivateIdInSchool}"></td>
+                <td th:text="${group.creatorDepartment}"></td>
                 <td>
-<!--                    <a href="#" th:href="@{/api/v1/groups/admin/{id}/members (id=${group.id})}"-->
-<!--                       class="btn btn-primary" role="button">회원 관리</a>-->
+                    <a href="#" th:href="@{/api/v1/groups/{id}/problems (id=${group.groupId})}"
+                       class="btn btn-primary" role="button">그룹 이동</a>
                 </td>
             </tr>
         </table>

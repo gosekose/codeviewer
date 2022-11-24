@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum GroupJoinStatus {
     WAIT("WAIT"),
+    ALREADY("ALREADY"),
     JOIN("JOIN"),
     NOTJOIN("NOTJOIN");
 

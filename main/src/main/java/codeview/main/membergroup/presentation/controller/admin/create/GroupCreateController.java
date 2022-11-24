@@ -3,7 +3,7 @@ package codeview.main.membergroup.presentation.controller.admin.create;
 import codeview.main.auth.domain.users.PrincipalUser;
 import codeview.main.member.application.MemberService;
 import codeview.main.member.domain.Member;
-import codeview.main.membergroup.application.GroupCreateService;
+import codeview.main.membergroup.application.GroupService;
 import codeview.main.membergroup.domain.MemberGroup;
 import codeview.main.membergroup.domain.eumerate.MemberGroupVisibility;
 import codeview.main.membergroup.presentation.dto.CreateGroupForm;
@@ -26,7 +26,7 @@ import java.util.Map;
 @RequestMapping("/api/v1/groups/admin/new")
 public class GroupCreateController {
 
-    private final GroupCreateService groupCreateService;
+    private final GroupService groupService;
     private final MemberService memberService;
 
     @ModelAttribute("visibilities")
@@ -65,11 +65,11 @@ public class GroupCreateController {
 
         Member member = memberService.findByRegisterId(principalUser.getProviderUser().getId());
 
-        MemberGroup memberGroup = groupCreateService.createdGroupSave(member.getId(), createGroupForm);
+        MemberGroup memberGroup = groupService.createdGroupSave(member.getId(), createGroupForm);
         redirectAttributes.addAttribute("groupId", memberGroup.getId());
         redirectAttributes.addAttribute("status", true);
 
-        return "redirect:/api/v1/groups/admin/{groupId}";
+        return "redirect:/api/v1/groups/admin/list";
     }
 
 

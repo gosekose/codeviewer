@@ -3,7 +3,7 @@ package codeview.main.problem.infra.repository.query;
 import lombok.Data;
 
 @Data
-public class ProblemSearchPageCond {
+public class ProblemSearchPageCondition {
 
     private Long memberGroupId;
     private String creatorName;

@@ -21,6 +21,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberQueryDslRepositoryImpl memberQueryDslRepository;
 
+
+    @Cacheable(cacheNames = "member", key="#id")
     public Member find(Long id) {
 
         Optional<Member> findMember = memberRepository.findById(id);
@@ -29,6 +31,7 @@ public class MemberService {
         return member;
     }
 
+    @Cacheable(cacheNames = "member", key="#email")
     public Member findByEmail(String email) {
 
         Member member = memberRepository.findByEmail(email);
@@ -41,7 +44,7 @@ public class MemberService {
     }
 
 
-
+    @Cacheable(cacheNames = "member", key="#registeredId")
     public Member findByRegisterId(String registeredId) {
         Optional<Member> findMember = memberRepository.findByRegisterId(registeredId);
         Member member = findMember.orElseThrow(

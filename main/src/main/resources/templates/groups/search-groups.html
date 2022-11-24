@@ -275,11 +275,15 @@
                 console.log("success");
                 console.log(data);
 
-                if (data == true) {
-                    alert("신청이 완료 되었습니다.");
+                if (data == "JOIN") {
+                    alert("가입이 완료되었습니다.");
                     location.href= window.location.href;
-                } else {
+                } else if (data == "WAIT") {
+                    alert("신청이 완료 되었습니다.");
+                } else if (data == "ALREADY") {
                     alert("이미 신청이 완료 되었습니다.");
+                } else if (data == "NOTJOIN") {
+                    alert("가입할 수 없는 그룹입니다.");
                 }
             },
 
