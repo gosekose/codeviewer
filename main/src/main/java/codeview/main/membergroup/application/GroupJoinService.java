@@ -124,21 +124,25 @@ public class GroupJoinService {
         GroupJoinRequest findGroupJoinReq = groupJoinRequestRepository.findByMemberAndMemberGroup(member, memberGroup);
 
         if (findGroupJoinReq != null) {
-            if (findGroupJoinReq.getGroupJoinStatus().equals(NOTJOIN)) {
+
+            if (findGroupJoinReq.getGroupJoinStatus().equals(ONEDELETE)) {
+                findGroupJoinReq.updateGroupStatus(JOIN);
+            } else if (findGroupJoinReq.getGroupJoinStatus().equals(NOTJOIN)) {
                 return NOTJOIN;
             }
+        } else {
+
+            // 해당 요청 request 요청 승인 저장
+            groupJoinRequestRepository.save(
+                    GroupJoinRequest.builder()
+                            .member(member)
+                            .denialCount(0)
+                            .memberGroup(memberGroup)
+                            .groupJoinStatus(JOIN)
+                            .build());
         }
 
         groupStorageService.save(member, memberGroup);
-
-        // 해당 요청 request 요청 승인 변경
-        groupJoinRequestRepository.save(
-                GroupJoinRequest.builder()
-                        .member(member)
-                        .denialCount(0)
-                        .memberGroup(memberGroup)
-                        .groupJoinStatus(JOIN)
-                        .build());
 
         return JOIN;
     }
@@ -163,7 +167,7 @@ public class GroupJoinService {
         }
 
         if (groupJoinRequest.getDenialCount() < 2) {
-            groupJoinRequest.updateGroupStatus(null);
+            groupJoinRequest.updateGroupStatus(ONEDELETE);
 
         } else {
             groupJoinRequest.updateGroupStatus(NOTJOIN);

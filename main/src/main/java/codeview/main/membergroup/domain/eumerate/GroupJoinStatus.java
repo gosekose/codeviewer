@@ -7,6 +7,8 @@ public enum GroupJoinStatus {
     WAIT("WAIT"),
     ALREADY("ALREADY"),
     JOIN("JOIN"),
+
+    ONEDELETE("ONEDELTE"),
     NOTJOIN("NOTJOIN");
 
 

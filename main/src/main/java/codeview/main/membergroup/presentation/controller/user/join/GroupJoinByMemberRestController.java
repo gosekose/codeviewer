@@ -1,19 +1,19 @@
-package codeview.main.membergroup.presentation.controller.admin.join;
+package codeview.main.membergroup.presentation.controller.user.join;
 
-import codeview.main.auth.domain.users.PrincipalUser;
 import codeview.main.member.application.MemberService;
 import codeview.main.member.domain.Member;
 import codeview.main.membergroup.application.GroupJoinService;
 import codeview.main.membergroup.application.GroupService;
 import codeview.main.membergroup.domain.MemberGroup;
 import codeview.main.membergroup.domain.eumerate.GroupJoinStatus;
-import codeview.main.membergroup.infra.repository.join.query.JoinRequestDao;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import static codeview.main.membergroup.domain.eumerate.GroupAutoJoin.ON;
 
@@ -27,15 +27,15 @@ public class GroupJoinByMemberRestController {
     private final GroupService groupService;
     private final GroupJoinService groupJoinService;
 
-    @PostMapping("/{groupId}/join")
-    private ResponseEntity<GroupJoinStatus> postJoinGroup(@PathVariable("groupId") Integer groupId,
-                                                  @AuthenticationPrincipal PrincipalUser principalUser,
-                                                  @RequestBody JoinRequestDao joinRequestDao) {
+    @PostMapping("/{groupId}/join/{memberId}")
+    private ResponseEntity<GroupJoinStatus> postJoinGroup(
+            @PathVariable("groupId") Integer groupId,
+            @PathVariable("memberId") Integer memberId) {
 
         GroupJoinStatus joinStatus;
 
-        MemberGroup memberGroup = groupService.findById(Long.valueOf(joinRequestDao.getGroupId()));
-        Member member = memberService.find(Long.valueOf(joinRequestDao.getMemberId()));
+        MemberGroup memberGroup = groupService.findById(Long.valueOf(groupId));
+        Member member = memberService.find(Long.valueOf(Long.valueOf(memberId)));
 
         if (memberGroup.getGroupAutoJoin().equals(ON)) {
 
@@ -49,7 +49,7 @@ public class GroupJoinByMemberRestController {
 
         }
 
-        return new ResponseEntity<>(joinStatus, HttpStatus.OK);
+        return new ResponseEntity<>(joinStatus, HttpStatus.TEMPORARY_REDIRECT);
     }
 
 
