@@ -7,12 +7,14 @@ import codeview.main.member.domain.Member;
 import codeview.main.membergroup.application.GroupJoinService;
 import codeview.main.membergroup.application.GroupService;
 import codeview.main.membergroup.domain.MemberGroup;
-import codeview.main.membergroup.infra.repository.join.query.JoinRequestDao;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Slf4j
@@ -25,31 +27,31 @@ public class GroupJoinAdminRestController {
     private final GroupService groupService;
     private final GroupStorageService groupStorageService;
 
-    @PostMapping("/join/approval")
+    @PostMapping("/join/approval/{memberId}")
     public ResponseEntity<BaseEntity> joinApprove(
             @PathVariable("groupId") Integer groupId,
-            @RequestBody JoinRequestDao joinRequestDao) {
+            @PathVariable("memberId") Integer memberId) {
 
-        Member member = memberService.find(Long.valueOf(joinRequestDao.getMemberId()));
-        MemberGroup memberGroup = groupService.findById(Long.valueOf(joinRequestDao.getGroupId()));
+        Member member = memberService.find(Long.valueOf(memberId));
+        MemberGroup memberGroup = groupService.findById(Long.valueOf(groupId));
 
         groupJoinService.saveRequestGroupJoin(member, memberGroup);
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.TEMPORARY_REDIRECT);
     }
 
 
-    @PostMapping("/join/denial")
+    @PostMapping("/join/denial/{memberId}")
     public ResponseEntity<BaseEntity> joinDenied(
             @PathVariable("groupId") Integer groupId,
-            @RequestBody JoinRequestDao joinRequestDao) throws IllegalAccessException {
+            @PathVariable("memberId") Integer memberId) throws IllegalAccessException {
 
-        Member member = memberService.find(Long.valueOf(joinRequestDao.getMemberId()));
-        MemberGroup memberGroup = groupService.findById(Long.valueOf(joinRequestDao.getGroupId()));
+        Member member = memberService.find(Long.valueOf(memberId));
+        MemberGroup memberGroup = groupService.findById(Long.valueOf(groupId));
 
         groupJoinService.deniedRequestGroupJoin(member, memberGroup);
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.TEMPORARY_REDIRECT);
     }
 
 
@@ -66,7 +68,7 @@ public class GroupJoinAdminRestController {
 
         groupJoinService.deniedRequestGroupJoin(member, memberGroup);
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.TEMPORARY_REDIRECT);
     }
 
 }
