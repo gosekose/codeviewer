@@ -51,6 +51,33 @@ public class ProblemQueryDslRepositoryImpl implements ProblemQueryDslRepository 
                 .fetch();
     }
 
+    @Override
+    public Page<ProblemSearchForBoardDto> searchProblemForBoard(ProblemSearchPageCondition condition, Pageable pageable) {
+
+        List<ProblemSearchForBoardDto> content = query
+                .select(
+                        new QProblemSearchForBoardDto(
+                                problem.id,
+                                problem.name))
+                .from(problem)
+                .join(problem.memberGroup, memberGroup)
+                .where(
+                        memberGroupIdEq(condition.getMemberGroupId())
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Long> countQuery = query
+                .select(problem.count())
+                .from(problem)
+                .join(problem.memberGroup, memberGroup)
+                .where(
+                        memberGroupIdEq(condition.getMemberGroupId())
+                );
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
+    }
 
     @Override
     public Page<ProblemSearchPageDto> searchProblemPageComplex(ProblemSearchPageCondition condition, Pageable pageable) {

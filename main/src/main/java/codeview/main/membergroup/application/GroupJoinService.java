@@ -12,7 +12,6 @@ import codeview.main.membergroup.infra.repository.join.query.JoinRequestConditio
 import codeview.main.membergroup.infra.repository.join.query.JoinRequestQueryPageDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -49,6 +48,8 @@ public class GroupJoinService {
         GroupStorage groupStorage = groupStorageService.findByMemberAndMemberGroup(member, memberGroup);
 
         if (groupStorage == null) {
+
+            log.info("groupStorage ");
             GroupJoinRequest findGroupJoinReq = groupJoinRequestRepository.findByMemberAndMemberGroup(member, memberGroup);
 
             if (findGroupJoinReq == null) {
@@ -73,7 +74,7 @@ public class GroupJoinService {
         return saveJoinRequest.getId();
     }
 
-    @Cacheable(cacheNames = "groupJoinRequest", key="#id")
+//    @Cacheable(cacheNames = "groupJoinRequest", key="#id")
     public GroupJoinRequest findById(Long id) {
         Optional<GroupJoinRequest> optionalGroupJoinRequest = groupJoinRequestRepository.findById(id);
 
@@ -123,16 +124,8 @@ public class GroupJoinService {
 
         GroupJoinRequest findGroupJoinReq = groupJoinRequestRepository.findByMemberAndMemberGroup(member, memberGroup);
 
-        if (findGroupJoinReq != null) {
+        if (findGroupJoinReq == null) {
 
-            if (findGroupJoinReq.getGroupJoinStatus().equals(ONEDELETE)) {
-                findGroupJoinReq.updateGroupStatus(JOIN);
-            } else if (findGroupJoinReq.getGroupJoinStatus().equals(NOTJOIN)) {
-                return NOTJOIN;
-            }
-        } else {
-
-            // 해당 요청 request 요청 승인 저장
             groupJoinRequestRepository.save(
                     GroupJoinRequest.builder()
                             .member(member)
@@ -140,9 +133,19 @@ public class GroupJoinService {
                             .memberGroup(memberGroup)
                             .groupJoinStatus(JOIN)
                             .build());
-        }
 
-        groupStorageService.save(member, memberGroup);
+            groupStorageService.save(member, memberGroup);
+
+        } else {
+
+            if (findGroupJoinReq.getGroupJoinStatus().equals(NOTJOIN)) {
+                return NOTJOIN;
+            }
+            if (findGroupJoinReq.getGroupJoinStatus().equals(ONEDELETE)) {
+                groupStorageService.save(member, memberGroup);
+                findGroupJoinReq.updateGroupStatus(JOIN);
+            }
+        }
 
         return JOIN;
     }

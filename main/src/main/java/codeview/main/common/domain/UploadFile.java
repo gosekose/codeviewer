@@ -1,4 +1,4 @@
-package codeview.main.problem.domain;
+package codeview.main.common.domain;
 
 import lombok.Builder;
 import lombok.Getter;

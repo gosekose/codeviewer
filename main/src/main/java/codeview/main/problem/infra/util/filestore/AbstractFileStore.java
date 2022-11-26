@@ -1,7 +1,7 @@
 package codeview.main.problem.infra.util.filestore;
 
 import codeview.main.common.application.FolderMaker;
-import codeview.main.problem.domain.UploadFile;
+import codeview.main.common.domain.UploadFile;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;

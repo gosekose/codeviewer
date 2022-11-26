@@ -23,6 +23,7 @@ public enum CacheType {
     MYGROUPSEARCH("myGroupSearch", 5 * 60, 10000),
 
     PROBLEM("problem", 5 * 60, 10000),
+    PROBLEMFORBOARD("problemForBoard", 5*60, 10000),
 
     MYGROUPMEMBERINFO("myMemberGroupInfo", 5 * 60, 10000),
     MYGROUPMEMBERSOLVENOPROBLEMID("myGroupMemberSolveNoProblemId", 5 * 60, 10000),
