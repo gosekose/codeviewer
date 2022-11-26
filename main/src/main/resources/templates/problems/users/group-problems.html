@@ -4,15 +4,20 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="fragments/header :: header"></head>
+
+<head th:replace="fragments/header :: header">
+</head>
+<head>
+    <meta name="groupId" th:content="${groupId}"/>
+</head>
 
 <body data-bs-spy="scroll" data-bs-target="#navScroll">
 <div class="container">
     <div th:replace="fragments/bodyHeader2 :: bodyHeader" />
 
     <main>
-        <div>
-            질문
+        <div class="col-md-9 flex-fill nav-link" th:href="@{/api/v1/groups/admin/new}" style=" cursor: pointer;" onclick="location.href='/api/v1/groups/' + groupId + '/problems/board';">
+            <h3 class="h5 my-2">질문하기</h3>
         </div>
         <div class="container py-vh-6">
             <table class="table">
@@ -51,6 +56,10 @@
     AOS.init({
         duration: 800, // values from 0 to 3000, with step 50ms
     });
+
+    const groupId = $("meta[name='groupId']").attr("content");
+
+
 </script>
 
 </body>

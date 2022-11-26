@@ -4,20 +4,7 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-  <meta name="description" content="A growing collection of ready to use components for the CSS framework Bootstrap 5">
-  <meta name="author" content="Holger Koenemann">
-  <meta name="generator" content="Eleventy v2.0.0">
-  <meta name="HandheldFriendly" content="true">
-  <title>CODEVIEWER</title>
-  <link rel="stylesheet" type="text/css" th:href="@{/css/theme.min.css}">
-  <link rel="stylesheet" th:href="@{/css/webfont.css}">
-
-  <style>
-  </style>
-
+<head th:replace="fragments/header :: header">
 </head>
 
 <body class="d-flex h-100 w-100" data-bs-spy="scroll" data-bs-target="#navScroll">
