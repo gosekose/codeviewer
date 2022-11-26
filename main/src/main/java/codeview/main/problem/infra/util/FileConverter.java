@@ -1,6 +1,6 @@
 package codeview.main.problem.infra.util;
 
-import codeview.main.problem.domain.UploadFile;
+import codeview.main.common.domain.UploadFile;
 import codeview.main.problem.domain.embedded.InputFile;
 import codeview.main.problem.domain.embedded.ProblemFile;
 import codeview.main.problem.domain.embedded.ShellFile;

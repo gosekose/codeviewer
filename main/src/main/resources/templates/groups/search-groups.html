@@ -56,7 +56,7 @@
                     <td th:text="${group.joinClosedTime}"></td>
                     <td>
                         <button type="button" onclick="groupJoin(this)" class="btn btn-primary"
-                                data-toggle="modal" data-target="#joinModal" th:value="${group.id}" th:id="${group.id}"></button>
+                                data-toggle="modal" data-target="#joinModal" th:value="${group.id}" th:id="${group.id}">가입 신청</button>
                     </td>
                 </tr>
             </table>
@@ -124,6 +124,7 @@
             cache: true,
             statusCode: {
                 307:function(data) {
+                    alert("가입 신청 완료")
                     window.location.reload();
                     return 307;
                 }}
@@ -134,7 +135,11 @@
             fail(function( jqXHR, textStatus ) {
 
                 if (jqXHR.status == 307) {
-                    alert('가입 신청을 완료 하였습니다.');
+
+                    console.log(jqXHR.data);
+                    window.location.reload();
+                    return 307;
+
                 } else {
                     alert('실패');
                     console.log(jqXHR.status);

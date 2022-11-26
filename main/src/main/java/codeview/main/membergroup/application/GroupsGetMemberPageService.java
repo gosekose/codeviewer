@@ -26,4 +26,8 @@ public class GroupsGetMemberPageService {
         return memberGroupQueryDslRepository.searchPageComplex(condition, pageable);
     }
 
+    public Page<GroupForPageDto> getSearchGroupByJoinStatus(MemberGroupSearchCondition condition, Pageable pageable) {
+        return memberGroupQueryDslRepository.searchGroupByJoinStatus(condition, pageable);
+    }
+
 }

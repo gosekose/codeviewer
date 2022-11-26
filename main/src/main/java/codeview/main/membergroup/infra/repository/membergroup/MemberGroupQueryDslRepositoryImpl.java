@@ -1,13 +1,16 @@
 package codeview.main.membergroup.infra.repository.membergroup;
 
 import codeview.main.member.domain.Member;
-import codeview.main.membergroup.domain.eumerate.GroupAutoJoin;
 import codeview.main.membergroup.domain.MemberGroup;
+import codeview.main.membergroup.domain.QGroupJoinRequest;
+import codeview.main.membergroup.domain.eumerate.GroupAutoJoin;
+import codeview.main.membergroup.domain.eumerate.GroupJoinStatus;
 import codeview.main.membergroup.domain.eumerate.MemberGroupVisibility;
 import codeview.main.membergroup.infra.repository.membergroup.query.MemberGroupSearchCondition;
 import codeview.main.membergroup.presentation.dto.GroupForPageDto;
 import codeview.main.membergroup.presentation.dto.QGroupForPageDto;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -72,6 +75,66 @@ public class MemberGroupQueryDslRepositoryImpl implements MemberGroupQueryDslRep
                         nameContains(condition.getName()),
                         groupJoinEq(condition.getGroupAutoJoin())
                 );
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
+    }
+
+    @Override
+    public Page<GroupForPageDto> searchGroupByJoinStatus(MemberGroupSearchCondition condition, Pageable pageable) {
+
+        QGroupJoinRequest groupJoinRequest = new QGroupJoinRequest("groupJoinRequest");
+
+
+        List<GroupForPageDto> content = query
+                .select(
+                        new QGroupForPageDto(
+                                memberGroup.id,
+                                memberGroup.name,
+                                memberGroup.memberGroupVisibility,
+                                memberGroup.maxMember,
+                                memberGroup.joinClosedTime,
+                                memberGroup.groupAutoJoin))
+                .from(memberGroup)
+                .where(
+                        memberNe(condition.getCreator()),
+                        adminEq(condition.getAdmin()),
+                        visibilityEq(condition.getVisibility()),
+                        nameContains(condition.getName()),
+                        groupJoinEq(condition.getGroupAutoJoin()),
+                        memberGroup.id.notIn(
+                                JPAExpressions
+                                        .select(groupJoinRequest.memberGroup.id)
+                                        .from(groupJoinRequest)
+                                        .where(
+                                                groupJoinRequest.member.eq(condition.getCreator()),
+                                                groupJoinRequest.groupJoinStatus.ne(GroupJoinStatus.ONEDELETE)
+                                        )
+                        )
+                )
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        JPAQuery<Long> countQuery = query
+                .select(memberGroup.count())
+                .from(memberGroup)
+                .where(
+                        memberNe(condition.getCreator()),
+                        adminEq(condition.getAdmin()),
+                        visibilityEq(condition.getVisibility()),
+                        nameContains(condition.getName()),
+                        groupJoinEq(condition.getGroupAutoJoin()),
+                        memberGroup.id.notIn(
+                                JPAExpressions
+                                        .select(groupJoinRequest.memberGroup.id)
+                                        .from(groupJoinRequest)
+                                        .where(
+                                                groupJoinRequest.member.eq(condition.getCreator()),
+                                                groupJoinRequest.groupJoinStatus.ne(GroupJoinStatus.ONEDELETE)
+                                        )
+                        )
+                );
+
 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }

@@ -1,12 +1,10 @@
 package codeview.main.problem.application;
 
+import codeview.main.membergroup.application.GroupService;
 import codeview.main.problem.domain.Problem;
 import codeview.main.problem.infra.repository.ProblemQueryDslRepositoryImpl;
 import codeview.main.problem.infra.repository.ProblemRepository;
-import codeview.main.problem.infra.repository.query.ProblemDetailPageCondition;
-import codeview.main.problem.infra.repository.query.ProblemDetailPageDto;
-import codeview.main.problem.infra.repository.query.ProblemSearchPageCondition;
-import codeview.main.problem.infra.repository.query.ProblemSearchPageDto;
+import codeview.main.problem.infra.repository.query.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -23,6 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProblemService {
 
+    private final GroupService groupService;
     private final ProblemRepository problemRepository;
     private final ProblemQueryDslRepositoryImpl problemQueryDslRepository;
 
@@ -41,6 +40,11 @@ public class ProblemService {
                 }
         );
 
+    }
+
+    @Cacheable(cacheNames = "problemForBoard", key = "#condition.memberGroupId + #pageable.pageNumber")
+    public Page<ProblemSearchForBoardDto> getProblemForBoard(ProblemSearchPageCondition condition, Pageable pageable) {
+        return problemQueryDslRepository.searchProblemForBoard(condition, pageable);
     }
 
     @Cacheable(cacheNames = "problemSearch",

@@ -1,6 +1,6 @@
 package codeview.main.problem.infra.util.filestore;
 
-import codeview.main.problem.domain.UploadFile;
+import codeview.main.common.domain.UploadFile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 

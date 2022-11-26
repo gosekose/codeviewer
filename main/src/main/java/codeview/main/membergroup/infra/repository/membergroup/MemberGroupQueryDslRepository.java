@@ -16,5 +16,7 @@ public interface MemberGroupQueryDslRepository {
 
     Page<GroupForPageDto> searchPageComplex(MemberGroupSearchCondition condition, Pageable pageable);
 
+    Page<GroupForPageDto> searchGroupByJoinStatus(MemberGroupSearchCondition condition, Pageable pageable);
+
 
 }

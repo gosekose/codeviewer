@@ -1,7 +1,7 @@
 package codeview.main.problem.infra.util.filestore;
 
 
-import codeview.main.problem.domain.UploadFile;
+import codeview.main.common.domain.UploadFile;
 import codeview.main.problem.presentation.dao.ProblemDockerDao;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

@@ -45,7 +45,7 @@ public class GroupSearchByMemberController {
         condition.setVisibility(MemberGroupVisibility.VISIBLE);
         condition.setCreator(member);
 
-        Page<GroupForPageDto> memberGroupsPage = groupsGetMemberPageService.getMemberGroupsPage(condition, pageable);
+        Page<GroupForPageDto> memberGroupsPage = groupsGetMemberPageService.getSearchGroupByJoinStatus(condition, pageable);
 
         MemberGroupsPageUtil.modelPagingAndModel(memberGroupsPage, model);
         model.addAttribute("_csrf", csrfProviderService.createCsrf(request));

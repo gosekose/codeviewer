@@ -2,7 +2,7 @@ package codeview.main.problem.application;
 
 import codeview.main.membergroup.application.GroupService;
 import codeview.main.problem.domain.Problem;
-import codeview.main.problem.domain.UploadFile;
+import codeview.main.common.domain.UploadFile;
 import codeview.main.problem.infra.util.FileUnZip;
 import codeview.main.problem.infra.util.filestore.CommonFilStore;
 import codeview.main.problem.infra.util.filestore.DockerFileStore;
