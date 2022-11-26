@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html class="h-100" lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/header :: header">
+  <meta name="groupId" th:content="${groupId}"/>
+</head>
+
+<body data-bs-spy="scroll" data-bs-target="#navScroll">
+<div class="container">
+  <div th:replace="fragments/bodyHeader2 :: bodyHeader" />
+  <main>
+
+    <form class="row" th:action="@{/api/v1/members/profile}" th:object="${boardForm}" method="post">
+      <div class="col-12 col-lg-10 col-xl-8">
+        <div class="mb-3">
+          <label th:for="boardName" class="form-label">제목</label>
+          <input type="text" class="form-control form-control-lg" th:field="*{boardName}">
+        </div>
+        <div class="mb-3">
+          <label th:for="boardMain" class="form-label">내용</label>
+          <textarea id="boardMain" rows='10' cols='60'
+                    class="form-control form-control-lg" th:field="*{boardMain}"></textarea><br/>
+          <div id="boardMainResult" th:field="*{boardMain}" hidden></div>
+        </div>
+        <div class="mb-3">
+          <label th:for="boardMultipartFileList" class="form-label">첨부 파일</label>
+          <input multiple="multiple" type="file" class="form-control form-control-lg" th:field="*{boardMultipartFileList}">
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-xl">Submit</button>
+      </div>
+    </form>
+  </main>
+
+
+  <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+
+<script th:src="@{/static/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/static/js/aos.js}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+  AOS.init({
+    duration: 800, // values from 0 to 3000, with step 50ms
+  });
+
+  const groupId = $("meta[name='groupId']").attr("content");
+
+  function getHtml(){
+    var html = $("#boardMain").val().replace(/(?:\r\n|\r|\n)/g, '<br />');
+    $("#boardMainResult").html(html);
+  }
+
+
+</script>
+
+
+</body>
+
+</html>

@@ -4,27 +4,14 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
+<head th:replace="fragments/header :: header">
+</head>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-  <meta name="description" content="A growing collection of ready to use components for the CSS framework Bootstrap 5">
-  <meta name="author" content="Holger Koenemann">
-  <meta name="generator" content="Eleventy v2.0.0">
-  <meta name="HandheldFriendly" content="true">
   <meta name="_csrf" th:content="${_csrf.token}"/>
   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <meta name="groupId" th:content="${groupId}"/>
-  <meta name="memberId" th:content="${memberId}"/>
-
-  <title>CODEVIEWER</title>
-  <link rel="stylesheet" th:href="@{/static/css/bootstrap.min.css}" >
-  <link rel="stylesheet" th:href="@{/static/css/theme.min.css}">
-  <link rel="stylesheet" th:href="@{/static/css/webfont.css}">
-
-  <style>
-  </style>
-
 </head>
+
 
 <body data-bs-spy="scroll" data-bs-target="#navScroll">
 <div class="container">
@@ -122,14 +109,15 @@
   let chartMyScore = [];
   let chartOtherScore = [];
 
+  const problemId = $(arg).val();
+  const groupId = $("meta[name='groupId']").attr("content");
+  const memberId = $("meta[name='memberId']").attr("content");
+
   function chartShowFnc(arg) {
 
     const token = $("meta[name='_csrf']").attr("content");
     const header = $("meta[name='_csrf_header']").attr("content");
 
-    const problemId = $(arg).val();
-    const groupId = $("meta[name='groupId']").attr("content");
-    const memberId = $("meta[name='memberId']").attr("content");
 
     $.ajax({
       type: 'GET',
