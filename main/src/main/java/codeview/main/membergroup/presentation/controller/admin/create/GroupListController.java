@@ -1,6 +1,7 @@
 package codeview.main.membergroup.presentation.controller.admin.create;
 
 import codeview.main.auth.domain.users.PrincipalUser;
+import codeview.main.common.presentation.page.PageUtils;
 import codeview.main.member.application.MemberService;
 import codeview.main.member.domain.Member;
 import codeview.main.membergroup.application.GroupService;
@@ -8,7 +9,6 @@ import codeview.main.membergroup.application.GroupsGetMemberPageService;
 import codeview.main.membergroup.domain.MemberGroup;
 import codeview.main.membergroup.infra.repository.membergroup.query.MemberGroupSearchCondition;
 import codeview.main.membergroup.presentation.dto.GroupForPageDto;
-import codeview.main.membergroup.presentation.util.MemberGroupsPageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -50,8 +50,9 @@ public class GroupListController {
         condition.setAdmin(admin);
 
         Page<GroupForPageDto> memberGroupsPage = groupsGetMemberPageService.getMyMemberGroupsPage(condition, pageable);
+        PageUtils.modelPagingAndModel(memberGroupsPage, model, "memberGroups");
 
-        MemberGroupsPageUtil.modelPagingAndModel(memberGroupsPage, model);
+//        MemberGroupsPageUtil.modelPagingAndModel(memberGroupsPage, model);
 
         return "groups/admins/my-group-list";
     }
