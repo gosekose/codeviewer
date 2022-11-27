@@ -4,6 +4,9 @@ import codeview.main.auth.domain.users.PrincipalUser;
 import codeview.main.board.application.BoardMultipartFileService;
 import codeview.main.board.application.BoardService;
 import codeview.main.board.domain.Board;
+import codeview.main.board.domain.enumtype.Nondisclosure;
+import codeview.main.board.infra.repository.query.BoardListCondition;
+import codeview.main.board.infra.repository.query.BoardListDto;
 import codeview.main.board.presentation.dao.BoardForm;
 import codeview.main.common.presentation.page.PageUtils;
 import codeview.main.member.application.MemberService;
@@ -79,12 +82,12 @@ public class BoardController {
 
     @GetMapping("/problemList")
     public String getProblemForBoard(
-            @PathVariable("groupId") Integer groupId,
+            @PathVariable("groupId") Long groupId,
             ProblemSearchPageCondition condition,
             @PageableDefault Pageable pageable,
             Model model) {
 
-        condition.setMemberGroupId(Long.valueOf(groupId));
+        condition.setMemberGroupId(groupId);
 
         Page<ProblemSearchForBoardDto> problemForBoard = problemService.getProblemForBoard(condition, pageable);
         PageUtils.modelPagingAndModel(problemForBoard, model, "problemForBoard");
@@ -92,6 +95,24 @@ public class BoardController {
         model.addAttribute("groupId", groupId);
 
         return "boards/user/problem-popup";
+    }
+
+    @GetMapping("/list")
+    public String getBoardList(
+            @PathVariable("groupId") Long groupId,
+            @PageableDefault Pageable pageable,
+            BoardListCondition condition,
+            Model model) {
+
+        condition.setNondisclosure(Nondisclosure.OFF);
+        condition.setMemberGroup(groupService.findById(groupId));
+
+        Page<BoardListDto> boardListDtoPage = boardService.getBoardListDtoPage(condition, pageable);
+        model.addAttribute("groupId", groupId);
+        model.addAttribute("boardList", boardListDtoPage);
+
+        return "boards/user/board-list";
+
     }
 
 }

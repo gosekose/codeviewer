@@ -32,6 +32,8 @@ public class Board extends BaseEntity {
     @JoinColumn(name = "writer_id")
     private Member writer;
 
+    private String viewName;
+
     @Enumerated(STRING)
     private AnonymousCheck anonymousCheck;
 
@@ -43,6 +45,7 @@ public class Board extends BaseEntity {
     private Problem problem;
 
     private String boardName;
+    @Lob
     private String boardMain;
 
     @ManyToOne(fetch = LAZY)
@@ -55,7 +58,7 @@ public class Board extends BaseEntity {
 
     @Builder
     public Board(Member writer, AnonymousCheck anonymousCheck, Nondisclosure nondisclosure,
-                 Problem problem, MemberGroup memberGroup, String boardName, String boardMain) {
+                 Problem problem, MemberGroup memberGroup, String boardName, String boardMain, String viewName) {
         this.writer = writer;
         this.anonymousCheck = anonymousCheck;
         this.nondisclosure = nondisclosure;
@@ -63,6 +66,7 @@ public class Board extends BaseEntity {
         this.memberGroup = memberGroup;
         this.boardName = boardName;
         this.boardMain = boardMain;
+        this.viewName = viewName;
     }
 
     /** 연관 관계 편의 메서드 */
