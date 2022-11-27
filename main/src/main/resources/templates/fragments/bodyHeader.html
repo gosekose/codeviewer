@@ -24,28 +24,47 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a class="nav-link" th:href="@{/api/v1/members/profile}">
-                            마이 페이지
-                        </a>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                마이 프로필
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" th:href="@{/api/v1/members/profile}">프로필 수정</a></li>
+                            </ul>
+                        </div>
                     </li>
+
                     <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a class="nav-link" th:href="@{/logout}">
-                            채널 관리
-                        </a>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                                마이 그룹
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                                <li><a class="dropdown-item" th:href="@{/api/v1/groups/admin/new}">그룹 생성</a></li>
+                                <li><a class="dropdown-item" th:href="@{/api/v1/groups/admin/list}">마이 그룹 관리</a></li>
+                                <li><a class="dropdown-item" th:href="@{/api/v1/groups/join/list}">가입한 그룹 관리</a></li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton3" data-bs-toggle="dropdown" aria-expanded="false">
+                                그룹 찾기
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton3">
+                                <li><a class="dropdown-item" th:href="@{/api/v1/groups/search}">그룹 찾기</a></li>
+                            </ul>
+                        </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#gallery" aria-label="Brings you to the frontpage">
-                            서비스 소개
+                        <a class="nav-link" href="#">
+                            서비스 공지 사항
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#">
-                            제휴 고객사
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            이용문의
+                            이용 문의
                         </a>
                     </li>
                     <li class="nav-item" sec:authorize="isAuthenticated()">

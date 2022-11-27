@@ -1,6 +1,5 @@
 package codeview.main.board.infra.repository.query;
 
-import codeview.main.board.domain.enumtype.AnonymousCheck;
 import codeview.main.board.domain.enumtype.Nondisclosure;
 import codeview.main.member.domain.Member;
 import codeview.main.membergroup.domain.MemberGroup;
@@ -13,7 +12,6 @@ public class BoardListCondition {
     private MemberGroup memberGroup;
     private Problem problem;
     private Member member;
-    private AnonymousCheck anonymousCheck;
     private Nondisclosure nondisclosure;
 
 }

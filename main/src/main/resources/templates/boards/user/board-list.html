@@ -1,0 +1,72 @@
+<!DOCTYPE HTML>
+<html class="h-100" lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/header :: header">
+</head>
+<head>
+  <meta name="groupId" th:content="${groupId}"/>
+</head>
+
+<body data-bs-spy="scroll" data-bs-target="#navScroll">
+<div class="container">
+  <div th:replace="fragments/bodyHeader2 :: bodyHeader" />
+  <main>
+
+    <div class="container py-vh-6">
+
+      <table class="table">
+        <thead>
+        <tr>
+          <th>질문 번호</th>
+          <th>문제 번호</th>
+          <th>문제 이름</th>
+          <th>질문 제목</th>
+          <th>작성자</th>
+          <th>작성 시간</th>
+          <th>수정 시간</th>
+          <td></td>
+        </tr>
+        </thead>
+        <tr th:each="board: ${boardList.getContent()}">
+          <td th:text="${board.boardId}"></td>
+          <td th:text="${board.problemId}"></td>
+          <td th:text="${board.problemName}"></td>
+          <td th:text="${board.boardName}"></td>
+          <td th:text="${board.viewName}"></td>
+          <td th:text="${board.createdAt}"></td>
+          <td th:text="${board.modifiedAt}"></td>
+          <td>
+            <a href="#" class="btn btn-primary" role="button">가입 신청 관리</a>
+          </td>
+        </tr>
+      </table>
+
+      <nav style="text-align: center;">
+        <ul class="pagination">
+
+        </ul>
+      </nav>
+
+    </div>
+  </main>
+
+
+  <div th:replace="fragments/footer :: footer" />
+</div> <!-- /container -->
+
+<script th:src="@{/static/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/static/js/aos.js}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script>
+  AOS.init({
+    duration: 800, // values from 0 to 3000, with step 50ms
+  });
+</script>
+
+
+</body>
+
+</html>

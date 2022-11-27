@@ -19,6 +19,10 @@
         <div class="col-md-9 flex-fill nav-link" th:href="@{/api/v1/groups/admin/new}" style=" cursor: pointer;" onclick="location.href='/api/v1/groups/' + groupId + '/problems/board';">
             <h3 class="h5 my-2">질문하기</h3>
         </div>
+
+
+
+
         <div class="container py-vh-6">
             <table class="table">
                 <thead>
@@ -37,13 +41,10 @@
                     </td>
                 </tr>
             </table>
-
             <nav style="text-align: center;">
                 <ul class="pagination">
-
                 </ul>
             </nav>
-
         </div>
     </main>
     <div th:replace="fragments/footer :: footer" />

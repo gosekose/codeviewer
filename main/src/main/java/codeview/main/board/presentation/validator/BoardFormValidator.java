@@ -7,6 +7,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.sql.Clob;
+
 @Slf4j
 @Component
 public class BoardFormValidator implements Validator {

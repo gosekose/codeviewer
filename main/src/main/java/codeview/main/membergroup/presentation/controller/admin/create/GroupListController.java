@@ -33,12 +33,6 @@ public class GroupListController {
 
     private final GroupService groupService;
 
-    @GetMapping
-    public String index(Model model) {
-
-        return "groups/my-groups";
-    }
-
 
     @GetMapping("/admin/list")
     public String getGroupList(Model model,
