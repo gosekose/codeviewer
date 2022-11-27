@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html class="h-100" lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/header :: header"></head>
+<head>
+    <meta name="groupId" th:content="${groupId}"/>
+</head>
+
+<body data-bs-spy="scroll" data-bs-target="#navScroll">
+    <div class="container">
+        <main>
+            <div class="container py-vh-6">
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>문제 번호</th>
+                        <th>문제명</th>
+                        <td></td>
+                    </tr>
+                    </thead>
+                    <tr th:each="problem: ${problemForBoard.getContent()}">
+                        <td th:text="${problem.problemId}"></td>
+                        <td th:text="${problem.name}"></td>
+                        <td>
+                            <button type="button" onclick="problemCheck(this)" class="btn btn-primary"
+                                    th:value="${problem.problemId}" th:id="${problem.problemId}">선택</button>
+                        </td>
+                    </tr>
+                </table>
+
+                <nav style="text-align: center;">
+                    <ul class="pagination">
+
+                    </ul>
+                </nav>
+
+            </div>
+        </main>
+    </div> <!-- /container -->
+
+<script th:src="@{/static/js/bootstrap.bundle.min.js}"></script>
+<script th:src="@{/static/js/aos.js}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script>
+    AOS.init({
+        duration: 800, // values from 0 to 3000, with step 50ms
+    });
+
+    function problemCheck(arg) {
+        opener.document.getElementById('problemId').value = $(arg).val();
+        window.close();
+    }
+
+
+
+</script>
+
+
+</body>
+
+</html>

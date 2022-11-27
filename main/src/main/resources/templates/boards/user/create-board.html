@@ -5,58 +5,124 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="fragments/header :: header">
+</head>
+<head>
   <meta name="groupId" th:content="${groupId}"/>
 </head>
 
 <body data-bs-spy="scroll" data-bs-target="#navScroll">
-<div class="container">
-  <div th:replace="fragments/bodyHeader2 :: bodyHeader" />
-  <main>
+    <div class="container">
+      <div th:replace="fragments/bodyHeader2 :: bodyHeader" />
+      <main>
+        <form class="row" th:action="@{/api/v1/groups/{groupId}/problems/board (groupId=${groupId})}"
+              enctype="multipart/form-data" th:object="${boardForm}" method="post">
 
-    <form class="row" th:action="@{/api/v1/members/profile}" th:object="${boardForm}" method="post">
-      <div class="col-12 col-lg-10 col-xl-8">
-        <div class="mb-3">
-          <label th:for="boardName" class="form-label">제목</label>
-          <input type="text" class="form-control form-control-lg" th:field="*{boardName}">
-        </div>
-        <div class="mb-3">
-          <label th:for="boardMain" class="form-label">내용</label>
-          <textarea id="boardMain" rows='10' cols='60'
-                    class="form-control form-control-lg" th:field="*{boardMain}"></textarea><br/>
-          <div id="boardMainResult" th:field="*{boardMain}" hidden></div>
-        </div>
-        <div class="mb-3">
-          <label th:for="boardMultipartFileList" class="form-label">첨부 파일</label>
-          <input multiple="multiple" type="file" class="form-control form-control-lg" th:field="*{boardMultipartFileList}">
-        </div>
+          <div class="form-row align-items-center">
+            <div class="col-auto my-1">
+              <label class="mr-sm-2" for="inlineFormCustomSelect">질문 분야</label>
+              <select class="custom-select mr-sm-2" id="inlineFormCustomSelect" onchange="changeValue(this)">
+                <option selected>질문 분야</option>
+                <option value="1">문제</option>
+                <option value="2">실행 오류</option>
+                <option value="3">기타</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-12 col-lg-10 col-xl-8">
+            <div class="mb-3">
+              <label th:for="boardName" class="form-label">제목</label>
+              <input type="text" class="form-control form-control-lg" th:field="*{boardName}">
+              <div class="field-error" th:errors="*{boardName}"></div>
+            </div>
+            <div class="mb-3">
+              <label th:for="boardMain" class="form-label">내용</label>
+              <textarea id="boardMain" rows='10' cols='60'
+                        class="form-control form-control-lg" th:field="*{boardMain}"></textarea><br/>
+              <div class="field-error" th:errors="*{boardMain}"></div>
+            </div>
+            <div class="mb-3">
+              <div>
+                <label class="form-label">비공개 등록</label>
+                <input th:for="nondisclosure" type="radio" class="form-check-inline" value="ON" name="nondisclosure" checked="checked">
+                <label class="form-label">비공개 해제</label>
+                <input th:for="nondisclosure" type="radio" class="form-check-inline" value="OFF" name="nondisclosure">
+                <div class="field-error" th:errors="*{nondisclosure}"></div>
+              </div>
+            </div>
+            <div class="mb-3" id="problemIdShow">
+              <div>
+                <label class="form-label">문제 번호</label>
+                <input type="text" class="col-sm-2 col-form-label" onclick="showPopup();" id='problemId' name='problemId' value=''>
+              </div>
+            </div>
+            <div class="mb-3">
+              <div>
+                <label class="form-label">익명 등록</label>
+                <input th:for="anonymousCheck" type="radio" class="form-check-inline" value="ON" name="anonymousCheck" checked="checked">
+                <label class="form-label">익명 해제</label>
+                <input th:for="anonymousCheck" type="radio" class="form-check-inline" value="OFF" name="anonymousCheck">
+                <div class="field-error" th:errors="*{anonymousCheck}"></div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label th:for="boardMultipartFileList" class="form-label">첨부 파일</label>
+              <input multiple="multiple" type="file" class="form-control form-control-lg" th:field="*{boardMultipartFileList}">
+            </div>
 
-        <button type="submit" class="btn btn-primary btn-xl">Submit</button>
-      </div>
-    </form>
-  </main>
+            <button type="submit" class="btn btn-primary btn-xl">Submit</button>
+          </div>
+        </form>
+      </main>
+    </div>
+
+  <div th:replace="fragments/footer :: footer"></div> <!-- /container -->
+
+  <script th:src="@{/static/js/bootstrap.bundle.min.js}"></script>
+  <script th:src="@{/static/js/aos.js}"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script>
+    AOS.init({
+      duration: 800, // values from 0 to 3000, with step 50ms
+    });
+
+    const groupId = $("meta[name='groupId']").attr("content");
+
+    function getHtml(){
+      var html = $("#boardMain").val().replace(/(?:\r\n|\r|\n)/g, '<br />');
+      $("#boardMainResult").html(html);
+    }
+
+    function showPopup() {
+
+      window.open("/api/v1/groups/" + groupId + "/problems/board/problemList", "a", "width=800, height=600, left=100, top=50");
+    }
 
 
-  <div th:replace="fragments/footer :: footer" />
-</div> <!-- /container -->
+    function problemIdShowOn() {
+      $("#problemIdShow").show();
+    }
 
-<script th:src="@{/static/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/static/js/aos.js}"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script>
-  AOS.init({
-    duration: 800, // values from 0 to 3000, with step 50ms
-  });
+    function problemIdShowOff() {
+      $("#problemIdShow").hide();
+    }
 
-  const groupId = $("meta[name='groupId']").attr("content");
+    window.onload = function () {
+      problemIdShowOff();
+    }
 
-  function getHtml(){
-    var html = $("#boardMain").val().replace(/(?:\r\n|\r|\n)/g, '<br />');
-    $("#boardMainResult").html(html);
-  }
+    const changeValue = (target) => {
+
+      if (target.value == "1") {
+        problemIdShowOn()
+      } else {
+        problemIdShowOff()
+      }
+
+    }
 
 
-</script>
+  </script>
 
 
 </body>

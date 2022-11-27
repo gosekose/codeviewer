@@ -12,14 +12,13 @@ import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @Component
-public class GroupDtoValidator implements Validator {
+public class GroupCreateFormValidator implements Validator {
 
 
     @Override
     public boolean supports(Class<?> clazz) {
         return CreateGroupForm.class.isAssignableFrom(clazz);
     }
-
 
     @Override
     public void validate(Object target, Errors errors) {

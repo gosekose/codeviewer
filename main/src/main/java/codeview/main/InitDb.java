@@ -1,61 +1,57 @@
-//package codeview.main;
-//
-//import codeview.main.member.domain.Member;
-//import codeview.main.membergroup.domain.MemberGroup;
-//import codeview.main.membergroup.domain.eumerate.MemberGroupVisibility;
-//import codeview.main.school.domain.School;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.stereotype.Component;
-//import org.springframework.transaction.annotation.Transactional;
-//
-//import javax.annotation.PostConstruct;
-//import javax.persistence.EntityManager;
-//import java.time.LocalDateTime;
-//import java.util.UUID;
-//
-//@Component
-//@RequiredArgsConstructor
-//public class InitDb {
-//
-//    private final InitService initService;
-//
-//    @PostConstruct
-//    public void init() {
-//        initService.dbInit();
-//    }
-//
-//
-//    @Component
-//    @Transactional
-//    @RequiredArgsConstructor
-//    static class InitService {
-//
-//        private final EntityManager em;
-//
-//        /**
-//         *
-//         * member 100명
-//         * memberGroup 5개
-//         *
-//         */
-//        public void dbInit() {
-//
-//            for (int i=0; i<10; i++) {
-//
-//                String uuid = UUID.randomUUID().toString();
-//
-//                Member member = Member.builder()
-//                        .email(String.valueOf(i) + "@naver.com")
-//                        .registrationId("NAVER")
-//                        .authorities("ROLE_USER")
-//                        .password(UUID.randomUUID().toString())
-//                        .registerId(uuid)
-//                        .build();
-//
-//                member.updateProfile(UUID.randomUUID().toString(), 20, "studhent", null, null, "iise", UUID.randomUUID().toString());
-//
-//                em.persist(member);
-//
+package codeview.main;
+
+import codeview.main.member.domain.Member;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
+import java.util.UUID;
+
+@Component
+@RequiredArgsConstructor
+public class InitDb {
+
+    private final InitService initService;
+
+    @PostConstruct
+    public void init() {
+        initService.dbInit();
+    }
+
+
+    @Component
+    @Transactional
+    @RequiredArgsConstructor
+    static class InitService {
+
+        private final EntityManager em;
+
+        /**
+         *
+         * member 10명
+         * memberGroup 5개
+         *
+         */
+        public void dbInit() {
+
+            for (int i=0; i<10; i++) {
+
+                String uuid = UUID.randomUUID().toString();
+
+                Member member = Member.builder()
+                        .email(String.valueOf(i) + "@naver.com")
+                        .registrationId("NAVER")
+                        .authorities("ROLE_USER")
+                        .password(UUID.randomUUID().toString())
+                        .registerId(uuid)
+                        .build();
+
+                member.updateProfile(UUID.randomUUID().toString(), 20, "studhent", null, null, "iise", UUID.randomUUID().toString());
+
+                em.persist(member);
+
 //                for (int j=0; j<5; j++) {
 //
 //                    uuid = UUID.randomUUID().toString();
@@ -69,11 +65,11 @@
 //                            .creator(member)
 //                            .build());
 //                }
-//            }
-//            em.flush();
-//        }
-//
-//
+            }
+            em.flush();
+        }
+
+
 //        public void inputSchool() {
 //            String schoolAddress;
 //
@@ -95,6 +91,6 @@
 //                em.persist(School.builder().schoolMembership("membership").name(String.valueOf(i)+"대학교").address(schoolAddress).build());
 //            }
 //        }
-//
-//    }
-//}
+
+    }
+}

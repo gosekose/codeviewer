@@ -1,7 +1,7 @@
 package codeview.main.board.domain;
 
 import codeview.main.auth.domain.BaseEntity;
-import codeview.main.board.domain.embedded.BoardFile;
+import codeview.main.common.domain.UploadFile;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,11 +26,12 @@ public class BoardMultipartFile extends BaseEntity {
     private Board board;
 
     @Embedded
-    private BoardFile boardFile;
+    private UploadFile boardFile;
 
     @Builder
-    public BoardMultipartFile(Board board, BoardFile boardFile) {
+    public BoardMultipartFile(Board board, UploadFile boardFile) {
         this.board = board;
         this.boardFile = boardFile;
     }
+
 }
