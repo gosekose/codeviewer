@@ -1,6 +1,6 @@
 package codeview.main.common.argumentresolver;
 
-import codeview.main.member.domain.Member;
+import codeview.main.businessservice.member.domain.Member;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;

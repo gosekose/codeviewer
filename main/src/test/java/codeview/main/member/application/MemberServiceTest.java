@@ -1,7 +1,8 @@
 package codeview.main.member.application;
 
-import codeview.main.member.domain.Member;
-import codeview.main.member.infra.MemberRepository;
+import codeview.main.businessservice.member.application.MemberService;
+import codeview.main.businessservice.member.domain.Member;
+import codeview.main.businessservice.member.infra.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

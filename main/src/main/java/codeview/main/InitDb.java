@@ -1,6 +1,6 @@
 package codeview.main;
 
-import codeview.main.member.domain.Member;
+import codeview.main.businessservice.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

@@ -31,7 +31,7 @@
             </div>
             <div sec:authorize="isAuthenticated()">
               <div><h2>안녕하세요 <span th:text="${user}"/> 님</h2></div>
-              
+
               <div class="col-md-9 flex-fill nav-link" th:href="@{/api/v1/temp/admin/create/group}" style=" cursor: pointer;" onclick="location.href='/api/v1/temp/admin/create/group';">
                 <h3 class="h5 my-2">데이터 추가</h3>
               </div>

@@ -1,8 +1,8 @@
 package codeview.main.auth.application.certification;
 
 import codeview.main.auth.domain.users.social.ProviderUser;
-import codeview.main.member.domain.Member;
-import codeview.main.member.infra.MemberRepository;
+import codeview.main.businessservice.member.domain.Member;
+import codeview.main.businessservice.member.infra.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
