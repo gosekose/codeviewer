@@ -1,15 +1,16 @@
 package codeview.main.member.infra.repository;
 
-import codeview.main.groupstorage.domain.GroupStorage;
-import codeview.main.groupstorage.infra.repository.GroupStorageRepository;
-import codeview.main.member.domain.Member;
-import codeview.main.member.infra.MemberRepository;
-import codeview.main.member.infra.repository.query.GroupMemberInfo;
-import codeview.main.member.infra.repository.query.GroupMemberInfoCondition;
-import codeview.main.membergroup.domain.MemberGroup;
-import codeview.main.membergroup.domain.eumerate.MemberGroupAuthority;
-import codeview.main.membergroup.domain.eumerate.MemberGroupVisibility;
-import codeview.main.membergroup.infra.repository.membergroup.MemberGroupRepository;
+import codeview.main.businessservice.groupstorage.domain.GroupStorage;
+import codeview.main.businessservice.groupstorage.infra.repository.GroupStorageRepository;
+import codeview.main.businessservice.member.domain.Member;
+import codeview.main.businessservice.member.infra.MemberRepository;
+import codeview.main.businessservice.member.infra.repository.MemberQueryDslRepositoryImpl;
+import codeview.main.businessservice.member.infra.repository.query.GroupMemberInfo;
+import codeview.main.businessservice.member.infra.repository.query.GroupMemberInfoCondition;
+import codeview.main.businessservice.membergroup.domain.MemberGroup;
+import codeview.main.businessservice.membergroup.domain.eumerate.MemberGroupAuthority;
+import codeview.main.businessservice.membergroup.domain.eumerate.MemberGroupVisibility;
+import codeview.main.businessservice.membergroup.infra.repository.membergroup.MemberGroupRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

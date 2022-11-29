@@ -1,15 +1,17 @@
 package codeview.main.solve.infra.repository;
 
-import codeview.main.groupstorage.application.GroupStorageService;
-import codeview.main.member.domain.Member;
-import codeview.main.member.infra.MemberRepository;
-import codeview.main.membergroup.domain.MemberGroup;
-import codeview.main.membergroup.domain.eumerate.MemberGroupVisibility;
-import codeview.main.membergroup.infra.repository.membergroup.MemberGroupRepository;
-import codeview.main.problem.domain.Problem;
-import codeview.main.problem.infra.repository.ProblemRepository;
-import codeview.main.solve.domain.Solve;
-import codeview.main.solve.infra.repository.query.*;
+import codeview.main.businessservice.groupstorage.application.GroupStorageService;
+import codeview.main.businessservice.member.domain.Member;
+import codeview.main.businessservice.member.infra.MemberRepository;
+import codeview.main.businessservice.membergroup.domain.MemberGroup;
+import codeview.main.businessservice.membergroup.domain.eumerate.MemberGroupVisibility;
+import codeview.main.businessservice.membergroup.infra.repository.membergroup.MemberGroupRepository;
+import codeview.main.businessservice.problem.domain.Problem;
+import codeview.main.businessservice.problem.infra.repository.ProblemRepository;
+import codeview.main.businessservice.solve.domain.Solve;
+import codeview.main.businessservice.solve.infra.repository.SolveQueryDslRepositoryImpl;
+import codeview.main.businessservice.solve.infra.repository.SolveRepository;
+import codeview.main.businessservice.solve.infra.repository.query.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

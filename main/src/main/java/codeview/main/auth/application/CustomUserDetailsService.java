@@ -1,8 +1,8 @@
 package codeview.main.auth.application;
 
 import codeview.main.auth.application.certification.SelfCertification;
-import codeview.main.member.application.MemberService;
-import codeview.main.member.infra.MemberRepository;
+import codeview.main.businessservice.member.application.MemberService;
+import codeview.main.businessservice.member.infra.MemberRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

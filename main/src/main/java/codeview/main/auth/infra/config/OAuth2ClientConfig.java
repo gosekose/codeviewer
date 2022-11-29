@@ -2,9 +2,9 @@ package codeview.main.auth.infra.config;
 
 import codeview.main.auth.application.CustomOAuth2UserService;
 import codeview.main.auth.application.CustomOidcUserService;
-import codeview.main.token.infra.filter.authentication.JwtAuthenticationFilter;
-import codeview.main.token.infra.filter.authorization.JwtAuthorizationRsaFilter;
-import codeview.main.token.infra.signature.RsaSecuritySigner;
+import codeview.main.businessservice.token.infra.filter.authentication.JwtAuthenticationFilter;
+import codeview.main.businessservice.token.infra.filter.authorization.JwtAuthorizationRsaFilter;
+import codeview.main.businessservice.token.infra.signature.RsaSecuritySigner;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jose.jwk.RSAKey;

@@ -1,6 +1,7 @@
 package codeview.main.member.infra;
 
-import codeview.main.member.domain.Member;
+import codeview.main.businessservice.member.domain.Member;
+import codeview.main.businessservice.member.infra.MemberRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,8 +11,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Optional;
 import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest

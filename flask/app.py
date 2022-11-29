@@ -1,6 +1,6 @@
 from flask import Flask, request, Response, make_response, jsonify
 from flask_restx import Resource, Api
-import os, stat
+import os, stat, subprocess
 
 from flask_cors import CORS
 
@@ -12,7 +12,6 @@ cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 todos = {}
 count = 1
-
 
 @api.route('/api/v1/test/index/compile')
 class CompileIndex(Resource):
@@ -52,6 +51,53 @@ class CompileIndex(Resource):
         response.headers.add('Access-Control-Allow-Methods', "*")
 
         return response
+        
+        
+@api.route('/api/server/hello')
+class RequestSolveServer(Resource):
+
+    def get_build_version(self, command):
+        out = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE).stdout
+        return out.read().strip()
+
+    
+    def get(self):
+
+        try:
+
+            problem_url = request.args.get("problemUrl")
+            solve_id = request.args.get("solveId")
+            solve_request_url = request.args.get("solveRequestUrl")
+            
+            a = subprocess.run(['python3 test2.py'], shell=True, check=True)
+
+            response = make_response(jsonify({
+                'solveId': 15,
+                'score': 60.5,
+                'testStatus': 'COMPILE_ERROR'
+
+            }))
+
+            print(response)
+            print(problem_url)
+            print(solve_id)
+            print(solve_request_url)
+        
+        except :
+            response = make_response(jsonify({
+                'solveId': "",
+                'score': "",
+                'testStatus': 'COMPILE_ERROR'
+            }))
+
+
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        response.headers.add('Access-Control-Allow-Headers', "*")
+        response.headers.add('Access-Control-Allow-Methods', "*")
+
+        return response
+
+  
 
 @api.route('/todos')
 class TodoPost(Resource):
