@@ -53,51 +53,116 @@ class CompileIndex(Resource):
         return response
         
         
-@api.route('/api/server/hello')
+@api.route('/api/server/solve/test')
 class RequestSolveServer(Resource):
 
-    def get_build_version(self, command):
-        out = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE).stdout
-        return out.read().strip()
+    def get_subprocess(self, command):
 
+        out, err = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE).communicate(timeout=2)
+
+        return out, err
+
+
+    def python_problem_solve_test(self, problem_path, solve_request_url, score) :
     
+        result_score = 0
+        result_text = {}
+
+        try:
+            
+            os.chdir(problem_path)
+            oslist = os.listdir()
+            oslist.sort()
+
+            inputs, outputs = [], []
+            
+            for o in oslist:
+
+                if o.split('.')[-1] == 'in':
+                    inputs.append(o)
+                elif o.split('.')[-1] == 'out':
+                    outputs.append(o)
+
+                if (len(inputs) == len(outputs)):
+                    full_lenth = len(inputs)
+                else:
+                    full_lenth = min(len(inputs), len(outputs))
+            
+
+            for length in range(1, full_lenth+1):
+            
+                command = ("python " + solve_request_url + " < " + str(length) + ".in")
+
+                try:
+                    out, err = self.get_subprocess(command)
+
+                    try:
+                        answer = out.decode('utf-8').strip().split('\n')
+                        f = open('output' + str(length) + '.txt', 'r')
+                        result = f.readlines()
+                        result = list(map(lambda s: s.strip(), result))
+                        f.close()
+
+                        if (answer == result):
+                            result_score += int(score[length-1])
+                            result_text[str(length)] = "Success"
+                            
+                        else:
+                            result_text[str(length)] = "Wrong Answer"
+
+                    except:
+                        result_text["fail"] = "Compile Error"
+                    
+                except:
+                    out.kill()
+                    err.kill()
+                    result_text["fail"] = "Runtime Error"
+            
+        except:
+            result_text["fail"] = "Error"
+
+
+        return result_score, result_text    
+
+
+
     def get(self):
 
         try:
 
             problem_url = request.args.get("problemUrl")
             solve_id = request.args.get("solveId")
+            score = request.args.getlist("score")
             solve_request_url = request.args.get("solveRequestUrl")
             
-            a = subprocess.run(['python3 test2.py'], shell=True, check=True)
+            result_score, result_text = self.python_problem_solve_test("test2.py", problem_url, solve_request_url, score)
+            
+            print("result_score = ", result_score)
+            print("result_text = ", result_text)
 
             response = make_response(jsonify({
-                'solveId': 15,
-                'score': 60.5,
-                'testStatus': 'COMPILE_ERROR'
-
+                "solveId": solve_id,
+                "resultScore": result_score,
+                "resultStatus": result_text
             }))
-
-            print(response)
-            print(problem_url)
-            print(solve_id)
-            print(solve_request_url)
         
         except :
             response = make_response(jsonify({
-                'solveId': "",
-                'score': "",
-                'testStatus': 'COMPILE_ERROR'
+                "solveId": solve_id,
+                "resultScore": 0,
+                "resultStatus": "Server Error"
             }))
-
 
         response.headers.add("Access-Control-Allow-Origin", "*")
         response.headers.add('Access-Control-Allow-Headers', "*")
         response.headers.add('Access-Control-Allow-Methods', "*")
 
+        print(response)
+
         return response
 
   
+
 
 @api.route('/todos')
 class TodoPost(Resource):

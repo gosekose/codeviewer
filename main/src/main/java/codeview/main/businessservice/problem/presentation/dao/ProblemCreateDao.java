@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ProblemCreateDao {
 
-    private String name;
+    private String problemName;
     private LocalDateTime openTime;
     private LocalDateTime closedTime;
     private List<String> descriptions;

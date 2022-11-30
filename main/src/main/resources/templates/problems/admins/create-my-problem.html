@@ -9,120 +9,225 @@
   <meta name="_csrf" th:content="${_csrf.token}"/>
   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <meta name="groupId" th:content="${groupId}"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+
+    .custom-container-flex {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+
+  </style>
 </head>
 
 <body data-bs-spy="scroll" data-bs-target="#navScroll">
 <div class="container">
   <div th:replace="fragments/bodyHeader2 :: bodyHeader" />
-  <main class="mb-auto col-12">
+  <main>
     <h1>문제 생성</h1>
-    <div sec:authorize="isAuthenticated()">
-      <form id="problemCreateForm" class="row" method="post" enctype="multipart/form-data">
-        <!--            <input type="hidden" th:field="*{id}" />-->
-        <div class="col-12 col-lg-10 col-xl-8">
+    </br>
 
-          <div class="mb-3">
-            <label class="form-label">문제명
-              <input type="text" value="" name="name" class="form-control form-control-lg" placeholder="문제명은 필수입니다.">
-            </label>
+    <div class="custom-container-flex">
+      <div class="mb-auto col-5">
+        <div class="mb-3">
+          <select class="form-select" required aria-label="select example" onchange="selectProblemType(this.value)">
+            <option value="">문제 출제 형식</option>
+            <option value="homeworkType">과제형</option>
+            <option value="testType">시험형</option>
+          </select>
+          <div class="invalid-feedback">출제 형태를 선택하세요</div>
+        </div>
+
+        <form id="problemCreateForm" class="row g-1 needs-validation" novalidate>
+          <div class="col-md-4 position-relative">
+            <label for="problemName" class="form-label">문제명</label>
+            <input type="text" class="form-control" id="problemName" name="problemName" value="" required onchange="previewProblemName()">
+          </div>
+          <div class="col-md-4 position-relative">
+            <label for="openTime" class="form-label">오픈 시간</label>
+            <input type='date' id="openTime" name='openTime' value='서버에 전송할 값'/>
+            <div class="valid-tooltip">
+            </div>
+          </div>
+          <div class="col-md-4 position-relative">
+            <label for="closedTime" class="form-label">마감 시간</label>
+            <div class="input-group has-validation">
+              <input type='date' id="closedTime" name='closedTime' value='서버에 전송할 값'/>
+              <div class="invalid-tooltip">
+              </div>
+            </div>
           </div>
 
           <div class="mb-3">
-            <label class="form-label">오픈 시간
-              <input type="text" value="" name="openTime" class="form-control form-control-lg" placeholder="오픈 시간">
-            </label>
+            <label for="descriptions" class="form-label">문제 설명</label>
+            <textarea class="form-control" id="descriptions" name="descriptions" placeholder="문제 설명을 작성 하세요." required
+            onchange="previewProblemDescription()"> </textarea>
+            <div class="invalid-feedback">
+              문제 설명을 작성 하세요.
+            </div>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label">마감 시간
-              <input type="text" value="" name="closedTime" class="form-control form-control-lg" placeholder="마감 시간">
-            </label>
-          </div>
-
-
-
-          <div class="mb-3" id="addDescriptionForm">
-            <label class="form-label">문제 설명
-              <input type="text" class="form-control form-control-lg" name="descriptions">
-            </label>
-          </div>
-          <a id="addDescriptionParam" href="javascript:void(0);">문제 설명 추가</a>
 
           <div class="mb-3" id="addSampleForm">
-            <label class="form-label">인풋
-              <input type="text" class="form-control form-control-lg" name="inputs">
-            </label>
-            <label class="form-label">아웃풋
-              <input type="text" class="form-control form-control-lg" name="outputs">
-            </label>
-          </div>
-          <a id="addSampleParam" href="javascript:void(0);">샘플 추가</a>
+            <label for="problemInput0" class="form-label">입력 예시 작성</label>
+            <textarea class="form-control" name="inputs" id="problemInput0" placeholder="입력 예시를 작성 하세요"
+                      required onchange="previewProblemInput0()"></textarea>
+            <label for="problemOutput0" class="form-label">출력 예시 작성</label>
+            <textarea class="form-control" name="outputs" id="problemOutput0" placeholder="출력 예시를 작성 하세요"
+                      required onchange="previewProblemOutput0()"></textarea>
 
+          </div>
+          <a id="addSampleParam" href="javascript:void(0);">입출력 예시 추가하기</a>
 
           <div class="mb-3">
-            <label class="form-label">문제 파일 업로드
-              <input type="file" class="form-control form-control-lg" name="problemFile" id="problemFile">
+            <input type="file" class="form-control" aria-label="file example" required>
+            <div class="invalid-feedback">Example invalid form file feedback</div>
+          </div>
+
+<!--          <i class="fa fa-camera"></i>-->
+
+          <div class="mb-3">
+            <button class="btn btn-primary" type="submit" disabled>Submit form</button>
+          </div>
+        </form>
+
+        <form id="problemIoZipForm" class="row" method="post" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label class="form-label">입출력 zip 파일 업로드
+              <input type="file" class="form-control form-control-lg" name="ioZipFile" id="ioZipFile" onchange="ajaxZipCall()">
             </label>
+          </div>
+          <div class="mb-3">
+            <button type="button" id="ajaxProblemZipCall" onclick="ajaxZipCall()" class="btn btn-primary">입출력 파일 등록</button>
+          </div>
+        </form>
+
+
+        <form id="inputDockerTestForm" class="row" method="post" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label class="form-label">문제 파일
+              <input type="file" class="form-control form-control-lg" name="mainSource" id="mainSource">
+            </label>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">입출력 파일
+              <input type="file" class="form-control form-control-lg" name="ioFileZip" id="ioFileZip">
+            </label>
+          </div>
+          <button type="button" id="inputDockerTest" onclick="ajaxServerTestCall()" class="btn btn-primary btn-xl">서버 입출력 테스트</button>
+        </form>
+
+
+      </div>
+      <div class="mb-auto col-5">
+        <div>
+          <h1> 문제명</h1>
+          <div>
+            <div class="card">
+              <div class="card-header" id="problemTypePreview" value="test">
+                문제 타입
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">
+                  <div id="previewProblemName">
+                    문제명
+                  </div>
+                </h5>
+                <p class="card-text"></p>
+              </div>
+            </div>
+            <br>
           </div>
         </div>
 
-        <!--              <div class="mb-3">-->
-        <!--                <label class="form-label">쉘 파일 업로드-->
-        <!--                  <input type="file" class="form-control form-control-lg" name="shellFile" id="shellFile">-->
-        <!--                </label>-->
-        <!--              </div>-->
 
-        <!--              <div class="mb-3">-->
-        <!--                <label class="form-label">인풋 파일 업로드-->
-        <!--                  <input type="file" class="form-control form-control-lg" name="inputFile" id="inputFile">-->
-        <!--                </label>-->
-        <!--              </div>-->
+        <div>
+          <h1> 문제 설명 </h1>
 
-        <button type="button" id="ajaxProblemCall" onclick="ajaxCall()" class="btn btn-primary btn-xl">문제 등록</button>
-      </form>
+          <div>
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title" id="previewProblemDescription">
+                  입력</h5>
+                <p class="card-text"></p>
+              </div>
+            </div>
+            <br>
+          </div>
+        </div>
 
-      </br>
-      </br>
-      <div id="ajaxIoUnzipFile">
+
+        <div>
+          <h1> 입출력 예시 </h1>
+
+          <div>
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">
+                  입력</h5>
+                <p class="card-text" id="previewProblemInput0"></p>
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">출력</h5>
+                <p class="card-text" id="previewProblemOutput0"></p>
+              </div>
+            </div>
+            <br>
+          </div>
+        </div>
+
+        <div id="previewAddIOExample">
+
+        </div>
+
       </div>
-      </br>
-      </br>
-      <form id="problemIoZipForm" class="row" method="post" enctype="multipart/form-data">
-        <div class="mb-3">
-          <label class="form-label">입출력 파일 업로드
-            <input type="file" class="form-control form-control-lg" name="ioZipFile" id="ioZipFile">
-          </label>
-        </div>
-        <button type="button" id="ajaxProblemZipCall" onclick="ajaxZipCall()" class="btn btn-primary btn-xl">입출력 파일 등록</button>
-      </form>
-
-      </br>
-      <form id="inputDockerTestForm" class="row" method="post" enctype="multipart/form-data">
-        <div class="mb-3">
-          <label class="form-label">문제 파일
-            <input type="file" class="form-control form-control-lg" name="mainSource" id="mainSource">
-          </label>
-        </div>
-        <div class="mb-3">
-          <label class="form-label">입출력 파일
-            <input type="file" class="form-control form-control-lg" name="ioFileZip" id="ioFileZip">
-          </label>
-        </div>
-        <button type="button" id="inputDockerTest" onclick="ajaxDockerCall()" class="btn btn-primary btn-xl">도커 테스트</button>
-      </form>
-
     </div>
+
   </main>
   <div th:replace="fragments/footer :: footer" /></div> <!-- /container -->
 
 <script th:src="@{/static/js/bootstrap.bundle.min.js}"></script>
 <script th:src="@{/static/js/aos.js}"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
 <script>
 
   AOS.init({
     duration: 800, // values from 0 to 3000, with step 50ms
   });
+
+  let selectProblemType = function (value) {
+
+    console.log(value);
+    if (value == "homeworkType") {
+      $("#problemTypePreview").text("과제형");
+    } else if (value == "testType") {
+      $("#problemTypePreview").text("시험형");
+    }
+  }
+
+  function previewProblemName()  {
+    const name = document.getElementById('problemName').value;
+    document.getElementById("previewProblemName").innerText = name;
+  }
+
+  function previewProblemDescription()  {
+    const name = document.getElementById('descriptions').value;
+    document.getElementById("previewProblemDescription").innerText = name;
+  }
+
+  function previewProblemInput0()  {
+    const name = document.getElementById('problemInput0').value;
+    document.getElementById("previewProblemInput0").innerText = name;
+  }
+
+  function previewProblemOutput0()  {
+    const name = document.getElementById('problemOutput0').value;
+    document.getElementById("previewProblemOutput0").innerText = name;
+  }
+
 
   let ajaxIoFilePath = []
   const token = $("meta[name='_csrf']").attr("content");
@@ -137,10 +242,38 @@
 
   $(document).ready(function() {
     $('#addSampleParam').click(function() {
-      const html = '<br/>                 ' + '<label class="form-label">인풋\n' + '<input type="text" class="form-control form-control-lg" name="inputs">\n' + '</label>\n' +
-              '<label class="form-label">아웃풋\n' + '<input type="text" class="form-control form-control-lg" name="outputs">\n' + '</label>'
-      $('#addSampleForm').append(html);});});
 
+      const html =
+              '<label for="validationTextarea" class="form-label">입력 예시 작성</label>' +
+              '      <textarea class="form-control add-inputs" name="inputs" placeholder="입력 예시를 작성 하세요" ' +
+              'required onchange="previewAddInputs()"></textarea>' +
+              '<label for="validationTextarea" class="form-label">출력 예시 작성</label>\n' +
+              '      <textarea class="form-control add-outputs" name="outputs" placeholder="출력 예시를 작성 하세요" ' +
+              'required onchange="previewAddOutputs()"></textarea>\n'
+
+      const previewHtml =
+              '<div>\n' +
+              '                <h1> 입출력 예시 </h1>\n' +
+              '\n' +
+              '                <div>\n' +
+              '                  <div class="card">\n' +
+              '                    <div class="card-body">\n' +
+              '                      <h5 class="card-title">\n' +
+              '                        입력</h5>\n' +
+              '                      <p class="card-text privewAddInputs"></p>\n' +
+              '                    </div>\n' +
+              '                    <div class="card-body">\n' +
+              '                      <h5 class="card-title">출력</h5>\n' +
+              '                      <p class="card-text privewAddOutputs"></p>\n' +
+              '                    </div>\n' +
+              '                  </div>\n' +
+              '                  <br>\n' +
+              '                </div>\n' +
+              '              </div>'
+
+      $('#addSampleForm').append(html);
+
+      $('#previewAddIOExample').append(previewHtml);});});
 
   function ajaxCall() {
     const form = $("#problemCreateForm")[0];
@@ -194,6 +327,7 @@
       success: function(data) {
         console.log(data);
         ajaxIoFilePath = data;
+        alert("등록이 완료 되었습니다.")
 
         $("#ajaxIoUnzipFile").html(""); // 태그 초기화
         $(document).ready(function() {
@@ -216,7 +350,7 @@
     })
   }
 
-  function ajaxDockerCall() {
+  function ajaxServerTestCall() {
     const form = $("#inputDockerTestForm")[0];
     const formData = new FormData(form);
 
@@ -241,6 +375,7 @@
       }
     })
   }
+
 
 </script>
 </body>

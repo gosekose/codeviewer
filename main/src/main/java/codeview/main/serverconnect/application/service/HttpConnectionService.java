@@ -2,6 +2,10 @@ package codeview.main.serverconnect.application.service;
 
 import codeview.main.serverconnect.presentation.dto.SolveRequestDto;
 import codeview.main.serverconnect.presentation.dto.SolveResponseDto;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -13,10 +17,15 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.List;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class HttpConnectionService {
 
+    private final ObjectMapper objectMapper;
 
     /**
      * 요청URL을 받아 통신하기
@@ -91,21 +100,29 @@ public class HttpConnectionService {
     }
 
     //1.get방식 요청
-    public SolveResponseDto requestSolveScore(SolveRequestDto solveRequestDto){
+    public SolveResponseDto requestSolveScore(SolveRequestDto solveRequestDto) throws JsonProcessingException {
+
+        SolveRequestDto req = buildSolveRequest(solveRequestDto);
 
         //URI를 빌드한다
         URI uri = UriComponentsBuilder
                 .fromUriString("http://localhost:5000")
-                .path("/api/server/hello")
+                .path("/api/server/solve/test")
                 .queryParam("problemUrl", solveRequestDto.getProblemUrl())
-                .queryParam("solveId", solveRequestDto.getSolveId())
                 .queryParam("solveRequestUrl", solveRequestDto.getSolveRequestUrl())
+                .queryParam("solveId", solveRequestDto.getSolveId())
+                .queryParam("score", solveRequestDto.getScore())
                 .encode(Charset.defaultCharset())
                 .build()
                 .toUri();
-        System.out.println(uri.toString());
 
         RestTemplate restTemplate = new RestTemplate();
+
+//        RequestEntity<SolveRequestDto> requestEntity = RequestEntity
+//                .post(uri)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .body(req);
+
 
         ResponseEntity<SolveResponseDto> result = restTemplate.getForEntity(uri, SolveResponseDto.class);
 
@@ -113,6 +130,17 @@ public class HttpConnectionService {
         System.out.println(result.getBody());
 
         return result.getBody();
+    }
+
+    public SolveRequestDto buildSolveRequest(SolveRequestDto solveRequestDto) throws JsonProcessingException {
+
+        solveRequestDto.setSolveId(10L);
+        solveRequestDto.setSolveRequestUrl("ttt");
+        solveRequestDto.setProblemUrl("ttt");
+        List<Integer> array = Arrays.asList(10, 20);
+        solveRequestDto.setScore(array);
+
+        return solveRequestDto;
     }
 
 

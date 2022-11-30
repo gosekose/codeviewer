@@ -1,55 +1,78 @@
 import subprocess, sys, os
 
-def get_build_version(command):
+def get_subprocess(command):
 
-  out, err = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE).communicate(timeout=10)
+  out, err = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE).communicate(timeout=2)
 
   return out, err
 
 
-if __name__ == '__main__':
+
+def python_problem_solve_test(filename, score) :
+  
+  result_score = 0
+  result_text = {}
 
   try:
 
-    # a = os.listdir()
-    # a.sort()
+    oslist = os.listdir()
+    oslist.sort()
 
-    # inputs = []
-    # outputs = []
+    inputs, outputs = [], []
     
-    # for i in a:
-    #   print(i)
-    #   if i[0:5] == "input":
-    #     inputs.append(i)
-    #   elif i[0:5] == "ouput":
-    #     outputs.append(i)
+    for o in oslist:
+      if o.split('.')[-1] == 'in':
+        inputs.append(o)
+      elif o.split('.')[-1] == 'out':
+        outputs.append(o)
 
-    #   if (len(inputs) == len(outputs)):
-    #     full_lenth = len(inputs)
-    #   else:
-    #     full_lenth = min(len(inputs), len(outputs))
+      if (len(inputs) == len(outputs)):
+        full_lenth = len(inputs)
+      else:
+        full_lenth = min(len(inputs), len(outputs))
 
-    # for i in full_lenth:
-    #   out, err = get_build_version('./run.sh')
-    #   b = out.decode('utf-8').strip().split('\n')
+    for length in range(1, full_lenth+1):
+      
+      command = ("python " + filename + " < " + str(length) + ".in")
 
-    out, err = get_build_version('./run.sh')
-    b = out.decode('utf-8').strip().split('\n')
-    print(b)
+      try:
+        out, err = get_subprocess(command)
 
-    # c = []
-    
-    # # f = open(sys.argv[1], 'r') 
+        try:
+          answer = out.decode('utf-8').strip().split('\n')
+          f = open('output' + str(length) + '.txt', 'r')
+          result = f.readlines()
+          result = list(map(lambda s: s.strip(), result))
+          f.close()
 
-    f = open('output1.txt', 'r')
-    lines = f.readlines()
-    lines = list(map(lambda s: s.strip(), lines))
-    f.close()
-    print(lines)
+          if (answer == result):
+            result_score += score[length-1]
+            result_text[str(length)] = "Success"
+          else:
+            result_text[str(length)] = "Wrong Answer"
 
-    print(b == lines)
+        except:
+          result_text["fail"] = "Compile Error"
+          print("Compile Error")
+          
+
+      except:
+        out.kill()
+        err.kill()
+        result_text["fail"] = "Runtime Error"
+        print("Runtime error")
     
   except:
+    result_text["fail"] = "Error"
     print("errors")
 
-print('aaa')
+
+  return result_score, result_text
+
+if __name__ == '__main__':
+
+  score = [50, 50]
+  result_score, result_text = python_problem_solve_test("test2.py", score)
+
+  print(result_score)
+  print(result_text)

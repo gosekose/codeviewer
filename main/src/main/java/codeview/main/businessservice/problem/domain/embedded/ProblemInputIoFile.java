@@ -10,14 +10,12 @@ import javax.persistence.Embeddable;
 @Embeddable
 @Getter @Setter
 @NoArgsConstructor
-public class InputFile {
+public class ProblemInputIoFile {
 
-    private String inputUploadName;
-    private String inputStoreName;
+    private String inputStoreFolderPath;
 
     @Builder
-    public InputFile(String inputUploadName, String inputStoreName) {
-        this.inputUploadName = inputUploadName;
-        this.inputStoreName = inputStoreName;
+    public ProblemInputIoFile(String inputStoreFolderPath) {
+        this.inputStoreFolderPath = inputStoreFolderPath;
     }
 }
