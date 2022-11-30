@@ -1,10 +1,13 @@
 package codeview.main.businessservice.problem.presentation.controller.admin;
 
+import codeview.main.businessservice.membergroup.application.GroupService;
+import codeview.main.businessservice.membergroup.domain.MemberGroup;
+import codeview.main.businessservice.problem.application.ProblemCreateService;
+import codeview.main.businessservice.problem.application.ProblemService;
 import codeview.main.businessservice.problem.infra.repository.query.ProblemDetailPageCondition;
 import codeview.main.businessservice.problem.infra.repository.query.ProblemDetailPageDto;
 import codeview.main.businessservice.problem.presentation.utils.ProblemPage;
 import codeview.main.common.application.CsrfProviderService;
-import codeview.main.businessservice.problem.application.ProblemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -26,7 +29,9 @@ public class ProblemAdminUiController {
     private final ProblemPage problemPage;
     private final CsrfProviderService csrfProviderService;
 
+    private final GroupService groupService;
     private final ProblemService problemService;
+    private final ProblemCreateService problemCreateService;
 
     @GetMapping("/new")
     public String getCreateProblem(
@@ -34,8 +39,12 @@ public class ProblemAdminUiController {
             HttpServletRequest request,
             Model model) {
 
+        MemberGroup memberGroup = groupService.findById(Long.valueOf(groupId));
+
         model.addAttribute("_csrf", csrfProviderService.createCsrf(request));
         model.addAttribute("groupId", groupId);
+
+        problemCreateService.deleteNotFolderPath(memberGroup);
 
         return "problems/admins/create-my-problem";
     }

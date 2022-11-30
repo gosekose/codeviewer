@@ -99,6 +99,9 @@
               <input type="file" class="form-control form-control-lg" name="ioZipFile" id="ioZipFile" onchange="ajaxZipCall()">
             </label>
           </div>
+          <div>
+            <input type="text" id="preFilePath" value="" name="preFilePath" hidden>
+          </div>
           <div class="mb-3">
             <button type="button" id="ajaxProblemZipCall" onclick="ajaxZipCall()" class="btn btn-primary">입출력 파일 등록</button>
           </div>
@@ -193,7 +196,6 @@
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 
 <script>
-
   AOS.init({
     duration: 800, // values from 0 to 3000, with step 50ms
   });
@@ -310,6 +312,7 @@
 
 
   function ajaxZipCall() {
+
     const form = $("#problemIoZipForm")[0];
     const formData = new FormData(form);
 
@@ -327,6 +330,8 @@
       success: function(data) {
         console.log(data);
         ajaxIoFilePath = data;
+        document.getElementById('preFilePath').value = ajaxIoFilePath.folderPath;
+        console.log(ajaxIoFilePath)
         alert("등록이 완료 되었습니다.")
 
         $("#ajaxIoUnzipFile").html(""); // 태그 초기화

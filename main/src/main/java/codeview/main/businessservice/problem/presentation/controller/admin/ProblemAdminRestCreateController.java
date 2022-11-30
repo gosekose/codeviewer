@@ -56,6 +56,15 @@ public class ProblemAdminRestCreateController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
+        if (problemIoFileDao.getPreFilePath() != null && !problemIoFileDao.getPreFilePath().equals("")) {
+            log.info("problemIoFilDao.getPreFilePath = {}", problemIoFileDao.getPreFilePath());
+            problemCreateService.deletePreFile(problemIoFileDao.getPreFilePath());
+            log.info("delete complete");
+        }
+
+        log.info(problemIoFileDao.getPreFilePath());
+
+
         IoFilePathDto ioFilePathDto = problemCreateService.convertIoZip(groupId, problemIoFileDao.getIoZipFile(), String.valueOf(UUID.randomUUID()));
         return new ResponseEntity(ioFilePathDto, HttpStatus.OK);
     }

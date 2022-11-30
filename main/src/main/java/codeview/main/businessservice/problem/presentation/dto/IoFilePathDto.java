@@ -8,9 +8,9 @@ import java.util.List;
 @Data
 public class IoFilePathDto {
 
+    private String folderPath;
     private List<String> inputs = new ArrayList<>();
     private List<String> outputs = new ArrayList<>();
-
 
     public void addInputs(String path) {
         inputs.add(path);
