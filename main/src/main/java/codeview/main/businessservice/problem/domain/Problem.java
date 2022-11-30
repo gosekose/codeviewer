@@ -3,7 +3,9 @@ package codeview.main.businessservice.problem.domain;
 import codeview.main.auth.domain.BaseEntity;
 import codeview.main.businessservice.membergroup.domain.MemberGroup;
 import codeview.main.businessservice.problem.domain.embedded.ProblemFile;
+import codeview.main.businessservice.problem.domain.embedded.ProblemInputIoFile;
 import codeview.main.businessservice.problem.domain.embedded.SolvePython;
+import codeview.main.businessservice.problem.domain.enumtype.ProblemType;
 import codeview.main.businessservice.problemdescription.domain.ProblemDescription;
 import codeview.main.businessservice.problemdescription.domain.ProblemIoExample;
 import codeview.main.businessservice.solve.domain.Solve;
@@ -16,6 +18,8 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static javax.persistence.EnumType.STRING;
 
 @Entity
 @Getter @NoArgsConstructor
@@ -41,8 +45,14 @@ public class Problem extends BaseEntity {
 
     private String name;
 
+    @Enumerated(STRING)
+    private ProblemType problemType;
+
     @Embedded
     private ProblemFile problemFile;
+
+    @Embedded
+    private ProblemInputIoFile problemInputIoFile;
 
     private LocalDateTime openTime;
     private LocalDateTime closedTime;
@@ -53,12 +63,12 @@ public class Problem extends BaseEntity {
     private SolvePython solvePython;
 
     @Builder
-    public Problem(MemberGroup memberGroup, String name, ProblemFile problemFile, LocalDateTime openTime, LocalDateTime closedTime) {
+    public Problem(MemberGroup memberGroup, String name, ProblemType problemType, ProblemFile problemFile, ProblemInputIoFile problemInputIoFile, LocalDateTime openTime, LocalDateTime closedTime) {
         this.memberGroup = memberGroup;
         this.name = name;
+        this.problemType = problemType;
         this.problemFile = problemFile;
-//        this.shellFile = shellFile;
-//        this.inputFile = inputFile;
+        this.problemInputIoFile = problemInputIoFile;
         this.openTime = openTime;
         this.closedTime = closedTime;
     }

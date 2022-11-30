@@ -7,6 +7,6 @@ import lombok.Data;
 public class SolveResponseDto {
 
     private Long solveId;
-    private Double score;
+    private Integer score;
     private TestStatus testStatus;
 }

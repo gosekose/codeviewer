@@ -1,7 +1,7 @@
 package codeview.main.businessservice.problem.infra.util;
 
+import codeview.main.businessservice.problem.domain.embedded.ProblemInputIoFile;
 import codeview.main.common.domain.UploadFile;
-import codeview.main.businessservice.problem.domain.embedded.InputFile;
 import codeview.main.businessservice.problem.domain.embedded.ProblemFile;
 import codeview.main.businessservice.problem.domain.embedded.ShellFile;
 import org.springframework.stereotype.Component;
@@ -9,14 +9,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class FileConverter {
 
-    public static InputFile toInputFile(UploadFile uploadFile) {
+    public static ProblemInputIoFile toInputFile(UploadFile uploadFile) {
 
         if (uploadFile == null) {
             return null;
         }
-        return InputFile.builder()
-                .inputUploadName(uploadFile.getUploadFileName())
-                .inputStoreName(uploadFile.getStoreFileName())
+        return ProblemInputIoFile.builder()
+                .inputStoreFolderPath(uploadFile.getStoreFileName())
                 .build();
     }
 

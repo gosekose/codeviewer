@@ -1,14 +1,17 @@
+import os
+
 def test2(a, b) :
   return a + b
 
 
 if __name__ == '__main__':
-  a = int(input())
+  # a = int(input())
   
-  for i in range(a):
-    a1 = int(input())
-    a2 = int(input())
+  # for i in range(a):
+  #   a1 = int(input())
+  #   a2 = int(input())
   
-    c = test2(a1, a2)
-    print(c)
-  
+  #   c = test2(a1, a2)
+  #   print(c)
+  os.chdir('/home/koseyun/IdeaProjects/capston/main')  
+  print(os.listdir())

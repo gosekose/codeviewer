@@ -8,7 +8,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.time.Duration;
 
-
 @RequiredArgsConstructor
 @Configuration
 public class WebCommonConfig implements WebMvcConfigurer {

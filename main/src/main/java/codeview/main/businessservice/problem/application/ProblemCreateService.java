@@ -69,7 +69,7 @@ public class ProblemCreateService {
 
 
         Problem problem = Problem.builder()
-                .name(problemCreateDao.getName())
+                .name(problemCreateDao.getProblemName())
                 .memberGroup(groupService.findById(Long.valueOf(groupId)))
                 .openTime(problemCreateDao.getOpenTime())
                 .closedTime(problemCreateDao.getClosedTime())
