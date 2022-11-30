@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 public class ProblemIoFileDao {
 
+    private String preFilePath;
     private MultipartFile ioZipFile;
 
 }
