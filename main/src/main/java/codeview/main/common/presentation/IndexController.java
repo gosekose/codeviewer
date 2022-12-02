@@ -2,10 +2,9 @@ package codeview.main.common.presentation;
 
 import codeview.main.auth.domain.users.PrincipalUser;
 import codeview.main.auth.infra.common.util.OAuth2Utils;
-import codeview.main.common.application.CsrfProviderService;
-import codeview.main.businessservice.indextest.presentation.dto.IndexTestForm;
 import codeview.main.businessservice.member.application.MemberService;
 import codeview.main.businessservice.member.domain.Member;
+import codeview.main.common.application.CsrfProviderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -48,7 +47,7 @@ public class IndexController {
         }
 
         model.addAttribute("_csrf", csrfProviderService.createCsrf(request));
-        model.addAttribute("indexTestForm", new IndexTestForm());
+//        model.addAttribute("indexTestForm", new IndexTestForm());
 
         return "index";
     }

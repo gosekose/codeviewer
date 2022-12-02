@@ -2,7 +2,6 @@ package codeview.main.businessservice.problem.infra.repository;
 
 import codeview.main.businessservice.membergroup.domain.MemberGroup;
 import codeview.main.businessservice.problem.infra.repository.query.*;
-import codeview.main.problem.infra.repository.query.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -15,10 +14,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static codeview.main.groupstorage.domain.QGroupStorage.groupStorage;
-import static codeview.main.member.domain.QMember.member;
-import static codeview.main.membergroup.domain.QMemberGroup.memberGroup;
-import static codeview.main.problem.domain.QProblem.problem;
+import static codeview.main.businessservice.groupstorage.domain.QGroupStorage.groupStorage;
+import static codeview.main.businessservice.member.domain.QMember.member;
+import static codeview.main.businessservice.membergroup.domain.QMemberGroup.memberGroup;
+import static codeview.main.businessservice.problem.domain.QProblem.problem;
+
 
 @Repository
 @Slf4j

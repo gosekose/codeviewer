@@ -11,6 +11,7 @@ import codeview.main.businessservice.membergroup.domain.eumerate.MemberGroupVisi
 import codeview.main.businessservice.membergroup.infra.repository.membergroup.MemberGroupRepository;
 import codeview.main.businessservice.problem.application.ProblemService;
 import codeview.main.businessservice.problem.domain.Problem;
+import codeview.main.businessservice.problem.domain.embedded.ProblemInputIoFile;
 import codeview.main.businessservice.solve.domain.Solve;
 import codeview.main.businessservice.solve.infra.repository.SolveRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Slf4j
 @Controller
@@ -95,8 +97,11 @@ public class TempController {
 
             for (int k = 0; k < 5; k++) {
 
-                Problem problem = Problem.builder().name("test" + k)
-                        .memberGroup(memberGroup).build();
+                Problem problem = Problem.builder()
+                        .name("test" + k)
+                        .memberGroup(memberGroup)
+                        .problemInputIoFile(new ProblemInputIoFile(UUID.randomUUID().toString()))
+                        .build();
 
                 problemService.save(problem);
 

@@ -48,7 +48,7 @@ public class InitDb {
                         .registerId(uuid)
                         .build();
 
-                member.updateProfile(UUID.randomUUID().toString(), 20, "studhent", null, null, "iise", UUID.randomUUID().toString());
+                member.updateProfile(UUID.randomUUID().toString(), 20, "student", null, "iise", UUID.randomUUID().toString());
 
                 em.persist(member);
 

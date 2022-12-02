@@ -1,5 +1,6 @@
 package codeview.main.businessservice.problem.presentation.dao;
 
+import codeview.main.businessservice.problem.domain.enumtype.ProblemType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ProblemCreateDao {
 
+    private ProblemType problemType;
     private String problemName;
     private LocalDateTime openTime;
     private LocalDateTime closedTime;
@@ -21,5 +23,7 @@ public class ProblemCreateDao {
     private List<String> inputs;
     private List<String> outputs;
     private MultipartFile problemFile;
+    private String preFilePath;
+    private MultipartFile ioZipFile;
 
 }

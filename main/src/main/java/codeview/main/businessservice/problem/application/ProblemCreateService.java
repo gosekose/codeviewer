@@ -20,6 +20,7 @@ import codeview.main.businessservice.problemdescription.infra.repository.Problem
 import codeview.main.businessservice.problemdescription.infra.repository.ProblemIoExampleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,6 +48,10 @@ public class ProblemCreateService {
     private final ProblemDescriptionRepository problemDescriptionRepository;
 
     private final FolderRemover folderRemover;
+
+    @Value("${file.dir}")
+    String dirPath;
+
 
     private void saveProblemIoExample(ProblemCreateDao problemCreateDao, Problem problem, int i) {
         problemIoExampleRepository.save(
@@ -86,11 +91,14 @@ public class ProblemCreateService {
     }
 
 
-    public IoFilePathDto convertIoZip(Integer groupId, MultipartFile multipartFile, String uuid) throws IOException {
-        UploadFile uploadFile = getUploadFile(multipartFile, groupId, uuid);
-
-        Path newPath = unzipAndSave(uploadFile);
-        return ioFileClientReturn(newPath);
+    public IoFilePathDto convertIoZip(Integer groupId, MultipartFile multipartFile, String uuid) {
+        try{
+            UploadFile uploadFile = getUploadFile(multipartFile, groupId, uuid);
+            Path newPath = unzipAndSave(uploadFile);
+            return ioFileClientReturn(newPath);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
 
@@ -142,35 +150,49 @@ public class ProblemCreateService {
         return newStringPath;
     }
 
-    public IoFilePathDto ioFileClientReturn(Path path) throws IOException {
-        IoFilePathDto ioFilePathDto = new IoFilePathDto();
-        ioFilePathDto.setFolderPath(String.valueOf(path));
+    public IoFilePathDto ioFileClientReturn(Path path) {
 
-        File fileUri = new File(path.toUri());
+        try{
+            IoFilePathDto ioFilePathDto = new IoFilePathDto();
+            ioFilePathDto.setFolderPath(String.valueOf(path));
 
-        File[] files = fileUri.listFiles();
+            File fileUri = new File(path.toUri());
 
-        Arrays.sort(files);
+            File[] files = fileUri.listFiles();
+
+            Arrays.sort(files);
 
 
-        for (File file : files) {
-            if(file.isFile()) {
+            for (File file : files) {
+                if(file.isFile()) {
 
-                log.info("fileName = {}", file.getPath());
-                String[] pathString = file.getPath().split("\\.");
-                if (pathString.length != 0) {
-                    if (pathString[pathString.length-1].equals("in")) {
-                        ioFilePathDto.addInputs(file.getPath());
-                    } else if (pathString[pathString.length-1].equals("out")) {
-                        ioFilePathDto.addOutputs(file.getPath());
+                    log.info("fileName = {}", file.getPath());
+                    String[] pathString = file.getPath().split("\\.");
+                    if (pathString.length != 0) {
+                        if (pathString[pathString.length-1].equals("in")) {
+                            ioFilePathDto.addInputs(pathLastFileName(file));
+
+                        } else if (pathString[pathString.length-1].equals("out")) {
+                            ioFilePathDto.addOutputs(pathLastFileName(file));
+                        }
                     }
                 }
             }
+
+            if (ioFilePathDto.getInputs().size() == 0 || ioFilePathDto.getOutputs().size() == 0) {
+                log.info("for delete path = {}", ioFilePathDto.getFolderPath());
+                folderRemover.removePart(new File(ioFilePathDto.getFolderPath()));
+                return null;
+            }
+
+            return ioFilePathDto;
+
+        } catch (Exception e) {
+             return null;
         }
 
-        return ioFilePathDto;
-    }
 
+    }
 
     @Transactional
     public void saveProblemData(ProblemCreateDao problemCreateDao, Problem problem) {
@@ -204,44 +226,47 @@ public class ProblemCreateService {
     public void deleteNotFolderPath(MemberGroup memberGroup) {
 
         List<ProblemInputIoFile> folders = problemService.findByMemberGroupForInputFolderPath(memberGroup);
+        for (ProblemInputIoFile folder : folders) {
+            log.info("folderList = {}", folder.getInputStoreFolderPath());
+        }
 
-        String path = "/home/koseyun/IdeaProjects/capston/main/source/storage/" + memberGroup.getId();
+        String path = dirPath + "/" + memberGroup.getId();
+
+        log.info("path = {}", path);
 
         File folder = new File(path);
         File[] folder_list = folder.listFiles();
         boolean flag = false;
 
-        for (File file : folder_list) {
-            for (int i=0; i<folders.size(); i++) {
-                if (file.getPath().equals(folders.get(i).getInputStoreFolderPath())) {
-                    flag = true;
-                    break;
-                }
-            }
-            if (!flag) {
-                log.info("file.getPath() = " + file.getPath());
-
-                try {
-                    int cnt = 0;
-                    while(file.exists()) {
-                        cnt ++;
-                        if (cnt > 2000) {
-                            break;
-                        }
-                        File[] toDeleteFolder = file.listFiles(); //파일리스트 얻어오기
-                        for (int j = 0; j < toDeleteFolder.length; j++) {
-                            log.info("delete folder = {}", toDeleteFolder);
-                            toDeleteFolder[j].delete(); //파일 삭제
-                        }
-                        if(toDeleteFolder.length == 0 && file.isDirectory()){
-                            file.delete(); //대상폴더 삭제
-                        }
-                    }
-                } catch (Exception e) {
-                    e.getStackTrace();
-                }
-            }
-            flag = false;
+        if (folders == null && folder_list == null) {
+            log.info("if1");
+            return ;
         }
+        else if (folders == null && folder_list != null) {
+            log.info("if2");
+            folderRemover.removeAllFile(path);
+        }
+        else if (folders != null && folder_list != null) {
+
+            log.info("if3");
+
+            for (File file : folder_list) {
+                for (int i=0; i<folders.size(); i++) {
+                    if (file.getPath().equals(folders.get(i).getInputStoreFolderPath())) {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag) {
+                    folderRemover.removePart(file);
+                }
+                flag = false;
+            }
+        }
+    }
+
+    private static String pathLastFileName(File file) {
+        String[] split = file.getPath().split("/");
+        return split[split.length - 1];
     }
 }

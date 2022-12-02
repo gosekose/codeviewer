@@ -28,13 +28,37 @@ public class ProblemAdminRestCreateController {
 
     private final ProblemCreateService problemCreateService;
 
+//    @PostMapping("/{groupId}/problems/new/3")
+//    public ResponseEntity<ProblemIdDto> postCreateProblem(
+//            @PathVariable("groupId") Integer groupId,
+//            @ModelAttribute ProblemCreateDao problemCreateDao) throws IOException {
+//
+//        Problem problem = problemCreateService.getProblem(groupId, problemCreateDao);
+//        Long problemId = problemService.save(problem);
+//        problemCreateService.saveProblemData(problemCreateDao, problem);
+//
+//        return new ResponseEntity<ProblemIdDto>(ProblemIdDto
+//                .builder()
+//                .problemId(problemId)
+//                .build(), HttpStatus.OK);
+//    }
+
     @PostMapping("/{groupId}/problems/new")
-    public ResponseEntity<ProblemIdDto> postCreateProblem(
+    public ResponseEntity<ProblemIdDto> postCreateProblem2(
             @PathVariable("groupId") Integer groupId,
             @ModelAttribute ProblemCreateDao problemCreateDao) throws IOException {
 
         Problem problem = problemCreateService.getProblem(groupId, problemCreateDao);
         Long problemId = problemService.save(problem);
+
+
+        if (problemCreateDao.getPreFilePath() != null && !problemCreateDao.getPreFilePath().equals("")) {
+            log.info("problemIoFilDao.getPreFilePath = {}", problemCreateDao.getPreFilePath());
+            problemCreateService.deletePreFile(problemCreateDao.getPreFilePath());
+            log.info("delete complete");
+        }
+
+
         problemCreateService.saveProblemData(problemCreateDao, problem);
 
         return new ResponseEntity<ProblemIdDto>(ProblemIdDto
@@ -43,29 +67,33 @@ public class ProblemAdminRestCreateController {
                 .build(), HttpStatus.OK);
     }
 
+
+
     @PostMapping("/{groupId}/problems/upload/io")
     public ResponseEntity<IoFilePathDto> uploadIoFile(
             @PathVariable("groupId") Integer groupId,
             @ModelAttribute ProblemIoFileDao problemIoFileDao) throws IOException {
 
 
-        log.info("problemIoFileDao.getIoFile() = {}", problemIoFileDao.getIoZipFile());
-        log.info("groupId = {}", groupId);
+        log.info("problemIoFileDao = {}", problemIoFileDao);
+        log.info("problemIoFileDao.getZip = {}", problemIoFileDao.getIoZipFile());
+        log.info("problemIoFileDao.getFilePath = {}", problemIoFileDao.getPreFilePath());
 
-        if (problemIoFileDao == null || problemIoFileDao.getIoZipFile() == null) {
+        if (problemIoFileDao == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
         if (problemIoFileDao.getPreFilePath() != null && !problemIoFileDao.getPreFilePath().equals("")) {
-            log.info("problemIoFilDao.getPreFilePath = {}", problemIoFileDao.getPreFilePath());
             problemCreateService.deletePreFile(problemIoFileDao.getPreFilePath());
-            log.info("delete complete");
         }
-
-        log.info(problemIoFileDao.getPreFilePath());
 
 
         IoFilePathDto ioFilePathDto = problemCreateService.convertIoZip(groupId, problemIoFileDao.getIoZipFile(), String.valueOf(UUID.randomUUID()));
+
+        if (ioFilePathDto == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
         return new ResponseEntity(ioFilePathDto, HttpStatus.OK);
     }
 

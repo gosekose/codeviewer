@@ -52,13 +52,4 @@ public abstract class AbstractFileStore implements FileStore {
 
     }
 
-    //    @Override
-//    public String extractExt(String originalFileName) {
-//
-//        int pos = originalFileName.lastIndexOf(".");
-//        return originalFileName.substring(pos + 1);
-//
-//    }
-
-
 }

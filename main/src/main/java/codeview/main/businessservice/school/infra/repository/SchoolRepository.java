@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface SchoolRepository extends JpaRepository<School, Long> {
 
-    @Query("select s from School s where s.name like %:name%")
+    @Query("select s from School s where s.schoolName like %:name%")
     List<School> findBySpecificName(@Param("name") String name);
 
 }

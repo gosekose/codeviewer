@@ -3,10 +3,10 @@ package codeview.main.businessservice.groupstorage.infra.repository;
 import codeview.main.businessservice.groupstorage.domain.GroupStorage;
 import codeview.main.businessservice.groupstorage.infra.repository.query.list.GroupStorageListCondition;
 import codeview.main.businessservice.groupstorage.infra.repository.query.list.GroupStorageListDto;
+import codeview.main.businessservice.groupstorage.infra.repository.query.list.QGroupStorageListDto;
 import codeview.main.businessservice.groupstorage.infra.repository.query.member.MembersOfGroupCondition;
 import codeview.main.businessservice.groupstorage.infra.repository.query.member.MembersOfGroupPageDto;
-import codeview.main.groupstorage.infra.repository.query.list.QGroupStorageListDto;
-import codeview.main.groupstorage.infra.repository.query.member.QMembersOfGroupPageDto;
+import codeview.main.businessservice.groupstorage.infra.repository.query.member.QMembersOfGroupPageDto;
 import codeview.main.businessservice.member.domain.Member;
 import codeview.main.businessservice.membergroup.domain.MemberGroup;
 import codeview.main.businessservice.membergroup.domain.eumerate.MemberGroupAuthority;
@@ -21,10 +21,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static codeview.main.groupstorage.domain.QGroupStorage.groupStorage;
-import static codeview.main.member.domain.QMember.member;
-import static codeview.main.membergroup.domain.QMemberGroup.memberGroup;
-import static codeview.main.school.domain.QSchool.school;
+import static codeview.main.businessservice.groupstorage.domain.QGroupStorage.groupStorage;
+import static codeview.main.businessservice.member.domain.QMember.member;
+import static codeview.main.businessservice.membergroup.domain.QMemberGroup.memberGroup;
+import static codeview.main.businessservice.school.domain.QSchool.school;
+
 
 @Repository
 @RequiredArgsConstructor
@@ -84,7 +85,7 @@ public class GroupStorageQueryDslRepositoryImpl implements GroupStorageQueryDslR
                                 memberGroup.id,
                                 memberGroup.name,
                                 memberGroup.creator.memberName,
-                                memberGroup.creator.school.name,
+                                memberGroup.creator.school.schoolName,
                                 memberGroup.creator.department))
                 .from(groupStorage)
                 .innerJoin(groupStorage.memberGroup, memberGroup)

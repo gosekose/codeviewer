@@ -2,7 +2,7 @@ package codeview.main.businessservice.membergroup.infra.repository.join;
 
 import codeview.main.businessservice.membergroup.infra.repository.join.query.JoinRequestCondition;
 import codeview.main.businessservice.membergroup.infra.repository.join.query.JoinRequestQueryPageDto;
-import codeview.main.membergroup.infra.repository.join.query.QJoinRequestQueryPageDto;
+import codeview.main.businessservice.membergroup.infra.repository.join.query.QJoinRequestQueryPageDto;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +14,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static codeview.main.member.domain.QMember.member;
-import static codeview.main.membergroup.domain.QGroupJoinRequest.groupJoinRequest;
-import static codeview.main.membergroup.domain.QMemberGroup.memberGroup;
-import static codeview.main.school.domain.QSchool.school;
+import static codeview.main.businessservice.member.domain.QMember.member;
+import static codeview.main.businessservice.membergroup.domain.QGroupJoinRequest.groupJoinRequest;
+import static codeview.main.businessservice.membergroup.domain.QMemberGroup.memberGroup;
+import static codeview.main.businessservice.school.domain.QSchool.school;
+
 
 @Repository
 @Slf4j
@@ -36,7 +37,7 @@ public class GroupJoinQueryDslRepositoryImpl implements GroupJoinQueryDslReposit
                                 groupJoinRequest.memberGroup.name,
                                 groupJoinRequest.member.id,
                                 groupJoinRequest.member.memberName,
-                                groupJoinRequest.member.school.name,
+                                groupJoinRequest.member.school.schoolName,
                                 groupJoinRequest.member.department,
                                 groupJoinRequest.member.privateIdInSchool))
                 .from(groupJoinRequest)

@@ -29,7 +29,7 @@ public class MemberUpdateRestController {
     @GetMapping("/id/update-info/schools")
     public AllSchoolResult allSchoolResult() {
 
-        List<AllSchoolDto> allSchools = schoolService.findAll().stream().map(s -> new AllSchoolDto(s.getName(), s.getAddress()))
+        List<AllSchoolDto> allSchools = schoolService.findAll().stream().map(s -> new AllSchoolDto(s.getSchoolName(), s.getAddress()))
                 .collect(Collectors.toList());
 
         return new AllSchoolResult<>(allSchools.size(), allSchools);
@@ -43,7 +43,7 @@ public class MemberUpdateRestController {
 
 //    @PostMapping("/{id}/update-info")
 //    public MemberResponseDto updateMember(@PathVariable("id") Long id,
-//                                          @RequestBody UpdateMemberRequest updateMemberRequest) {
+//                                          @RequestBody MemberUpdateForm updateMemberRequest) {
 //        memberService.update(id, updateMemberRequest);
 //        Member member = memberService.find(id);
 //
