@@ -68,7 +68,7 @@ class MemberQueryDslRepositoryImplTest {
                 .password(UUID.randomUUID().toString()).email(UUID.randomUUID().toString())
                 .build();
 
-        member.updateProfile("koseyun",null,null,null,null,"1111","1111");
+        member.updateProfile("koseyun",null,null,null,"1111","1111");
 
         memberRepository.save(creator);
         memberRepository.save(member);

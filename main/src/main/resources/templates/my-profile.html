@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html class="h-100" lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/my-header :: header">
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <div th:replace="fragments/my-body-header :: bodyHeader" />
+  <!-- End Header -->
+
+  <!-- ======= Sidebar ======= -->
+  <div th:replace="fragments/my-sidebar :: sidebar" />
+  <!-- End Sidebar-->
+
+  <main id="main" class="main">
+
+    <div class="pagetitle">
+      <h1>Profile</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item">Users</li>
+          <li class="breadcrumb-item active">Profile</li>
+        </ol>
+      </nav>
+    </div><!-- End Page Title -->
+
+    <section class="section profile">
+      <div class="row">
+        <div class="col-xl-4">
+
+          <div class="card">
+            <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+
+              <img th:src="@{/static/assets/img/profile-img.jpg}" alt="Profile" class="rounded-circle">
+              <h2 th:text="${memberProfileDto.memberName}">Kevin Anderson</h2>
+              <h3 th:text="${memberProfileDto.work}">Web Designer</h3>
+              <div class="social-links mt-2">
+                <a th:href="${memberProfileDto.facebookEmail}" class="facebook"><i class="bi bi-facebook"></i></a>
+                <a th:href="${memberProfileDto.linkedInEmail}" class="linkedin"><i class="bi bi-linkedin"></i></a>
+                <a th:href="${memberProfileDto.githubEmail}" class="github"><i class="bi bi-github"></i></a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="col-xl-8">
+
+          <div class="card">
+            <div class="card-body pt-3">
+              <!-- Bordered Tabs -->
+              <ul class="nav nav-tabs nav-tabs-bordered">
+
+                <li class="nav-item">
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Overview</button>
+                </li>
+
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit Profile</button>
+                </li>
+
+                <li class="nav-item">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-settings">Settings</button>
+                </li>
+
+              </ul>
+              <div class="tab-content pt-2">
+
+                <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                  <h5 class="card-title">한 줄 소개</h5>
+                  <p class="small fst-italic" th:text="${memberProfileDto.userComment}"> 없음 </p>
+
+                  <h5 class="card-title">Profile Details</h5>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">이름</div>
+                    <div class="col-lg-9 col-md-8" th:text="${memberProfileDto.memberName}"> 없음 </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">학교</div>
+                    <div class="col-lg-9 col-md-8"th:text="${memberProfileDto.schoolName}"> 없음 </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label"> 학과 </div>
+                    <div class="col-lg-9 col-md-8" th:text="${memberProfileDto.department}"> 없음 </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label"> 학사교번 </div>
+                    <div class="col-lg-9 col-md-8" th:text="${memberProfileDto.privateIdInSchool}"> 없음 </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">직업</div>
+                    <div class="col-lg-9 col-md-8" th:text="${memberProfileDto.work}"> 없음 </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label">소셜 로그인</div>
+                    <div class="col-lg-9 col-md-8" th:text="${memberProfileDto.registrationId}"> 없음 </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-lg-3 col-md-4 label"> 등록 이메일 </div>
+                    <div class="col-lg-9 col-md-8" th:text="${memberProfileDto.email}"> 없음 </div>
+                  </div>
+
+                </div>
+
+                <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
+
+                  <!-- Profile Edit Form -->
+                  <form th:action="@{/api/v1/members/profile}" th:object="${memberForm}" method="post">
+                    <input type="hidden" th:field="*{id}" />
+                    <div class="row mb-3">
+                      <label class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
+                      <div class="col-md-8 col-lg-9">
+                        <img th:src="@{/static/assets/img/profile-img.jpg}" alt="Profile">
+                        <div class="pt-2">
+                          <a href="#" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></a>
+                          <a href="#" class="btn btn-danger btn-sm" title="Remove my profile image"><i class="bi bi-trash"></i></a>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label th:for="memberName" class="col-md-4 col-lg-3 col-form-label">이름</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="memberName" type="text" class="form-control" th:field="*{memberName}" value="Kevin Anderson">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label th:for="age" class="col-md-4 col-lg-3 col-form-label">나이</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="age" type="number" class="form-control" id="age" th:field="*{age}"></input>
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label th:for="school" class="col-md-4 col-lg-3 col-form-label">학교</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="school" type="text" class="form-control" id="school" th:field="*{school}" value="서울과학기술대학교">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label th:for="department" class="col-md-4 col-lg-3 col-form-label">학과</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="department" type="text" class="form-control" id="department" value="IISE" th:field="*{department}">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label for="viewWork" class="col-md-4 col-lg-3 col-form-label">직업</label>
+                      <div class="col-md-8 col-lg-9">
+                        <select class="form-select" aria-label="Default select example" id="viewWork" onchange="updateWork()">
+                          <option selected>직업을 선택 하세요</option>
+                          <option value="student">학생</option>
+                          <option value="professor">교수</option>
+                          <option value="personnel">교직원</option>
+                          <option value="user">기타</option>
+                        </select>
+                      </div>
+                      <div hidden>
+                        <input type="text" id="work" class="form-control" th:field="*{work}">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label th:for="privateIdInSchool" class="col-md-4 col-lg-3 col-form-label">학사교번</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="privateIdInSchool" type="text" class="form-control" id="privateIdInSchool" th:field="*{privateIdInSchool}" value="17181920">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label th:for="userComment" class="col-md-4 col-lg-3 col-form-label">한 줄 소개</label>
+                      <div class="col-md-8 col-lg-9">
+                        <textarea name="userComment" class="form-control" id="userComment"
+                                  th:field="*{userComment}" style="height: 100px"></textarea>
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label th:for="facebookEmail" class="col-md-4 col-lg-3 col-form-label">페이스북 이메일</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="facebookEmail" type="text" class="form-control" id="facebookEmail" th:field="*{facebookEmail}" value="https://facebook.com/#">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label th:for="linkedInEmail" class="col-md-4 col-lg-3 col-form-label">링크드인 이메일</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="linkedInEmail" type="text" class="form-control" id="linkedInEmail" th:field="*{linkedInEmail}" value="https://linkedin.com/#">
+                      </div>
+                    </div>
+
+                    <div class="row mb-3">
+                      <label th:for="githubEmail" class="col-md-4 col-lg-3 col-form-label">깃허브 이메일</label>
+                      <div class="col-md-8 col-lg-9">
+                        <input name="githubEmail" type="text" class="form-control" id="githubEmail" th:field="*{githubEmail}" value="https://github.com/#">
+                      </div>
+                    </div>
+
+                    <div class="text-center">
+                      <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                  </form><!-- End Profile Edit Form -->
+
+                </div>
+
+                <div class="tab-pane fade pt-3" id="profile-settings">
+
+                  <!-- Settings Form -->
+                  <form>
+
+                    <div class="row mb-3">
+                      <label for="changesMade" class="col-md-4 col-lg-3 col-form-label">Email Notifications</label>
+                      <div class="col-md-8 col-lg-9">
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="changesMade" checked>
+                          <label class="form-check-label" for="changesMade">
+                            Changes made to your account
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="newProducts" checked>
+                          <label class="form-check-label" for="newProducts">
+                            Information on new products and services
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="proOffers">
+                          <label class="form-check-label" for="proOffers">
+                            Marketing and promo offers
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="checkbox" id="securityNotify" checked disabled>
+                          <label class="form-check-label" for="securityNotify">
+                            Security alerts
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="text-center">
+                      <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                  </form><!-- End settings Form -->
+
+                </div>
+              </div><!-- End Bordered Tabs -->
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <div th:replace="fragments/my-footer :: footer" />
+  <!-- End Footer -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- ======= Script ======= -->
+  <div th:replace="fragments/my-script :: script" />
+  <script>
+
+    function updateWork() {
+      let viewWork = $("#viewWork option:selected").val();
+      $("#work").attr("value", viewWork);
+    }
+
+  </script>
+  <!-- End Script -->
+</body>
+
+</html>

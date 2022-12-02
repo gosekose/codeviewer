@@ -2,7 +2,6 @@ package codeview.main.businessservice.solve.infra.repository;
 
 import codeview.main.businessservice.solve.domain.Solve;
 import codeview.main.businessservice.solve.infra.repository.query.*;
-import codeview.main.solve.infra.repository.query.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -14,9 +13,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static codeview.main.member.domain.QMember.member;
-import static codeview.main.problem.domain.QProblem.problem;
-import static codeview.main.solve.domain.QSolve.solve;
+import static codeview.main.businessservice.member.domain.QMember.member;
+import static codeview.main.businessservice.problem.domain.QProblem.problem;
+import static codeview.main.businessservice.solve.domain.QSolve.solve;
+
 
 @Repository
 @RequiredArgsConstructor

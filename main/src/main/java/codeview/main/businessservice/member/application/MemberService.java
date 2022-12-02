@@ -4,8 +4,10 @@ import codeview.main.auth.domain.users.social.ProviderUser;
 import codeview.main.businessservice.member.domain.Member;
 import codeview.main.businessservice.member.infra.MemberRepository;
 import codeview.main.businessservice.member.infra.repository.MemberQueryDslRepositoryImpl;
-import codeview.main.businessservice.member.infra.repository.query.GroupMemberInfoCondition;
 import codeview.main.businessservice.member.infra.repository.query.GroupMemberInfo;
+import codeview.main.businessservice.member.infra.repository.query.GroupMemberInfoCondition;
+import codeview.main.businessservice.member.infra.repository.query.MemberCondition;
+import codeview.main.businessservice.member.infra.repository.query.MemberProfileDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -79,7 +81,14 @@ public class MemberService {
     }
 
 
-//    public void update(Long id, UpdateMemberRequest memberReq) {
+    @Cacheable(value = "memberProfile", key = "#condition.memberId")
+    public MemberProfileDto getMemberProfile(MemberCondition condition) {
+        return memberQueryDslRepository.getMemberProfile(condition);
+    }
+
+
+
+//    public void update(Long id, MemberUpdateForm memberReq) {
 //
 //        Optional<Member> findMember = memberRepository.findById(id);
 //        Member member = findMember.orElseThrow(() -> { throw new IllegalArgumentException("존재하지 않는 회원입니다."); });

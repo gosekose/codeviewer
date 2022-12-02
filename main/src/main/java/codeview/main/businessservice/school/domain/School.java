@@ -18,7 +18,7 @@ public class School {
     @Column(name = "school_id")
     private Long id;
     private String schoolMembership;
-    private String name;
+    private String schoolName;
 
     private String address;
 
@@ -26,9 +26,9 @@ public class School {
     private List<Member> members = new ArrayList<>();
 
     @Builder
-    public School(String schoolMembership, String name, String address) {
+    public School(String schoolMembership, String schoolName, String address) {
         this.schoolMembership = schoolMembership;
-        this.name = name;
+        this.schoolName = schoolName;
         this.address = address;
     }
 }

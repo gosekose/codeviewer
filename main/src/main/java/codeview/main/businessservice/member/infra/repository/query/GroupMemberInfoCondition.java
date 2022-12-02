@@ -13,4 +13,8 @@ public class GroupMemberInfoCondition {
         this.memberId = Long.valueOf(memberId);
     }
 
+    public void updateMember(Long memberId) {
+        this.memberId = memberId;
+    }
+
 }

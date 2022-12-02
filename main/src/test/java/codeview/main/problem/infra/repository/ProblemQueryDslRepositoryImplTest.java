@@ -46,7 +46,7 @@ class ProblemQueryDslRepositoryImplTest {
                 .password(UUID.randomUUID().toString()).email(UUID.randomUUID().toString())
                 .build();
 
-        creator.updateProfile("koseyun", null, null, null, null, null, null);
+        creator.updateProfile("koseyun", null, null, null, null, null);
         memberRepository.save(creator);
 
         MemberGroup group1 = MemberGroup.builder().creator(creator).maxMember(20)

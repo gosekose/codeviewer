@@ -3,7 +3,7 @@ package codeview.main.businessservice.board.infra.repository;
 import codeview.main.businessservice.board.domain.enumtype.Nondisclosure;
 import codeview.main.businessservice.board.infra.repository.query.BoardListCondition;
 import codeview.main.businessservice.board.infra.repository.query.BoardListDto;
-import codeview.main.board.infra.repository.query.QBoardListDto;
+import codeview.main.businessservice.board.infra.repository.query.QBoardListDto;
 import codeview.main.businessservice.member.domain.Member;
 import codeview.main.businessservice.membergroup.domain.MemberGroup;
 import codeview.main.businessservice.problem.domain.Problem;
@@ -18,8 +18,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static codeview.main.board.domain.QBoard.board;
-import static codeview.main.problem.domain.QProblem.problem;
+import static codeview.main.businessservice.board.domain.QBoard.board;
+import static codeview.main.businessservice.problem.domain.QProblem.problem;
+
 
 @Repository
 @RequiredArgsConstructor

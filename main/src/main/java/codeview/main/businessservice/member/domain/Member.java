@@ -1,9 +1,8 @@
 package codeview.main.businessservice.member.domain;
 
 import codeview.main.auth.domain.BaseEntity;
-import codeview.main.common.domain.Address;
-import codeview.main.businessservice.membergroup.domain.GroupJoinRequest;
 import codeview.main.businessservice.groupstorage.domain.GroupStorage;
+import codeview.main.businessservice.membergroup.domain.GroupJoinRequest;
 import codeview.main.businessservice.membergroup.domain.MemberGroup;
 import codeview.main.businessservice.membership.domain.MemberShip;
 import codeview.main.businessservice.school.domain.School;
@@ -48,8 +47,6 @@ public class Member extends BaseEntity {
     @JoinColumn(name = "school_id")
     private School school;
 
-    @Embedded
-    private Address address;
 
     private String department;
     private String privateIdInSchool;
@@ -64,6 +61,12 @@ public class Member extends BaseEntity {
     @OneToMany(mappedBy = "member")
     private List<GroupJoinRequest> groupJoinRequests = new ArrayList<>();
 
+    private String userComment;
+
+    private String facebookEmail;
+    private String linkedInEmail;
+    private String githubEmail;
+
     @Builder
     public Member(String registrationId, String registerId, String password, String email, String picture, String authorities) {
         this.registrationId = registrationId;
@@ -75,12 +78,11 @@ public class Member extends BaseEntity {
     }
 
     public void updateProfile(String memberName, Integer age, String work, School school,
-                              Address address, String department, String privateIdInSchool) {
+                              String department, String privateIdInSchool) {
         this.memberName = memberName;
         this.age = age;
         this.work = work;
         this.school = school;
-        this.address = address;
         this.department = department;
         this.privateIdInSchool = privateIdInSchool;
     }

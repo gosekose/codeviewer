@@ -2,7 +2,7 @@ package codeview.main.businessservice.school.infra.repository;
 
 import codeview.main.businessservice.school.domain.School;
 import codeview.main.businessservice.school.infra.dao.SchoolSearchCondition;
-import codeview.main.school.presentation.dto.QSchoolDto;
+import codeview.main.businessservice.school.presentation.dto.QSchoolDto;
 import codeview.main.businessservice.school.presentation.dto.SchoolDto;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -17,7 +17,7 @@ import org.thymeleaf.util.StringUtils;
 
 import java.util.List;
 
-import static codeview.main.school.domain.QSchool.school;
+import static codeview.main.businessservice.school.domain.QSchool.school;
 
 
 @Repository
@@ -41,7 +41,7 @@ public class SchoolQueryDslRepositoryImpl implements SchoolQueryDslRepository {
 
         List<SchoolDto> content = jpaQueryFactory
                 .select(new QSchoolDto(
-                        school.name,
+                        school.schoolName,
                         school.address
                 ))
                 .from(school)
@@ -69,7 +69,7 @@ public class SchoolQueryDslRepositoryImpl implements SchoolQueryDslRepository {
 
     private BooleanExpression nameContains(String name) {
 
-        return StringUtils.isEmpty(name) ? null : school.name.contains(name);
+        return StringUtils.isEmpty(name) ? null : school.schoolName.contains(name);
     }
 
 }
