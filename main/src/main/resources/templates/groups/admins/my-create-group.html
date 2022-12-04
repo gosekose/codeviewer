@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html class="h-100" lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/my-header :: header">
+</head>
+
+<body>
+
+<!-- ======= Header ======= -->
+<div th:replace="fragments/my-body-header :: bodyHeader" />
+<!-- End Header -->
+
+<!-- ======= Sidebar ======= -->
+<div th:replace="fragments/my-sidebar :: sidebar" />
+<!-- End Sidebar-->
+
+<main id="main" class="main">
+
+    <div class="col-lg-6">
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">General Form Elements</h5>
+
+                <!-- General Form Elements -->
+                <form class="row" th:action="@{/api/v1/groups/admin/new}" th:object="${createGroupForm}" method="post">
+                    <div class="row mb-3">
+                        <label th:for="name" class="col-sm-2 col-form-label">그룹명</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="name" class="form-control"
+                                   th:errorclass="field-error" th:field="*{name}"  placeholder="그룹명은 필수입니다." autofocus>
+                        </div>
+                        <div class="field-error" th:errors="*{name}"></div>
+                    </div>
+                    <div class="row mb-3">
+                        <label th:for="joinClosedTime" class="col-sm-2 col-form-label">가입 가능 날짜</label>
+                        <div class="col-sm-10">
+                            <input type="date" id="joinClosedTime" class="form-control"
+                                   th:errorclass="joinClosedTime" th:field="*{joinClosedTime}">
+                        </div>
+                        <div class="field-error" th:errors="*{joinClosedTime}"></div>
+                    </div>
+                    <div class="row mb-3">
+                        <label for="inputTime" class="col-sm-2 col-form-label">가입 가능 시간</label>
+                        <div class="col-sm-10">
+                            <input type="time" class="form-control" id="inputTime">
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label th:for="maxMember" class="col-sm-2 col-form-label">최대 인원</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" th:errorclass="maxMember" th:field="*{maxMember}">
+                        </div>
+                        <div class="field-error" th:errors="*{maxMember}"></div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label th:for="description" class="col-sm-2 col-form-label">그룹 설명</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" style="height: 100px" th:field="*{description}"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label th:for="skillTag" class="col-sm-2 col-form-label">스킬 태그</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" style="height: 100px" th:field="*{skillTag}"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label>
+                    </div>
+
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label>
+                    </div>
+
+                    <div class="col-sm-10">
+                        <input type="password" class="form-control">
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label">Submit Button</label>
+                        <div class="col-sm-10">
+                            <button type="submit" class="btn btn-primary">Submit Form</button>
+                        </div>
+                    </div>
+
+                </form><!-- End General Form Elements -->
+
+            </div>
+        </div>
+
+    </div>
+
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<div th:replace="fragments/my-footer :: footer" />
+<!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- ======= Script ======= -->
+<div th:replace="fragments/my-script :: script" />
+<!-- End Script -->
+
+<script>
+
+    $("#payMethod").change(function(){
+        if($(this).prop("checked") == true){
+            //run code
+        }else{
+            //run code
+        }
+    });
+    Share
+
+
+</script>
+
+</body>
+</html>
