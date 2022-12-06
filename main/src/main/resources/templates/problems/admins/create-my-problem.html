@@ -1,7 +1,12 @@
-<!DOCTYPE HTML>
-<html class="h-100" lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/header :: header">
+<!DOCTYPE html>
+<html class="h-100" lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/my-header :: header">
 </head>
+
 <head>
   <meta name="_csrf" th:content="${_csrf.token}"/>
   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
@@ -30,195 +35,222 @@
     }
   </style>
 </head>
+<body>
 
-<body data-bs-spy="scroll" data-bs-target="#navScroll">
-<div class="container">
-  <div th:replace="fragments/bodyHeader2 :: bodyHeader"/>
+<!-- ======= Header ======= -->
+<div th:replace="fragments/my-body-header :: bodyHeader" />
+<!-- End Header -->
 
-  <main>
-    </br>
-    </br>
-    <div class="custom-container-flex"> </div>
+<!-- ======= Sidebar ======= -->
+<div th:replace="fragments/my-sidebar :: sidebar" />
+<!-- End Sidebar-->
+
+<main id="main" class="main">
+
+  <div class="pagetitle">
+    <h1>문제 생성</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">홈</a></li>
+        <li class="breadcrumb-item">그룹</li>
+        <li class="breadcrumb-item active">문제</li>
+      </ol>
+    </nav>
+  </div>
+
+  <div>
 
     <div id="changeCreateProblem">
-      <div class="mb-auto col-5">
-        <h1>문제 생성</h1>
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">문제 생성 <button type="button" class="btn btn-outline-primary btn-sm" id="changeProblemButton" onclick="changeForm()">미리보기</button> </h5>
 
-        <div class="mb-3">
-          <select aria-label="select example" class="form-select" onchange="selectProblemType(this.value)" required>
-            <option value="">문제 출제 형식</option>
-            <option value="homeworkType">과제형</option>
-            <option value="testType">시험형</option>
-          </select>
-          <div class="invalid-feedback">
-            출제 형태를 선택하세요
+          <div class="mb-auto col-8">
+
+            <form class="needs-validation" id="problemCreateForm" novalidate>
+
+              <div class="row mb-3 position-relative">
+                <label class="col-sm-2 col-form-label" for="selectProblem">문제 출제 형식</label>
+                <div class="col-sm-10">
+                  <select aria-label="select example" class="form-select" id="selectProblem" onchange="selectProblemType(this.value)" required>
+                    <option value="">선택 하세요</option>
+                    <option value="homeworkType">과제형</option>
+                    <option value="testType">시험형</option>
+                  </select>
+                  <div class="invalid-feedback"> 출제 형태를 선택하세요 </div>
+                </div>
+              </div>
+
+              <div class="row mb-3 position-relative">
+                <label class="col-sm-2 col-form-label" for="problemName">문제명</label>
+                <div class="col-sm-10">
+                  <input class="form-control" id="problemName" name="problemName" onchange="previewProblemName()" required type="text" value="">
+                </div>
+              </div>
+
+              <div class="row mb-3 position-relative">
+                <label class="col-sm-2 col-form-label" for="openTime">오픈 시간</label>
+                <div class="col-sm-10">
+                  <input id="openTime" name='openTime' class="form-control" type='date' value='서버에 전송할 값'/>
+                </div>
+                <div class="valid-tooltip"></div>
+              </div>
+
+              <div class="row mb-3 position-relative">
+                <label class="col-sm-2 col-form-label" for="closedTime">마감 시간</label>
+                <div class="col-sm-10">
+                  <input id="closedTime" name='closedTime' class="form-control" type='date' value='서버에 전송할 값'/>
+                </div>
+                <div class="invalid-tooltip"></div>
+              </div>
+
+              <div class="row mb-3 position-relative">
+                <label class="col-sm-2 col-form-label" for="descriptions">문제 설명</label>
+                <div class="col-sm-10">
+                  <textarea class="form-control" id="descriptions" name="descriptions" onchange="previewProblemDescription()" placeholder="문제 설명을 작성 하세요." required style="height: 100px"></textarea>
+                </div>
+                <div class="invalid-feedback"> 문제 설명을 작성 하세요.</div>
+              </div>
+
+              <div id="addSampleForm">
+                <div class="row mb-3 position-relative">
+                  <label class="col-sm-2 col-form-label" for="problemInput0">입력 예시 작성</label>
+                  <div class="col-sm-10">
+                    <textarea class="form-control" id="problemInput0" name="inputs" onchange="previewProblemInput0()" placeholder="입력 예시를 작성 하세요" required style="height: 100px"></textarea>
+                  </div>
+                </div>
+                <div class="row mb-3 position-relative">
+                  <label class="col-sm-2 col-form-label" for="problemOutput0">출력 예시 작성</label>
+                  <div class="col-sm-10">
+                    <textarea class="form-control" id="problemOutput0" name="outputs" onchange="previewProblemOutput0()" placeholder="출력 예시를 작성 하세요" required style="height: 100px"></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mb-3 position-relative">
+                  <a href="javascript:void(0);" id="addSampleParam">입출력 예시 추가하기</a>
+              </div>
+
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">문제 등록 및 입출력 파일 서버 테스트
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="ajaxServerTestCall()">서버 테스트</button></h5>
+
+                  <div class="row mb-3 position-relative">
+                    <label class="col-sm-2 col-form-label" for="problemFile">문제 파일 등록</label>
+                    <div class="col-sm-10">
+                      <input aria-label="file example" class="form-control form-control-lg" required type="file" id="problemFile" name="problemFile">
+                    </div>
+                    <div class="invalid-feedback">문제 등록은 필수입니다.</div>
+                  </div>
+
+                  <div id="divZipForm">
+                    <div class="row mb-3 position-relative">
+                      <label class="col-sm-2 col-form-label" for="ioZipFile">입출력 zip 등록 </label>
+                      <div class="col-sm-10">
+                        <input class="form-control form-control-lg" id="ioZipFile" required name="ioZipFile" onchange="ajaxZipCall()" type="file">
+                      </div>
+                      <div style="display: none">
+                        <input id="preFilePath" name="preFilePath" type="text" value="">
+                      </div>
+                      <div class="invalid-feedback">입출력 zip 파일 등록은 필수입니다.</div>
+                    </div>
+                    <div id="ajaxIoUnzipFile"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-center">
+                <button type="submit" class="btn btn-outline-primary">문제 등록</button>
+              </div>
+
+            </form>
           </div>
         </div>
-
-        <form class="row g-1 needs-validation" id="problemCreateForm" novalidate>
-
-          <div class="col-md-4 position-relative">
-            <label class="form-label" for="problemName">문제명</label>
-            <input class="form-control" id="problemName" name="problemName" onchange="previewProblemName()" required type="text" value="">
-          </div>
-
-          <div class="col-md-4 position-relative">
-            <label class="form-label" for="openTime">오픈 시간</label>
-            <input id="openTime" name='openTime' type='date' value='서버에 전송할 값'/>
-            <div class="valid-tooltip">
-            </div>
-          </div>
-
-          <div class="col-md-4 position-relative">
-            <label class="form-label" for="closedTime">마감 시간</label>
-            <div class="input-group has-validation">
-              <input id="closedTime" name='closedTime' type='date' value='서버에 전송할 값'/>
-              <div class="invalid-tooltip">
-              </div>
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label" for="descriptions">문제 설명</label>
-            <textarea class="form-control" id="descriptions" name="descriptions" onchange="previewProblemDescription()" placeholder="문제 설명을 작성 하세요." required style="height: 100px"></textarea>
-            <div class="invalid-feedback">
-              문제 설명을 작성 하세요.
-            </div>
-          </div>
-
-          <div class="mb-3" id="addSampleForm">
-            <label class="form-label" for="problemInput0">입력 예시 작성</label>
-            <textarea class="form-control" id="problemInput0" name="inputs" onchange="previewProblemInput0()" placeholder="입력 예시를 작성 하세요" required style="height: 100px"></textarea>
-            <label class="form-label" for="problemOutput0">출력 예시 작성</label>
-            <textarea class="form-control" id="problemOutput0" name="outputs" onchange="previewProblemOutput0()" placeholder="출력 예시를 작성 하세요" required style="height: 100px"></textarea>
-          </div>
-
-          <a href="javascript:void(0);" id="addSampleParam">입출력 예시 추가하기</a>
-
-          <div class="mb-3">
-            <input aria-label="file example" class="form-control" required type="file">
-            <div class="invalid-feedback">
-              Example invalid form file feedback
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <button class="btn btn-primary" disabled type="submit">Submit form</button>
-          </div>
-
-        </form>
-
-        <form class="row" enctype="multipart/form-data" id="problemIoZipForm" method="post">
-
-          <div class="mb-3">
-            <label class="form-label">입출력 zip 파일 업로드 <input class="form-control form-control-lg" id="ioZipFile" name="ioZipFile" onchange="ajaxZipCall()" type="file">
-            </label>
-          </div>
-
-          <div>
-            <input hidden id="preFilePath" name="preFilePath" type="text" value="">
-          </div>
-
-          <div id="ajaxIoUnzipFile">
-          </div>
-
-          <div class="mb-3">
-            <button class="btn btn-primary" id="ajaxProblemZipCall" onclick="ajaxZipCall()" type="button">입출력 파일 등록</button>
-          </div>
-
-        </form>
-
-
-        <form class="row" enctype="multipart/form-data" id="inputDockerTestForm" method="post">
-          <div class="mb-3">
-            <label class="form-label">문제 파일 <input class="form-control form-control-lg" id="mainSource" name="mainSource" type="file">
-            </label>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">입출력 파일 <input class="form-control form-control-lg" id="ioFileZip" name="ioFileZip" type="file">
-            </label>
-          </div>
-          <button class="btn btn-primary btn-xl" id="inputDockerTest" onclick="ajaxServerTestCall()" type="button">서버 입출력 테스트</button>
-        </form>
-
       </div>
-
-      <button class="btn btn-primary btn-xl" id="changeProblemButton" onclick="changeForm()" type="button">미리 보기</button>
-
     </div>
 
     <div id="changePreview" style="display: none">
-      <div class="mb-auto col-5">
-        <div>
-          <h1>문제명</h1>
-          <div>
-            <div class="card">
-              <div class="card-header" id="problemTypePreview" value="test">
-                문제 타입
-              </div>
-              <div class="card-body">
-                <h5 class="card-title">
-                  <div class="title-overflow-auto" id="previewProblemName">
-                    문제명
-                  </div>
-                </h5>
-                <p class="card-text overflow-auto">
-                </p>
-              </div>
-            </div>
-            <br>
-          </div>
-        </div>
-        <div>
-          <h1> 문제 설명 </h1>
-          <div>
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title overflow-auto text-overflow-auto" id="previewProblemDescription">
-                  입력</h5>
-                <p class="card-text">
-                </p>
-              </div>
-            </div>
-            <br>
-          </div>
-        </div>
-        <div>
-          <h1> 입출력 예시 </h1>
-          <div>
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">
-                  입력</h5>
-                <p class="card-text io-overflow-auto" id="previewProblemInput0">
-                </p>
-              </div>
-              <div class="card-body">
-                <h5 class="card-title">출력</h5>
-                <p class="card-text io-overflow-auto" id="previewProblemOutput0">
-                </p>
-              </div>
-            </div>
-            <br>
-          </div>
-        </div>
-        <div id="previewAddIOExample">
-        </div>
-      </div>
-      <button class="btn btn-primary btn-xl" id="changeBackButton" onclick="changeBackForm()" type="button">돌아 가기</button>
-    </div>
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">문제 <button type="button" class="btn btn-outline-primary btn-sm" id="changeBackButton" onclick="changeBackForm()">돌아가기</button> </h5>
 
-  </main>
-  <div th:replace="fragments/footer :: footer"/>
-</div>
-<!-- /container -->
-<script th:src="@{/static/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/static/js/aos.js}"></script>
+          <div class="mb-auto col-5">
+            <div>
+              <h1>문제명</h1>
+              <div>
+                <div class="card">
+                  <div class="card-header" id="problemTypePreview" value="test">
+                    문제 타입
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <div class="title-overflow-auto" id="previewProblemName">
+                        문제명
+                      </div>
+                    </h5>
+                    <p class="card-text overflow-auto">
+                    </p>
+                  </div>
+                </div>
+                <br>
+              </div>
+            </div>
+              <div>
+                <h1> 문제 설명 </h1>
+                <div>
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title overflow-auto text-overflow-auto" id="previewProblemDescription">
+                        입력</h5>
+                      <p class="card-text">
+                      </p>
+                    </div>
+                  </div>
+                  <br>
+                </div>
+              </div>
+              <div>
+                <h1> 입출력 예시 </h1>
+                <div>
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">
+                        입력</h5>
+                      <p class="card-text io-overflow-auto" id="previewProblemInput0">
+                      </p>
+                    </div>
+                    <div class="card-body">
+                      <h5 class="card-title">출력</h5>
+                      <p class="card-text io-overflow-auto" id="previewProblemOutput0">
+                      </p>
+                    </div>
+                  </div>
+                  <br>
+                </div>
+              </div>
+              <div id="previewAddIOExample"></div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<div th:replace="fragments/my-footer :: footer" />
+<!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- ======= Script ======= -->
+<div th:replace="fragments/my-script :: script" />
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<!-- End Script -->
+
 <script>
-  AOS.init({
-    duration: 800, // values from 0 to 3000, with step 50ms
-  });
+
   let selectProblemType = function (value) {
     console.log(value);
     if (value == "homeworkType") {
@@ -257,12 +289,21 @@
   $(document).ready(function() {
     $('#addSampleParam').click(function() {
       const html =
-              '<label for="validationTextarea" class="form-label">입력 예시 작성</label>' +
-              '      <textarea class="form-control add-inputs" name="inputs" placeholder="입력 예시를 작성 하세요" ' +
-              'required onchange="previewAddInputs()"></textarea>' +
-              '<label for="validationTextarea" class="form-label">출력 예시 작성</label>\n' +
-              '      <textarea class="form-control add-outputs" name="outputs" placeholder="출력 예시를 작성 하세요" ' +
-              'required onchange="previewAddOutputs()"></textarea>\n'
+              '              <div class="row mb-3 position-relative">\n' +
+              '                <label class="col-sm-2 col-form-label">입력 예시 작성 </label>\n' +
+              '                <div class="col-sm-10">\n' +
+              '                  <textarea class="form-control" name="inputs" onchange="previewProblemInput0()" placeholder="입력 예시를 작성 하세요" required style="height: 100px"></textarea>\n' +
+              '                </div>' +
+              '              </div>\n' +
+              '              <div class="row mb-3 position-relative">\n' +
+              '                <label class="col-sm-2 col-form-label">출력 예시 작성</label>' +
+              '                <div class="col-sm-10">\n' +
+              '                  <textarea class="form-control" name="outputs" onchange="previewProblemOutput0()" placeholder="출력 예시를 작성 하세요" required style="height: 100px"></textarea>' +
+              '                </div>' +
+              '              </div>'
+
+
+
       const previewHtml =
               '<div>\n' +
               '                <h1> 입출력 예시 </h1>\n' +
@@ -285,27 +326,6 @@
       $('#addSampleForm').append(html);
       $('#previewAddIOExample').append(previewHtml);});});
 
-  function ajaxCall() {
-    const form = $("#problemCreateForm")[0];
-    const formData = new FormData(form);
-    $.ajax({
-      type: 'POST',
-      contentType: false,
-      processData: false,
-      cache: false,
-      enctype : 'multipart/form-data',
-      url: '/api/v1/groups/admin/' + groupId + '/problems/new',
-      data: formData,
-      beforeSend: function(xhr) {xhr.setRequestHeader(header, token);},
-      async: true,
-      cache: true,
-      success: function(data) {
-        location.href = "/api/v1/groups/admin/" + groupId + "/problems/" + data.problemId;
-      },
-      error: function(xhr, status, error) {
-        console.log('error:' + error);
-      }})}
-
   jQuery.fn.serializeObject = function() {
     let obj = null;
     try { if (this[0].tagName && this[0].tagName.toUpperCase() == "FORM") {
@@ -315,10 +335,15 @@
     } catch (e) { alert(e.message); } finally { }
     return obj;};
 
+
   function ajaxZipCall() {
 
-    const form = $("#problemIoZipForm")[0];
-    const formData = new FormData(form);
+    let formData = new FormData();
+    formData.append("ioZipFile", jQuery('#ioZipFile')[0].files[0]);
+    formData.append("preFilePath", document.getElementById('preFilePath').value);
+
+    console.log(formData)
+
     $.ajax({
       type: 'POST',
       contentType: false,
@@ -341,14 +366,28 @@
           for (let i=0; i<ajaxIoFilePath.inputs.length; i++) {
             console.log(ajaxIoFilePath.inputs[i]);
             $('#ajaxIoUnzipFile').each(function () {
-              const html = '<i class="fa fa-file-text-o fa-5x" aria-hidden="true"></i>' + '<div>' + ajaxIoFilePath.inputs[i] + '</div>'
-              $('#ajaxIoUnzipFile').append(html);
+
+              if (i % 2 == 0) {
+                const html = '</br> <i class="fa fa-file-text-o fa-2x" aria-hidden="true">&nbsp;&nbsp;' + ajaxIoFilePath.inputs[i] + '&nbsp;&nbsp;&nbsp;&nbsp;</i>'
+                $('#ajaxIoUnzipFile').append(html);
+              } else {
+                const html = '<i class="fa fa-file-text-o fa-2x" aria-hidden="true">&nbsp;&nbsp;' + ajaxIoFilePath.inputs[i] + '&nbsp;&nbsp;&nbsp;&nbsp;</i>'
+                $('#ajaxIoUnzipFile').append(html);
+              }
+
             }); } });
         $(document).ready(function() {
           for (let i=0; i<ajaxIoFilePath.outputs.length; i++) {
             $('#ajaxIoUnzipFile').each(function() {
-              const html = '<i class="fa fa-file-text-o fa-5x" aria-hidden="true"></i>' + '<div>' + ajaxIoFilePath.outputs[i] + '</div>'
-              $('#ajaxIoUnzipFile').append(html);
+
+              if (i % 2 == 0) {
+                const html = '<i class="fa fa-file-text-o fa-2x" aria-hidden="true">&nbsp;&nbsp;' + ajaxIoFilePath.outputs[i] + '&nbsp;&nbsp;&nbsp;&nbsp;</i>'
+                $('#ajaxIoUnzipFile').append(html);
+              } else {
+                const html = '<i class="fa fa-file-text-o fa-2x" aria-hidden="true">&nbsp;&nbsp;' + ajaxIoFilePath.outputs[i] + '&nbsp;&nbsp;&nbsp;&nbsp;</i>'
+                $('#ajaxIoUnzipFile').append(html);
+              }
+
             });}});},
       error: function(xhr, status, error) {
         console.log('error:' + error);
@@ -358,16 +397,23 @@
     })
   }
 
+
+
   function ajaxServerTestCall() {
-    const form = $("#inputDockerTestForm")[0];
-    const formData = new FormData(form);
+
+    let formData = new FormData();
+    formData.append("problemFile", jQuery('#problemFile')[0].files[0]);
+    formData.append("ioZipFile", jQuery('#ioZipFile')[0].files[0]);
+    formData.append("preFilePath", document.getElementById('preFilePath').value);
+
+
     $.ajax({
       type: 'POST',
       contentType: false,
       processData: false,
       cache: false,
       enctype : 'multipart/form-data',
-      url: '/api/v1/groups/admin/' + groupId + '/problems/upload/docker',
+      url: '/api/v1/groups/admin/' + groupId + '/problems/upload/server',
       data: formData,
       beforeSend: function(xhr) {xhr.setRequestHeader(header, token);},
       async: true,
@@ -394,9 +440,7 @@
 
   }
 
-
 </script>
-
 
 </body>
 </html>

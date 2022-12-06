@@ -1,83 +1,95 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html class="h-100" lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="fragments/header :: header">
+<head th:replace="fragments/my-header :: header">
 </head>
 
-<body data-bs-spy="scroll" data-bs-target="#navScroll">
-<div class="container">
-    <div th:replace="fragments/bodyHeader2 :: bodyHeader" />
-    <main>
+<body>
 
-        <div class="container py-vh-6">
+<!-- ======= Header ======= -->
+<div th:replace="fragments/my-body-header :: bodyHeader" />
+<!-- End Header -->
 
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>그룹 번호</th>
-                    <th>그룹명</th>
-                    <th>공개 여부</th>
-                    <th>최대 멤버</th>
-                    <th>가입 신청 마감 시간</th>
-                    <th>자동 가입 설정</th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                </thead>
-                <tr th:each="group: ${memberGroups.getContent()}">
-                    <td th:text="${group.id}"></td>
-                    <td th:text="${group.name}"></td>
-                    <td th:text="${group.visibility}"></td>
-                    <td th:text="${group.maxMember}"></td>
-                    <td th:text="${group.joinClosedTime}"></td>
-                    <td th:text="${group.groupAutoJoin}"></td>
-                    <td>
-                        <a href="#" th:href="@{/api/v1/groups/admin/{id}/join (id=${group.id})}"
-                           class="btn btn-primary" role="button">가입 신청 관리</a>
-                    </td>
-                    <td>
-                        <a href="#" th:href="@{/api/v1/groups/admin/{id}/members (id=${group.id})}"
-                           class="btn btn-primary" role="button">회원 관리</a>
-                    </td>
-                    <td>
-                        <a href="#" th:href="@{/api/v1/groups/admin/{id} (id=${group.id})}"
-                           class="btn btn-primary" role="button">문제 관리</a>
-                    </td>
-                    <td>
-                        <a href="#" th:href="@{/api/v1/groups/admin/edit/{id} (id=${group.id})}"
-                           class="btn btn-primary" role="button">그룹 수정</a>
-                    </td>
-                </tr>
-            </table>
+<!-- ======= Sidebar ======= -->
+<div th:replace="fragments/my-sidebar :: sidebar" />
+<!-- End Sidebar-->
 
-            <nav style="text-align: center;">
-                <ul class="pagination">
+<main id="main" class="main">
 
-                </ul>
-            </nav>
+  <div class="col-lg-10">
 
-        </div>
-    </main>
+    <div class="card-body">
+      <h5 class="card-title">내 그룹 관리</h5>
+      <p> <code>가입 신청 관리, 회원 관리, 문제 관리, 그룹 수정 관리 </code>를 할 수 있습니다.</p>
+      <!-- Active Table -->
 
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th scope="col">그룹 번호</th>
+          <th scope="col">그룹명</th>
+          <th scope="col">공개 여부</th>
+          <th scope="col">최대 멤버</th>
+          <th scope="col">가입 신청 마감 시간</th>
+          <th scope="col">자동 가입 설정</th>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        </thead>
+        <tr th:each="group: ${memberGroups.getContent()}">
+          <td th:text="${group.id}"></td>
+          <td th:text="${group.name}"></td>
+          <td th:text="${group.visibility}"></td>
+          <td th:text="${group.maxMember}"></td>
+          <td th:text="${group.joinClosedTime}"></td>
+          <td th:text="${group.groupAutoJoin}"></td>
+          <td>
+            <a href="#" th:href="@{/api/v1/groups/admin/{id}/join (id=${group.id})}"
+               class="btn btn-primary" role="button">가입 신청 관리</a>
+          </td>
+          <td>
+            <a href="#" th:href="@{/api/v1/groups/admin/{id}/members (id=${group.id})}"
+               class="btn btn-primary" role="button">회원 관리</a>
+          </td>
+          <td>
+            <a href="#" th:href="@{/api/v1/groups/admin/{id} (id=${group.id})}"
+               class="btn btn-primary" role="button">문제 관리</a>
+          </td>
+          <td>
+            <a href="#" th:href="@{/api/v1/groups/admin/edit/{id} (id=${group.id})}"
+               class="btn btn-primary" role="button">그룹 수정</a>
+          </td>
+        </tr>
+      </table>
 
-    <div th:replace="fragments/footer :: footer" />
-</div> <!-- /container -->
+      <!-- End Tables without borders -->
 
-<script th:src="@{/static/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/static/js/aos.js}"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    </div>
+
+    <div th:replace="fragments/my-pagination :: pagination" />
+
+  </div>
+
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<div th:replace="fragments/my-footer :: footer" />
+<!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- ======= Script ======= -->
+<div th:replace="fragments/my-script :: script" />
+<!-- End Script -->
+
 <script>
-    AOS.init({
-        duration: 800, // values from 0 to 3000, with step 50ms
-    });
+
 </script>
 
-
 </body>
-
 </html>

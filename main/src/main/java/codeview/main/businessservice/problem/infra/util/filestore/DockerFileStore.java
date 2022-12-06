@@ -1,7 +1,7 @@
 package codeview.main.businessservice.problem.infra.util.filestore;
 
 
-import codeview.main.businessservice.problem.presentation.dao.ProblemDockerDao;
+import codeview.main.businessservice.problem.presentation.dao.ProblemServerDao;
 import codeview.main.common.domain.UploadFile;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -17,10 +17,10 @@ import java.util.List;
 public class DockerFileStore extends AbstractFileStore{
 
 
-    public List<UploadFile> dockerStoreFile(ProblemDockerDao dao, String groupId, String uuid) throws IOException {
+    public List<UploadFile> dockerStoreFile(ProblemServerDao dao, String groupId, String uuid) throws IOException {
 
         List<UploadFile> result = new ArrayList<>();
-        MultipartFile[] problemFiles = new MultipartFile[] { dao.getMainSource(), dao.getIoFileZip() };
+        MultipartFile[] problemFiles = new MultipartFile[] { dao.getProblemFile(), dao.getIoZipFile() };
 
         log.info("problems = {}", problemFiles.length);
 

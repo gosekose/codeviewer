@@ -8,8 +8,8 @@ import codeview.main.businessservice.problem.infra.util.FileUnZip;
 import codeview.main.businessservice.problem.infra.util.filestore.CommonFilStore;
 import codeview.main.businessservice.problem.infra.util.filestore.DockerFileStore;
 import codeview.main.businessservice.problem.presentation.dao.ProblemCreateDao;
-import codeview.main.businessservice.problem.presentation.dao.ProblemDockerDao;
-import codeview.main.businessservice.problem.presentation.dto.DockerIoFilePathDto;
+import codeview.main.businessservice.problem.presentation.dao.ProblemServerDao;
+import codeview.main.businessservice.problem.presentation.dto.ServerIoFilePathDto;
 import codeview.main.businessservice.problem.presentation.dto.IoFilePathDto;
 import codeview.main.businessservice.problem.domain.Problem;
 import codeview.main.common.application.FolderRemover;
@@ -102,8 +102,8 @@ public class ProblemCreateService {
     }
 
 
-    public DockerIoFilePathDto convertDocker(Integer groupId, ProblemDockerDao problemDockerDao, String uuid) throws IOException {
-        List<UploadFile> uploadFiles = getDockerFile(problemDockerDao, groupId, uuid);
+    public ServerIoFilePathDto convertServerFile(Integer groupId, ProblemServerDao problemServerDao, String uuid) throws IOException {
+        List<UploadFile> uploadFiles = getDockerFile(problemServerDao, groupId, uuid);
 
         if (uploadFiles == null ) {
             return null;
@@ -120,9 +120,9 @@ public class ProblemCreateService {
 
         IoFilePathDto ioFilePathDto = ioFileClientReturn(newPath);
 
-        return DockerIoFilePathDto.builder()
+        return ServerIoFilePathDto.builder()
                 .ioFilePathDto(ioFilePathDto)
-                .docker(uploadFiles.get(0).getStoreFileName())
+                .server(uploadFiles.get(0).getStoreFileName())
                 .build();
     }
 
@@ -214,7 +214,7 @@ public class ProblemCreateService {
         return commonFilStore.storeFile(dao, String.valueOf(groupId), uuid);
     }
 
-    public List<UploadFile> getDockerFile(ProblemDockerDao dao, Integer groupId, String uuid) throws IOException {
+    public List<UploadFile> getDockerFile(ProblemServerDao dao, Integer groupId, String uuid) throws IOException {
 
         return dockerFileStore.dockerStoreFile(dao, String.valueOf(groupId), uuid);
     }

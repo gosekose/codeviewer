@@ -1,62 +1,80 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html class="h-100" lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="fragments/header :: header"></head>
+<head th:replace="fragments/my-header :: header">
+</head>
 
-<body data-bs-spy="scroll" data-bs-target="#navScroll">
-<div class="container">
-  <div th:replace="fragments/bodyHeader :: bodyHeader" />
+<body>
 
-    <main>
-      <div class="container py-vh-6">
-        <table class="table">
-          <thead>
-          <tr>
-            <th>문제 번호</th>
-            <th>문제 이름</th>
-            <th>문제 파일명</th>
-            <th>생성 시간</th>
-            <th>변경 시간</th>
-            <td></td>
-          </tr>
-          </thead>
-          <tr th:each="problem: ${problems.getContent()}">
-            <td th:text="${problem.problemId}"></td>
-            <td th:text="${problem.name}"></td>
-            <td th:text="${problem.originalProblemFileName}"></td>
-            <td th:text="${problem.createdAt}"></td>
-            <td th:text="${problem.modifiedAt}"></td>
+<!-- ======= Header ======= -->
+<div th:replace="fragments/my-body-header :: bodyHeader" />
+<!-- End Header -->
 
-            <td>
-              <a href="#" th:href="@{/api/v1/groups/admin/{groupId}/problems/{problemId} (groupId=${groupId}, problemId=${problem.problemId})}"
-                 class="btn btn-primary" role="button">문제 관리</a>
-            </td>
-          </tr>
-        </table>
+<!-- ======= Sidebar ======= -->
+<div th:replace="fragments/my-sidebar :: sidebar" />
+<!-- End Sidebar-->
 
-        <nav style="text-align: center;">
-          <ul class="pagination">
+<main id="main" class="main">
 
-          </ul>
-        </nav>
+  <div class="col-lg-10">
 
-      </div>
-    </main>
-  <div th:replace="fragments/footer :: footer" />
-</div> <!-- /container -->
+    <div class="card-body">
+      <h5 class="card-title">내 문제 관리</h5>
+      <p> <code> 출제한 문제에 대한 정보를 확인하고 문제 관리 </code>를 할 수 있습니다.</p>
+      <!-- Active Table -->
 
-<script th:src="@{/static/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/static/js/aos.js}"></script>
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th>문제 번호</th>
+          <th>문제 이름</th>
+          <th>문제 파일명</th>
+          <th>생성 시간</th>
+          <th>변경 시간</th>
+          <td></td>
+        </tr>
+        </thead>
+        <tr th:each="problem: ${problems.getContent()}">
+          <td th:text="${problem.problemId}"></td>
+          <td th:text="${problem.name}"></td>
+          <td th:text="${problem.originalProblemFileName}"></td>
+          <td th:text="${problem.createdAt}"></td>
+          <td th:text="${problem.modifiedAt}"></td>
+
+          <td>
+            <a href="#" th:href="@{/api/v1/groups/admin/{groupId}/problems/{problemId} (groupId=${groupId}, problemId=${problem.problemId})}"
+               class="btn btn-primary" role="button">문제 관리</a>
+          </td>
+        </tr>
+      </table>
+
+      <!-- End Tables without borders -->
+
+    </div>
+
+    <div th:replace="fragments/my-pagination :: pagination" />
+
+  </div>
+
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<div th:replace="fragments/my-footer :: footer" />
+<!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- ======= Script ======= -->
+<div th:replace="fragments/my-script :: script" />
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<!-- End Script -->
+
 <script>
-  AOS.init({
-    duration: 800, // values from 0 to 3000, with step 50ms
-  });
+
 </script>
 
 </body>
-
 </html>

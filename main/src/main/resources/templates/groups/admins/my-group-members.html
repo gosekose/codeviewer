@@ -1,34 +1,43 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html class="h-100" lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="fragments/header :: header">
-</head>
+<head th:replace="fragments/my-header :: header"></head>
 <head>
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <meta name="groupId" th:content="${groupId}"/>
 </head>
+<body>
 
+<!-- ======= Header ======= -->
+<div th:replace="fragments/my-body-header :: bodyHeader" />
+<!-- End Header -->
 
-<body data-bs-spy="scroll" data-bs-target="#navScroll">
-<div class="container">
-    <div th:replace="fragments/bodyHeader2 :: bodyHeader" />
+<!-- ======= Sidebar ======= -->
+<div th:replace="fragments/my-sidebar :: sidebar" />
+<!-- End Sidebar-->
 
+<main id="main" class="main">
 
-    <main>
-        <div class="container py-vh-6">
-            <table class="table">
+    <div class="col-lg-10">
+
+        <div class="card-body">
+            <h5 class="card-title">내 그룹 관리</h5>
+            <p> <code>가입 신청 관리, 회원 관리, 문제 관리, 그룹 수정 관리 </code>를 할 수 있습니다.</p>
+            <!-- Active Table -->
+
+            <table class="table table-bordered">
                 <thead>
                 <tr>
                     <th>회원 아이디</th>
                     <th>회원 이름</th>
                     <th>학과</th>
                     <th>학번</th>
-                    <th></th>
-                    <th></th>
+                    <th>권한</th>
+                    <th>가입 시간</th>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -55,67 +64,157 @@
                 </tr>
             </table>
 
-            <nav style="text-align: center;">
-                <ul class="pagination">
-
-                </ul>
-            </nav>
+            <!-- End Tables without borders -->
 
         </div>
-    </main>
-    <div th:replace="fragments/footer :: footer" />
-</div> <!-- /container -->
 
-<script th:src="@{/static/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/static/js/aos.js}"></script>
+        <div th:replace="fragments/my-pagination :: pagination" />
+
+    </div>
+
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<div th:replace="fragments/my-footer :: footer" />
+<!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- ======= Script ======= -->
+<div th:replace="fragments/my-script :: script" />
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<!-- End Script -->
+
 <script>
-    AOS.init({
-        duration: 800, // values from 0 to 3000, with step 50ms
-    });
+
+    let chartAjaxData = {};
+    let chartSolveId = [];
+    let chartOneLabel = [];
+    let chartMyScore = [];
+    let chartOtherScore = [];
 
     const groupId = $("meta[name='groupId']").attr("content");
-    const token = $("meta[name='_csrf']").attr("content");
-    const header = $("meta[name='_csrf_header']").attr("content");
-    let httpStatus;
+    const memberId = $("meta[name='memberId']").attr("content");
 
-    function deleteMember(arg) {
+    function chartShowFnc(arg) {
 
-        const memberId = $(arg).val();
+        const problemId = $(arg).val();
+        const token = $("meta[name='_csrf']").attr("content");
+        const header = $("meta[name='_csrf_header']").attr("content");
 
-        var jqxhr = $.ajax({
-            type: 'POST',
+        $.ajax({
+            type: 'GET',
             contentType: 'application/json',
-            url: '/api/v1/groups/admin/' + groupId + '/delete/' + memberId,
+            url: '/api/v1/groups/admin/' + groupId + '/members/' + memberId + '/' + problemId +'/chart',
             beforeSend: function(xhr) {
                 xhr.setRequestHeader(header, token);
             },
             async: true,
             cache: true,
-            statusCode: {
-                307:function(data) {
-                    window.location.reload();
-                    return 307;
-                }}
-        })
-            .done(function(data) {
-                alert('성공');
-            }).
-            fail(function( jqXHR, textStatus ) {
+            success: function(data) {
+                console.log("success");
+                console.log(data);
+                chartAjaxData = data;
+                chartDraw(chartAjaxData);
 
-                if (jqXHR.status == 307) {
-                    alert('회원 강퇴에 성공하였습니다.');
-                } else {
-                    alert('실패');
-                    console.log(jqXHR.status);
+            },
+
+            error: function(xhr, status, error) {
+                console.log('error:' + error);
+                console.log('status:' + status);
+                console.log('compile.error');
+            }
+        })
+    }
+
+    function chartDraw(chartAjaxData) {
+
+        chartSolveId = [];
+        chartOneLabel = [];
+        chartMyScore = [];
+        chartOtherScore = [];
+
+        for(let i=0; i<chartAjaxData.myChart.length; i++) {
+            chartSolveId.push(chartAjaxData.myChart[i].solveId);
+            chartOneLabel.push(chartAjaxData.myChart[i].number + 1);
+            chartMyScore.push(chartAjaxData.myChart[i].myScore);
+        }
+
+        for(let i=0; i<chartAjaxData.otherChart.length; i++) {
+            chartOtherScore.push(chartAjaxData.otherChart[i].otherScore);
+        }
+
+        chartDrawCall1(chartSolveId, chartOneLabel, chartMyScore)
+        chartDrawCall2(chartSolveId, chartOneLabel, chartMyScore, chartOtherScore)
+    }
+
+
+    function chartDrawCall1(chartSolveId, chartOneLabel, chartMyScore) {
+
+        var ctx = document.getElementById('myChart1').getContext('2d');
+        var chart = new Chart(ctx, {
+            // 챠트 종류를 선택
+            type: 'line',
+
+            // 챠트를 그릴 데이타
+            data: {
+                labels: chartOneLabel,
+                datasets: [{
+                    label: '점수 통계',
+                    backgroundColor: 'transparent',
+                    borderColor: 'blue',
+                    data: chartMyScore
+                }]
+            },
+            // 옵션
+            options: {}
+        });
+    }
+
+    function chartDrawCall2(chartSolveId, chartOneLabel, chartMyScore, chartOtherScore) {
+
+        const colors = ['#45B5A8','#cfe8ef','blue','#c3e6cb','#dc3545','#6c757d'];
+        // const datas = [589, 445, ...] 선언하고 아래서 datas 변수만 써줘도 된다.
+
+        var ctx = document.getElementById('myChart2');
+
+        var chartData = {
+            labels: chartOneLabel,
+            datasets: [{
+                data: chartMyScore,
+                backgroundColor: 'transparent',
+                borderColor: colors[2],
+                borderWidth: 3,
+                pointBackgroundColor: colors[0]
+            },
+                {
+                    data: chartOtherScore,
+                    backgroundColor: colors[1],
+                    borderColor: colors[0],
+                    borderWidth: 3,
+                    pointBackgroundColor: colors[0]
                 }
-                return false;
-            });
-        return false;
+            ]
+        };
+
+        var myChart = new Chart(ctx, {
+            // 챠트 종류를 선택
+            type: 'line',
+
+            // 챠트를 그릴 데이타
+            data: chartData,
+
+            // 옵션
+            options: {
+                legend: {
+                    display: false
+                }
+            }
+        });
+
     }
 
 </script>
 
 </body>
-
 </html>

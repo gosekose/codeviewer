@@ -4,9 +4,9 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 @Data
-public class ProblemDockerDao {
+public class ProblemServerDao {
 
-    MultipartFile mainSource;
-    MultipartFile ioFileZip;
+    MultipartFile problemFile;
+    MultipartFile ioZipFile;
 
 }

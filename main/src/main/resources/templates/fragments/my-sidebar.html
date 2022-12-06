@@ -59,22 +59,32 @@
               <i class="bi bi-circle"></i><span>그룹 찾기</span>
             </a>
           </li>
+          <li>
+            <a th:href="@{/api/v1/temp/admin/create/group}">
+              <i class="bi bi-circle"></i><span>임시 데이터 생성</span>
+            </a>
+          </li>
         </ul>
       </li><!-- End Forms Nav -->
 
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-layout-text-window-reverse"></i><span>Tables</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-layout-text-window-reverse"></i><span>문제</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="tables-general.html">
-              <i class="bi bi-circle"></i><span>General Tables</span>
+            <a th:href="@{/api/v1/groups/admin/new}">
+              <i class="bi bi-circle"></i><span>문제 생성</span>
             </a>
           </li>
           <li>
-            <a href="tables-data.html">
-              <i class="bi bi-circle"></i><span>Data Tables</span>
+            <a th:href="@{/api/v1/groups/admin/new}">
+              <i class="bi bi-circle"></i><span>문제 풀기</span>
+            </a>
+          </li>
+          <li>
+            <a th:href="@{/api/v1/groups/admin/new}">
+              <i class="bi bi-circle"></i><span>문제 찾기</span>
             </a>
           </li>
         </ul>
@@ -82,22 +92,22 @@
 
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-bar-chart"></i><span>Charts</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-bar-chart"></i><span>리더보드</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
-            <a href="charts-chartjs.html">
-              <i class="bi bi-circle"></i><span>Chart.js</span>
+            <a href="charts-apexcharts.html">
+              <i class="bi bi-circle"></i><span>마이 리더보드</span>
             </a>
           </li>
           <li>
-            <a href="charts-apexcharts.html">
-              <i class="bi bi-circle"></i><span>ApexCharts</span>
+            <a href="charts-chartjs.html">
+              <i class="bi bi-circle"></i><span>그룹 리더보드</span>
             </a>
           </li>
           <li>
             <a href="charts-echarts.html">
-              <i class="bi bi-circle"></i><span>ECharts</span>
+              <i class="bi bi-circle"></i><span>전체 리더보드</span>
             </a>
           </li>
         </ul>
@@ -105,22 +115,22 @@
 
       <li class="nav-item">
         <a class="nav-link collapsed" data-bs-target="#icons-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-gem"></i><span>Icons</span><i class="bi bi-chevron-down ms-auto"></i>
+          <i class="bi bi-gem"></i><span>대회</span><i class="bi bi-chevron-down ms-auto"></i>
         </a>
         <ul id="icons-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
           <li>
             <a href="icons-bootstrap.html">
-              <i class="bi bi-circle"></i><span>Bootstrap Icons</span>
+              <i class="bi bi-circle"></i><span>시행 중인 대회</span>
             </a>
           </li>
           <li>
             <a href="icons-remix.html">
-              <i class="bi bi-circle"></i><span>Remix Icons</span>
+              <i class="bi bi-circle"></i><span>연습</span>
             </a>
           </li>
           <li>
             <a href="icons-boxicons.html">
-              <i class="bi bi-circle"></i><span>Boxicons</span>
+              <i class="bi bi-circle"></i><span>대회 참여 분석</span>
             </a>
           </li>
         </ul>
@@ -131,21 +141,21 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="users-profile.html">
           <i class="bi bi-person"></i>
-          <span>Profile</span>
+          <span>게시판</span>
         </a>
       </li><!-- End Profile Page Nav -->
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="pages-faq.html">
           <i class="bi bi-question-circle"></i>
-          <span>F.A.Q</span>
+          <span>서비스 소개</span>
         </a>
       </li><!-- End F.A.Q Page Nav -->
 
       <li class="nav-item">
         <a class="nav-link collapsed" href="pages-contact.html">
           <i class="bi bi-envelope"></i>
-          <span>Contact</span>
+          <span>서비스 문의</span>
         </a>
       </li><!-- End Contact Page Nav -->
         <!-- End Login Page Nav -->
