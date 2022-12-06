@@ -1,65 +1,66 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html class="h-100" lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="fragments/header :: header"></head>
+<head th:replace="fragments/my-header :: header"></head>
+<body>
 
-<body data-bs-spy="scroll" data-bs-target="#navScroll">
-<div class="container">
-    <div th:replace="fragments/bodyHeader2 :: bodyHeader" />
+<!-- ======= Header ======= -->
+<div th:replace="fragments/my-body-header :: bodyHeader" />
+<!-- End Header -->
 
-    <main>
+<!-- ======= Sidebar ======= -->
+<div th:replace="fragments/my-sidebar :: sidebar" />
+<!-- End Sidebar-->
 
-        <div class="container py-vh-6">
+<main id="main" class="main">
 
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>그룹 번호</th>
-                    <th>그룹 이름</th>
-                    <th>그룹장 이름</th>
-                    <th>그룹장 학교</th>
-                    <th>그룹장 학과</th>
-                    <td></td>
-                </tr>
-                </thead>
-                <tr th:each="group: ${groupList.getContent()}">
-                    <td th:text="${group.groupId}"></td>
-                    <td th:text="${group.groupName}"></td>
-                    <td th:text="${group.creatorName}"></td>
-                    <td th:text="${group.creatorSchoolName}"></td>
-                    <td th:text="${group.creatorDepartment}"></td>
-                    <td>
-                        <a href="#" th:href="@{/api/v1/groups/{id}/problems (id=${group.groupId})}"
-                           class="btn btn-primary" role="button">그룹 이동</a>
-                    </td>
-                </tr>
-            </table>
+    <div class="col-lg-10">
 
-            <nav style="text-align: center;">
-                <ul class="pagination">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>그룹 번호</th>
+                <th>그룹 이름</th>
+                <th>그룹장 이름</th>
+                <th>그룹장 학교</th>
+                <th>그룹장 학과</th>
+                <td></td>
+            </tr>
+            </thead>
+            <tr th:each="group: ${groupList.getContent()}">
+                <td th:text="${group.groupId}"></td>
+                <td th:text="${group.groupName}"></td>
+                <td th:text="${group.creatorName}"></td>
+                <td th:text="${group.creatorSchoolName}"></td>
+                <td th:text="${group.creatorDepartment}"></td>
+                <td>
+                    <a href="#" th:href="@{/api/v1/groups/{id}/problems (id=${group.groupId})}"
+                       class="btn btn-primary" role="button">그룹 이동</a>
+                </td>
+            </tr>
+        </table>
 
-                </ul>
-            </nav>
+        <div th:replace="fragments/my-pagination :: pagination" />
 
-        </div>
-    </main>
-    <div th:replace="fragments/footer :: footer" />
-</div> <!-- /container -->
+    </div>
 
+</main><!-- End #main -->
 
-<script th:src="@{/static/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/static/js/aos.js}"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<!-- ======= Footer ======= -->
+<div th:replace="fragments/my-footer :: footer" />
+<!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- ======= Script ======= -->
+<div th:replace="fragments/my-script :: script" />
+<!-- End Script -->
+
 <script>
-    AOS.init({
-        duration: 800, // values from 0 to 3000, with step 50ms
-    });
 </script>
 
-
 </body>
-
 </html>

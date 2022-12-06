@@ -1,5 +1,7 @@
 package codeview.main.serverconnect.application.service;
 
+import codeview.main.businessservice.problem.presentation.dto.ServerIoFilePathDto;
+import codeview.main.serverconnect.presentation.dto.ServerIoFilePathResDto;
 import codeview.main.serverconnect.presentation.dto.SolveRequestDto;
 import codeview.main.serverconnect.presentation.dto.SolveResponseDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,8 +19,6 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.List;
 
 @Service
 @Slf4j
@@ -102,8 +102,6 @@ public class HttpConnectionService {
     //1.get방식 요청
     public SolveResponseDto requestSolveScore(SolveRequestDto solveRequestDto) throws JsonProcessingException {
 
-        SolveRequestDto req = buildSolveRequest(solveRequestDto);
-
         //URI를 빌드한다
         URI uri = UriComponentsBuilder
                 .fromUriString("http://localhost:5000")
@@ -118,35 +116,27 @@ public class HttpConnectionService {
 
         RestTemplate restTemplate = new RestTemplate();
 
-//        RequestEntity<SolveRequestDto> requestEntity = RequestEntity
-//                .post(uri)
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .body(req);
-
-
         ResponseEntity<SolveResponseDto> result = restTemplate.getForEntity(uri, SolveResponseDto.class);
-
-        System.out.println(result.getStatusCode());
-        System.out.println(result.getBody());
 
         return result.getBody();
     }
 
-    public SolveRequestDto buildSolveRequest(SolveRequestDto solveRequestDto) throws JsonProcessingException {
+    public ServerIoFilePathResDto requestProblemCreateTest(ServerIoFilePathDto serverIoFilePathDto) throws JsonProcessingException {
 
-        solveRequestDto.setSolveId(10L);
-        solveRequestDto.setSolveRequestUrl("ttt");
-        solveRequestDto.setProblemUrl("ttt");
-        List<Integer> array = Arrays.asList(10, 20);
-        solveRequestDto.setScore(array);
+        //URI를 빌드한다
+        URI uri = UriComponentsBuilder
+                .fromUriString("http://localhost:5000")
+                .path("/api/server/solve/test")
+                .queryParam("mainFilePath", serverIoFilePathDto.getMainFilePath())
+                .queryParam("folderPath", serverIoFilePathDto.getIoFilePathDto().getFolderPath())
+                .encode(Charset.defaultCharset())
+                .build()
+                .toUri();
 
-        return solveRequestDto;
+        RestTemplate restTemplate = new RestTemplate();
+
+        ResponseEntity<ServerIoFilePathResDto> result = restTemplate.getForEntity(uri, ServerIoFilePathResDto.class);
+
+        return result.getBody();
     }
-
-
-
-
-
-
-
 }

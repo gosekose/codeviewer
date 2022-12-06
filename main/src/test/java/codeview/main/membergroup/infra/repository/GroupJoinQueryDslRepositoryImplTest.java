@@ -103,7 +103,7 @@ class GroupJoinQueryDslRepositoryImplTest {
         memberRepository.save(creator);
 
         school = School.builder()
-                .name("SeoulTech")
+                .schoolName("SeoulTech")
                 .build();
         schoolRepository.save(school);
 

@@ -4,14 +4,14 @@ import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class DockerIoFilePathDto {
+public class ServerIoFilePathDto {
 
-    private String docker;
+    private String mainFilePath;
     private IoFilePathDto ioFilePathDto;
 
     @Builder
-    public DockerIoFilePathDto(String docker, IoFilePathDto ioFilePathDto) {
-        this.docker = docker;
+    public ServerIoFilePathDto(String mainFilePath, IoFilePathDto ioFilePathDto) {
+        this.mainFilePath = mainFilePath;
         this.ioFilePathDto = ioFilePathDto;
     }
 }

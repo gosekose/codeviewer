@@ -42,7 +42,7 @@ public class GroupCreateController {
     public String getCreateGroups(Model model) {
 
         model.addAttribute("createGroupForm", new CreateGroupForm());
-        return "groups/admins/create-my-group";
+        return "groups/admins/my-create-group";
     }
 
 
@@ -50,7 +50,7 @@ public class GroupCreateController {
     public String getGroupsById(Model model, @PathVariable("groupId") String id) {
 
         model.addAttribute("createGroupForm", new CreateGroupForm());
-        return "groups/admins/create-my-group";
+        return "groups/admins/my-create-group";
     }
 
     @PostMapping
@@ -60,7 +60,7 @@ public class GroupCreateController {
 
          if (bindingResult.hasErrors()) {
             log.info("errors = {}", bindingResult);
-            return "groups/admins/create-my-group";
+            return "groups/admins/my-create-group";
         }
 
         Member member = memberService.findByRegisterId(principalUser.getProviderUser().getId());

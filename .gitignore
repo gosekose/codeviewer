@@ -3,3 +3,7 @@
 source/
 .idea/
 .idea/*.xml
+
+*.in
+*.out
+*.zip

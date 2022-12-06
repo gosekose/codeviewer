@@ -1,14 +1,16 @@
 package codeview.main.businessservice.problem.presentation.controller.admin;
 
-import codeview.main.businessservice.problem.presentation.dao.ProblemCreateDao;
-import codeview.main.businessservice.problem.presentation.dao.ProblemDockerDao;
-import codeview.main.businessservice.problem.presentation.dao.ProblemIoFileDao;
-import codeview.main.businessservice.problem.presentation.dto.DockerIoFilePathDto;
-import codeview.main.businessservice.problem.presentation.dto.IoFilePathDto;
-import codeview.main.businessservice.problem.presentation.dto.ProblemIdDto;
 import codeview.main.businessservice.problem.application.ProblemCreateService;
 import codeview.main.businessservice.problem.application.ProblemService;
 import codeview.main.businessservice.problem.domain.Problem;
+import codeview.main.businessservice.problem.presentation.dao.ProblemCreateDao;
+import codeview.main.businessservice.problem.presentation.dao.ProblemIoFileDao;
+import codeview.main.businessservice.problem.presentation.dao.ProblemServerDao;
+import codeview.main.businessservice.problem.presentation.dto.IoFilePathDto;
+import codeview.main.businessservice.problem.presentation.dto.ProblemIdDto;
+import codeview.main.businessservice.problem.presentation.dto.ServerIoFilePathDto;
+import codeview.main.serverconnect.application.service.HttpConnectionService;
+import codeview.main.serverconnect.presentation.dto.ServerIoFilePathResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,8 @@ public class ProblemAdminRestCreateController {
     private final ProblemService problemService;
 
     private final ProblemCreateService problemCreateService;
+
+    private final HttpConnectionService httpConnectionService;
 
 //    @PostMapping("/{groupId}/problems/new/3")
 //    public ResponseEntity<ProblemIdDto> postCreateProblem(
@@ -97,24 +101,43 @@ public class ProblemAdminRestCreateController {
         return new ResponseEntity(ioFilePathDto, HttpStatus.OK);
     }
 
-    @PostMapping("/{groupId}/problems/upload/docker")
-    public ResponseEntity<DockerIoFilePathDto> problemDockerTest(
+    @PostMapping("/{groupId}/problems/upload/server")
+    public ResponseEntity<ServerIoFilePathDto> problemDockerTest(
             @PathVariable("groupId") Integer groupId,
-            @ModelAttribute ProblemDockerDao problemDockerDao) throws IOException {
+            @ModelAttribute ProblemServerDao problemServerDao) throws IOException {
 
-        if (problemDockerDao == null || problemDockerDao.getMainSource() == null || problemDockerDao.getIoFileZip() == null) {
+        log.info("problemIoFileDao = {}", problemServerDao);
+        log.info("problemIoFileDao.getZip = {}", problemServerDao.getIoZipFile());
+        log.info("problemIoFileDao.getFilePath = {}", problemServerDao.getProblemFile());
+
+
+        if (problemServerDao == null || problemServerDao.getProblemFile() == null || problemServerDao.getIoZipFile() == null) {
             log.info("not found");
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
-        log.info("problemDockerDao.data = {}", problemDockerDao.getIoFileZip());
+        log.info("problemServerDao.data = {}", problemServerDao.getIoZipFile());
 
-        DockerIoFilePathDto dockerIoFilePathDto = problemCreateService.convertDocker(groupId, problemDockerDao, String.valueOf(UUID.randomUUID()));
+        ServerIoFilePathDto serverIoFilePathDto = problemCreateService.convertServerFile(groupId, problemServerDao, String.valueOf(UUID.randomUUID()));
 
-        log.info("dockerFile = {}", dockerIoFilePathDto.getDocker());
+        log.info("mainFilePath = {}", serverIoFilePathDto.getMainFilePath());
 
-        return new ResponseEntity(dockerIoFilePathDto, HttpStatus.OK);
+        ServerIoFilePathResDto serverIoFilePathDtoReq = httpConnectionService.requestProblemCreateTest(serverIoFilePathDto);
+
+        return new ResponseEntity(serverIoFilePathDtoReq, HttpStatus.OK);
     }
 
+
+//    @GetMapping
+//    public ResponseEntity<SolveResponseDto> getSolveResponse(SolveRequestDto solveRequestDto) throws JsonProcessingException {
+//
+//        SolveResponseDto solveResponseDto = httpConnectionService.requestSolveScore(solveRequestDto);
+//
+//        log.info("solveId = {}", solveResponseDto.getSolveId());
+//        log.info("score = {}", solveResponseDto.getScore());
+//        log.info("testStatus = {}", solveResponseDto.getTestStatus());
+//
+//        return new ResponseEntity<>(solveResponseDto, HttpStatus.OK);
+//    }
 
 }

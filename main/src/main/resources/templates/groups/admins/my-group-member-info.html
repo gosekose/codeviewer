@@ -1,105 +1,115 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html class="h-100" lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="fragments/header :: header">
-</head>
+<head th:replace="fragments/my-header :: header"></head>
 <head>
   <meta name="_csrf" th:content="${_csrf.token}"/>
   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <meta name="groupId" th:content="${groupId}"/>
+  <meta name="memberId" th:content="${memberId}"/>
 </head>
+<body>
 
+<!-- ======= Header ======= -->
+<div th:replace="fragments/my-body-header :: bodyHeader" />
+<!-- End Header -->
 
-<body data-bs-spy="scroll" data-bs-target="#navScroll">
-<div class="container">
-  <div th:replace="fragments/bodyHeader2 :: bodyHeader" /> </div>
+<!-- ======= Sidebar ======= -->
+<div th:replace="fragments/my-sidebar :: sidebar" />
+<!-- End Sidebar-->
 
-    <main>
-      <div class="container py-vh-6">
+<main id="main" class="main">
 
-        <div class="row d-flex justify-content-between align-items-center">
+  <div class="col-lg-10">
 
-          <table class="table" style="margin-top: 25px">
-            <thead>
-            <tr>
-              <th>학교</th>
-              <th>학과</th>
-              <th>학번</th>
-              <th>그룹 권한</th>
-              <th>가입 시간</th>
-            </tr>
-            </thead>
-            <td th:text="${memberInfo.schoolName}"></td>
-            <td th:text="${memberInfo.department}"></td>
-            <td th:text="${memberInfo.privateIdInSchool}"></td>
-            <td th:text="${memberInfo.memberGroupAuthority}"></td>
-            <td th:text="${memberInfo.joinTime}"></td>
-          </table>
+    <div class="card-body">
+      <h5 class="card-title"> 내 그룹 회원 정보 조회 </h5>
+      <p> <code>회원의 정보, 문제 해결 차트 등</code>을 확인 할 수 있습니다.</p>
 
-          <table class="table" style="margin-top: 25px">
-            <thead>
-            <tr>
-              <th>문제 번호</th>
-              <th>문제 이름</th>
-              <th>시도 횟수</th>
-              <th>최고 점수</th>
-              <th>마지막 변경 시간</th>
-              <td></td>
-            </tr>
-            </thead>
-            <tr th:each="solve: ${solves}">
-              <td th:text="${solve.problemId}"></td>
-              <td th:text="${solve.problemName}"></td>
-              <td th:text="${solve.triedSolveCount}"></td>
-              <td th:text="${solve.maxScore}"></td>
-              <td th:text="${solve.lastModifiedTime}"></td>
-              <td>
-                <button type="button" onclick="chartShowFnc(this)" class="btn btn-primary" th:value="${solve.problemId}">차트 확인</button>
-              </td>
-            </tr>
-          </table>
+      <div class="row d-flex justify-content-between align-items-center">
 
-          <div class="col-lg-6">
-            <div class="container">
-              <canvas id="myChart1"></canvas>
-            </div>
-          </div>
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th>학교</th>
+            <th>학과</th>
+            <th>학번</th>
+            <th>그룹 권한</th>
+            <th>가입 시간</th>
+          </tr>
+          </thead>
+          <td th:text="${memberInfo.schoolName}"></td>
+          <td th:text="${memberInfo.department}"></td>
+          <td th:text="${memberInfo.privateIdInSchool}"></td>
+          <td th:text="${memberInfo.memberGroupAuthority}"></td>
+          <td th:text="${memberInfo.joinTime}"></td>
+        </table>
 
-          <div class="col-lg-6">
-            <div class="container">
-              <canvas id="myChart2"></canvas>
-            </div>
+        <table class="table table-bordered" style="margin-top: 25px">
+          <thead>
+          <tr>
+            <th>문제 번호</th>
+            <th>문제 이름</th>
+            <th>시도 횟수</th>
+            <th>최고 점수</th>
+            <th>마지막 변경 시간</th>
+            <td></td>
+          </tr>
+          </thead>
+          <tr th:each="solve: ${solves}">
+            <td th:text="${solve.problemId}"></td>
+            <td th:text="${solve.problemName}"></td>
+            <td th:text="${solve.triedSolveCount}"></td>
+            <td th:text="${solve.maxScore}"></td>
+            <td th:text="${solve.lastModifiedTime}"></td>
+            <td>
+              <button type="button" onclick="chartShowFnc(this)" class="btn btn-primary" th:value="${solve.problemId}">차트 확인</button>
+            </td>
+          </tr>
+        </table>
+
+        <div class="col-lg-5">
+          <div class="container">
+            <canvas id="myChart1"></canvas>
           </div>
         </div>
 
-        <nav style="text-align: center;">
-          <ul class="pagination">
-
-          </ul>
-        </nav>
+        <div class="col-lg-5">
+          <div class="container">
+            <canvas id="myChart2"></canvas>
+          </div>
+        </div>
       </div>
 
-      </div>
-    </main>
+      <div th:replace="fragments/my-pagination :: pagination" />
 
-    <div th:replace="fragments/footer :: footer" />
-  </div> <!-- /container -->
+      <!-- End Tables without borders -->
+
+    </div>
+
+  </div>
+
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<div th:replace="fragments/my-footer :: footer" />
+<!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- ======= Script ======= -->
+<div th:replace="fragments/my-script :: script" />
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-<script th:src="@{/static/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/static/js/aos.js}"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
         crossorigin="anonymous"></script>
-<script>
-  AOS.init({
-    duration: 800, // values from 0 to 3000, with step 50ms
-  });
-</script>
+
+<!-- End Script -->
 
 <script>
 
@@ -109,16 +119,15 @@
   let chartMyScore = [];
   let chartOtherScore = [];
 
-  const problemId = $(arg).val();
   const groupId = $("meta[name='groupId']").attr("content");
   const memberId = $("meta[name='memberId']").attr("content");
 
   function chartShowFnc(arg) {
 
+    const problemId = $(arg).val();
     const token = $("meta[name='_csrf']").attr("content");
     const header = $("meta[name='_csrf_header']").attr("content");
-
-
+    
     $.ajax({
       type: 'GET',
       contentType: 'application/json',
@@ -179,7 +188,7 @@
         datasets: [{
           label: '점수 통계',
           backgroundColor: 'transparent',
-          borderColor: 'black',
+          borderColor: 'blue',
           data: chartMyScore
         }]
       },
@@ -190,7 +199,7 @@
 
   function chartDrawCall2(chartSolveId, chartOneLabel, chartMyScore, chartOtherScore) {
 
-    const colors = ['gray','gray','black','#c3e6cb','#dc3545','#6c757d'];
+    const colors = ['#45B5A8','#cfe8ef','blue','#c3e6cb','#dc3545','#6c757d'];
     // const datas = [589, 445, ...] 선언하고 아래서 datas 변수만 써줘도 된다.
 
     var ctx = document.getElementById('myChart2');
@@ -234,5 +243,4 @@
 </script>
 
 </body>
-
 </html>

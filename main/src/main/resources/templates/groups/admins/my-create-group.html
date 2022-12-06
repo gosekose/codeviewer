@@ -6,6 +6,9 @@
 
 <head th:replace="fragments/my-header :: header">
 </head>
+<head>
+    <link th:href="@{/static/assets/vendor/bootstrap/css/bootstrap-datetimepicker.min.css}" rel="stylesheet">
+</head>
 
 <body>
 
@@ -19,11 +22,11 @@
 
 <main id="main" class="main">
 
-    <div class="col-lg-6">
+    <div class="col-lg-10">
 
         <div class="card">
             <div class="card-body">
-                <h5 class="card-title">General Form Elements</h5>
+                <h5 class="card-title">그룹 생성하기</h5>
 
                 <!-- General Form Elements -->
                 <form class="row" th:action="@{/api/v1/groups/admin/new}" th:object="${createGroupForm}" method="post">
@@ -35,19 +38,17 @@
                         </div>
                         <div class="field-error" th:errors="*{name}"></div>
                     </div>
-                    <div class="row mb-3">
-                        <label th:for="joinClosedTime" class="col-sm-2 col-form-label">가입 가능 날짜</label>
-                        <div class="col-sm-10">
-                            <input type="date" id="joinClosedTime" class="form-control"
-                                   th:errorclass="joinClosedTime" th:field="*{joinClosedTime}">
+
+                    <div class="well">
+                        <div id="datetimepicker" class="input-append date">
+                            <label th:for="joinClosedTime" class="col-sm-2 col-form-label">가입 가능 날짜</label>
+                            <input data-format="dd/MM/yyyy hh:mm:ss" type="text" th:field="*{joinClosedTime}" th:errorclass="joinClosedTime">
+                            <span class="add-on">
+                              <i data-time-icon="icon-time" data-date-icon="icon-calendar">
+                              </i>
+                            </span>
                         </div>
                         <div class="field-error" th:errors="*{joinClosedTime}"></div>
-                    </div>
-                    <div class="row mb-3">
-                        <label for="inputTime" class="col-sm-2 col-form-label">가입 가능 시간</label>
-                        <div class="col-sm-10">
-                            <input type="time" class="form-control" id="inputTime">
-                        </div>
                     </div>
 
                     <div class="row mb-3">
@@ -73,21 +74,24 @@
                     </div>
 
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-                        <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label>
+                        <input class="form-check-input" type="checkbox" id="groupAutoJoin">
+                        <label class="form-check-label" for="groupAutoJoin">자동 가입 설정</label>
                     </div>
 
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-                        <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label>
+                        <input class="form-check-input" type="checkbox" id="passwordStatus">
+                        <label class="form-check-label" for="passwordStatus">가입 비밀번호 설정</label>
                     </div>
 
-                    <div class="col-sm-10">
-                        <input type="password" class="form-control">
+                    <div id="passwordOnOff" class="col-sm-10">
+                        <div class="mb-3">
+                            <label th:for="password" autocomplete="false" class="form-label">가입 비밀번호</label>
+                            <input type="password" class="form-control form-control-lg" id="key" th:field="*{password}">
+                            <div id="keyShow">SHOW</div>
+                        </div>
                     </div>
-                    
+
                     <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label">Submit Button</label>
                         <div class="col-sm-10">
                             <button type="submit" class="btn btn-primary">Submit Form</button>
                         </div>
@@ -110,18 +114,63 @@
 
 <!-- ======= Script ======= -->
 <div th:replace="fragments/my-script :: script" />
+<script th:src="@{/static/assets/vendor/bootstrap/js/bootstrap-datetimepicker.min.js}"></script>
 <!-- End Script -->
 
 <script>
 
-    $("#payMethod").change(function(){
+    window.onload = function () {
+        $("#passwordStatus").value = "OFF";
+        $("#passwordOnOff").hide();
+    }
+
+
+
+    $("#groupAutoJoin").change(function(){
         if($(this).prop("checked") == true){
             //run code
+            this.value="ON";
+            console.log(this.value);
         }else{
             //run code
+            this.value="OFF";
+            console.log(this.value);
         }
     });
-    Share
+
+
+    $("#passwordStatus").change(function(){
+        if($(this).prop("checked") == true){
+            //run code
+            this.value = "ON"
+            console.log(this.value)
+            $("#passwordOnOff").css("display", "inline-block");
+        }else{
+            //run code
+            this.value = "OFF"
+            console.log(this.value)
+            $("#passwordOnOff").hide();
+        }
+    });
+
+
+    $("#key").on("keyup", function(event) {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+        } else {
+            if (this.value) {
+                $("#keyShow").css("display", "inline-block");
+            } else {
+                $("#keyShow").hide();
+            }
+        }
+    }).focus();
+
+    $(function() {
+        $('#datetimepicker').datetimepicker({
+            language: 'pt-BR'
+        });
+    });
 
 
 </script>
