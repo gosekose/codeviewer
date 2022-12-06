@@ -236,6 +236,23 @@
     </div>
   </div>
 
+
+  <div class="modal fade show" id="problemCreateModal" tabindex="-1" style="display: none;" aria-modal="true" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">서버 테스트 결과</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="problemCreateModalText">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="problemCreateTestModalClose()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </main><!-- End #main -->
 
 <!-- ======= Footer ======= -->
@@ -420,6 +437,37 @@
       cache: true,
       success: function(data) {
         console.log(data);
+
+        let createText = "";
+
+        if (data.ioFileResult) {
+          createText += "입출력 결과: PASS \n"
+        } else {
+          createText += "입출력 결과: FAIL \n"
+        }
+
+        if (data.ioProcessResult) {
+          createText += "입출력 프로세싱: PASS \n"
+        } else {
+          createText += "입출력 프로세싱: FAIL \n"
+        }
+
+        if (data.runtimeResult) {
+          createText += "런타임 상태: PASS \n"
+        } else {
+          createText += "런타임 상태: FAIL \n"
+        }
+
+        if (data.serverResult) {
+          createText += "서버 상태: PASS \n"
+        } else {
+          createText += "서버 상태: FAIL \n"
+        }
+
+        document.getElementById("problemCreateModalText").innerText = createText;
+
+        problemCreateTestModal();
+
       },
       error: function(xhr, status, error) {
         console.log('error:' + error);
@@ -437,6 +485,16 @@
   function changeBackForm() {
     document.getElementById("changeCreateProblem").style.display = "block";
     document.getElementById("changePreview").style.display = "none";
+
+  }
+
+  function problemCreateTestModal() {
+    document.getElementById("problemCreateModal").style.display = "block";
+
+  }
+
+  function problemCreateTestModalClose() {
+    document.getElementById("problemCreateModal").style.display = "none";
 
   }
 

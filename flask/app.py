@@ -164,6 +164,111 @@ class RequestSolveServer(Resource):
   
 
 
+@api.route('/api/server/problem/demo/test')
+class RequestProblemDemoServer(Resource):
+
+    def get_subprocess(self, command):
+
+        out, err = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE).communicate(timeout=2)
+
+        return out, err
+
+
+    def python_problem_create_test(self, main_file_Path, folder_path) :
+    
+        self.io_file_result = True
+        self.io_process_result = True
+        self.runtime_result = True
+        self.server_result = True
+
+        try:
+            
+            os.chdir(folder_path)
+            oslist = os.listdir()
+            oslist.sort()
+
+            inputs, outputs = [], []
+            
+            for o in oslist:
+
+                if o.split('.')[-1] == 'in':
+                    inputs.append(o)
+                elif o.split('.')[-1] == 'out':
+                    outputs.append(o)
+
+                if (len(inputs) == len(outputs)):
+                    full_lenth = len(inputs)
+                else:
+                    full_lenth = min(len(inputs), len(outputs))
+            
+
+            for length in range(1, full_lenth+1):
+            
+                command = ("python " + main_file_Path + " < " + str(length) + ".in")
+                print(command)
+
+                try:
+                    out, err = self.get_subprocess(command)
+
+                    try:
+                        answer = out.decode('utf-8').strip().split('\n')
+                        f = open(str(length) + '.out', 'r')
+                        result = f.readlines()
+                        result = list(map(lambda s: s.strip(), result))
+                        f.close()
+
+                        if (answer != result):
+                            self.io_file_result = False
+
+                    except:
+                        self.io_process_result = False
+                    
+                except:
+                    out.kill()
+                    err.kill()
+                    self.runtime_result = False
+            
+        except:
+            self.server_result = False
+
+        return self.io_file_result, self.io_process_result, self.runtime_result, self.server_result
+
+
+
+    def get(self):
+
+        try:
+
+            main_file_path = request.args.get("mainFilePath")
+            folder_path = request.args.get("folderPath")
+
+            io_file_result, io_process_result, runtime_result, server_result = self.python_problem_create_test(main_file_path, folder_path)
+            
+            response = make_response(jsonify({
+                "ioFileResult": io_file_result,
+                "ioProcessResult": io_process_result,
+                "runtimeResult": runtime_result,
+                "serverResult": server_result
+            }))
+        
+        except :
+
+            response = make_response(jsonify({
+                "ioFileResult": False,
+                "ioProcessResult": False,
+                "runtimeResult": False,
+                "serverResult": False
+            }))
+
+        response.headers.add("Access-Control-Allow-Origin", "*")
+        response.headers.add('Access-Control-Allow-Headers', "*")
+        response.headers.add('Access-Control-Allow-Methods', "*")
+
+        print(response)
+
+        return response
+
+
 @api.route('/todos')
 class TodoPost(Resource):
     def post(self):

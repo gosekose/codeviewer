@@ -126,7 +126,7 @@ public class HttpConnectionService {
         //URI를 빌드한다
         URI uri = UriComponentsBuilder
                 .fromUriString("http://localhost:5000")
-                .path("/api/server/solve/test")
+                .path("/api/server/problem/demo/test")
                 .queryParam("mainFilePath", serverIoFilePathDto.getMainFilePath())
                 .queryParam("folderPath", serverIoFilePathDto.getIoFilePathDto().getFolderPath())
                 .encode(Charset.defaultCharset())
