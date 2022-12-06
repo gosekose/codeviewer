@@ -122,7 +122,7 @@ public class ProblemCreateService {
 
         return ServerIoFilePathDto.builder()
                 .ioFilePathDto(ioFilePathDto)
-                .server(uploadFiles.get(0).getStoreFileName())
+                .mainFilePath(uploadFiles.get(0).getStoreFileName())
                 .build();
     }
 
