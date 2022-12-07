@@ -128,7 +128,7 @@ public class HttpConnectionService {
                 .fromUriString("http://localhost:5000")
                 .path("/api/server/problem/demo/test")
                 .queryParam("mainFilePath", serverIoFilePathDto.getMainFilePath())
-                .queryParam("folderPath", serverIoFilePathDto.getIoFilePathDto().getFolderPath())
+                .queryParam("folderPath", serverIoFilePathDto.getIoFileDataDto().getFolderPath())
                 .encode(Charset.defaultCharset())
                 .build()
                 .toUri();

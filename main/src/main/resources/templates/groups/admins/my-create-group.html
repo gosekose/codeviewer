@@ -39,14 +39,11 @@
                         <div class="field-error" th:errors="*{name}"></div>
                     </div>
 
-                    <div class="well">
-                        <div id="datetimepicker" class="input-append date">
-                            <label th:for="joinClosedTime" class="col-sm-2 col-form-label">가입 가능 날짜</label>
-                            <input data-format="dd/MM/yyyy hh:mm:ss" type="text" th:field="*{joinClosedTime}" th:errorclass="joinClosedTime">
-                            <span class="add-on">
-                              <i data-time-icon="icon-time" data-date-icon="icon-calendar">
-                              </i>
-                            </span>
+                    <div class="row mb-3">
+                        <label th:for="joinClosedTime" class="col-sm-2 col-form-label">그룹명</label>
+                        <div class="col-sm-10">
+                            <input type="datetime-local" id="joinClosedTime" class="form-control" onchange="localDateTimeValidation()"
+                                   th:errorclass="field-error" th:field="*{joinClosedTime}"  placeholder="마감 시간은 현재 시간 이후만 가능 합니다." autofocus>
                         </div>
                         <div class="field-error" th:errors="*{joinClosedTime}"></div>
                     </div>
@@ -90,19 +87,42 @@
                             <div id="keyShow">SHOW</div>
                         </div>
                     </div>
+                    <div>
+                        </br>
+                    </div>
 
-                    <div class="row mb-3">
-                        <div class="col-sm-10">
-                            <button type="submit" class="btn btn-primary">Submit Form</button>
+                    <div class="text-center">
+                        <div class="row mb-3">
+                            <div class="col-sm-10">
+                                <button type="submit" class="btn btn-primary">Submit Form</button>
+                            </div>
                         </div>
                     </div>
 
-                </form><!-- End General Form Elements -->
+                </form>
+                <!-- End General Form Elements -->
 
             </div>
         </div>
 
     </div>
+
+
+    <div class="modal fade show" id="problemCreateModal" tabindex="-1" style="display: none;" aria-modal="true" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="problemCreateModalTitle"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="problemCreateModalText"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="problemCreateTestModalClose()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 </main><!-- End #main -->
 
@@ -115,6 +135,7 @@
 <!-- ======= Script ======= -->
 <div th:replace="fragments/my-script :: script" />
 <script th:src="@{/static/assets/vendor/bootstrap/js/bootstrap-datetimepicker.min.js}"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <!-- End Script -->
 
 <script>
@@ -166,11 +187,27 @@
         }
     }).focus();
 
-    $(function() {
-        $('#datetimepicker').datetimepicker({
-            language: 'pt-BR'
-        });
-    });
+    function localDateTimeValidation() {
+
+        let createTitle = "시간 오류"
+        let joinClosedTime = $("#joinClosedTime").val();
+        let today = new Date().toISOString();
+
+        if (today > joinClosedTime) {
+
+            let createText = "마감 시간은 현재 시간 이후만 가능 합니다.";
+            document.getElementById("joinClosedTime").value = '';
+
+            document.getElementById("problemCreateModalTitle").innerText = createTitle;
+            document.getElementById("problemCreateModalText").innerText = createText;
+            document.getElementById("problemCreateModal").style.display = "block";
+        }
+    }
+
+    function problemCreateTestModalClose() {
+        document.getElementById("problemCreateModal").style.display = "none";
+
+    }
 
 
 </script>

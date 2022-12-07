@@ -2,6 +2,7 @@ package codeview.main.businessservice.problem.presentation.utils;
 
 import codeview.main.businessservice.problem.application.ProblemService;
 import codeview.main.businessservice.problem.domain.Problem;
+import codeview.main.businessservice.problem.presentation.dto.ProblemAdminEditDto;
 import codeview.main.businessservice.problemdescription.application.ProblemDescriptionService;
 import codeview.main.businessservice.problemdescription.application.ProblemIoExampleService;
 import codeview.main.businessservice.problemdescription.domain.ProblemDescription;
@@ -32,10 +33,18 @@ public class ProblemPage {
         List<ProblemDescription> descriptions = problemDescriptionService.findAllByProblem(problem);
         List<ProblemIoExample> ioExamples = problemIoExampleService.findAllByProblem(problem);
 
+        ProblemAdminEditDto problemAdminEditDto = ProblemAdminEditDto.builder()
+                .name(problem.getName())
+                .problemType(problem.getProblemType())
+                .openTime(problem.getOpenTime())
+                .closedTime(problem.getClosedTime())
+                .build();
+
         model.addAttribute("groupId", groupId);
         model.addAttribute("problemId", problemId);
         model.addAttribute("descriptions", descriptions);
         model.addAttribute("ioExamples", ioExamples);
+        model.addAttribute("problemAdminEditDto", problemAdminEditDto);
 
         log.info("descriptions = {}", descriptions.size());
         log.info("ioExamples = {}", ioExamples.size());

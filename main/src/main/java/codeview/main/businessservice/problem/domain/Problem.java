@@ -5,6 +5,7 @@ import codeview.main.businessservice.membergroup.domain.MemberGroup;
 import codeview.main.businessservice.problem.domain.embedded.ProblemFile;
 import codeview.main.businessservice.problem.domain.embedded.ProblemInputIoFile;
 import codeview.main.businessservice.problem.domain.embedded.SolvePython;
+import codeview.main.businessservice.problem.domain.enumtype.ProblemDifficulty;
 import codeview.main.businessservice.problem.domain.enumtype.ProblemType;
 import codeview.main.businessservice.problemdescription.domain.ProblemDescription;
 import codeview.main.businessservice.problemdescription.domain.ProblemIoExample;
@@ -61,6 +62,10 @@ public class Problem extends BaseEntity {
 
     @Embedded
     private SolvePython solvePython;
+
+    private ProblemDifficulty problemDifficulty;
+
+    private Integer totalScore;
 
     @Builder
     public Problem(MemberGroup memberGroup, String name, ProblemType problemType, ProblemFile problemFile, ProblemInputIoFile problemInputIoFile, LocalDateTime openTime, LocalDateTime closedTime) {
