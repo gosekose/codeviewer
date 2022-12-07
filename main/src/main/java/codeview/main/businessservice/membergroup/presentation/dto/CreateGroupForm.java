@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
@@ -32,6 +33,7 @@ public class CreateGroupForm {
     private GroupAutoJoin groupAutoJoin;
 
     @Future(message = "현재 시간 이후만 체크 가능합니다.")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime joinClosedTime;
 
     @Length(max = 1000, message = "길이는 최대 1000자 입니다.")

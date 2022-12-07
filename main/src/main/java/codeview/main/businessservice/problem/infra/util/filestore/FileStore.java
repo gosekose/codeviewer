@@ -10,6 +10,7 @@ import java.io.IOException;
 public interface FileStore {
 
     UploadFile storeFile(MultipartFile multipartFile, String groupId, String newProblemFolder) throws IOException;
+    UploadFile storeFileAlreadyFolder(MultipartFile multipartFile, String groupId, String path) throws IOException;
 
     String createStoreFileName(String newProblemPath, String originalFileName);
 

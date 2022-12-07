@@ -12,7 +12,7 @@
   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <meta name="groupId" th:content="${groupId}"/>
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-  <style>
+ <style>
     .custom-container-flex {
       display: flex;
       justify-content: space-between;
@@ -67,7 +67,7 @@
 
           <div class="mb-auto col-8">
 
-            <form class="needs-validation" id="problemCreateForm" novalidate>
+            <form class="needs-validation" id="problemCreateForm" novalidate method="post" enctype="multipart/form-data">
 
               <div class="row mb-3 position-relative">
                 <label class="col-sm-2 col-form-label" for="selectProblem">문제 출제 형식</label>
@@ -84,14 +84,14 @@
               <div class="row mb-3 position-relative">
                 <label class="col-sm-2 col-form-label" for="problemName">문제명</label>
                 <div class="col-sm-10">
-                  <input class="form-control" id="problemName" name="problemName" onchange="previewProblemName()" required type="text" value="">
+                  <input class="form-control" id="problemName" name="problemName" onchange="previewProblemTag(this)" required type="text" value="">
                 </div>
               </div>
 
               <div class="row mb-3 position-relative">
                 <label class="col-sm-2 col-form-label" for="openTime">오픈 시간</label>
                 <div class="col-sm-10">
-                  <input id="openTime" name='openTime' class="form-control" type='date' value='서버에 전송할 값'/>
+                  <input id="openTime" name='openTime' class="form-control" onchange="localDateTimeValidation()" type='datetime-local'/>
                 </div>
                 <div class="valid-tooltip"></div>
               </div>
@@ -99,7 +99,7 @@
               <div class="row mb-3 position-relative">
                 <label class="col-sm-2 col-form-label" for="closedTime">마감 시간</label>
                 <div class="col-sm-10">
-                  <input id="closedTime" name='closedTime' class="form-control" type='date' value='서버에 전송할 값'/>
+                  <input id="closedTime" name='closedTime' class="form-control" onchange="localDateTimeValidation()" type='datetime-local'/>
                 </div>
                 <div class="invalid-tooltip"></div>
               </div>
@@ -107,7 +107,7 @@
               <div class="row mb-3 position-relative">
                 <label class="col-sm-2 col-form-label" for="descriptions">문제 설명</label>
                 <div class="col-sm-10">
-                  <textarea class="form-control" id="descriptions" name="descriptions" onchange="previewProblemDescription()" placeholder="문제 설명을 작성 하세요." required style="height: 100px"></textarea>
+                  <textarea class="form-control" id="descriptions" name="descriptions" onchange="previewProblemTag(this)" placeholder="문제 설명을 작성 하세요." required style="height: 100px"></textarea>
                 </div>
                 <div class="invalid-feedback"> 문제 설명을 작성 하세요.</div>
               </div>
@@ -116,19 +116,19 @@
                 <div class="row mb-3 position-relative">
                   <label class="col-sm-2 col-form-label" for="problemInput0">입력 예시 작성</label>
                   <div class="col-sm-10">
-                    <textarea class="form-control" id="problemInput0" name="inputs" onchange="previewProblemInput0()" placeholder="입력 예시를 작성 하세요" required style="height: 100px"></textarea>
+                    <textarea class="form-control" id="problemInput0" name="inputs" onchange="previewProblemTag(this)" placeholder="입력 예시를 작성 하세요" required style="height: 100px"></textarea>
                   </div>
                 </div>
                 <div class="row mb-3 position-relative">
                   <label class="col-sm-2 col-form-label" for="problemOutput0">출력 예시 작성</label>
                   <div class="col-sm-10">
-                    <textarea class="form-control" id="problemOutput0" name="outputs" onchange="previewProblemOutput0()" placeholder="출력 예시를 작성 하세요" required style="height: 100px"></textarea>
+                    <textarea class="form-control" id="problemOutput0" name="outputs" onchange="previewProblemTag(this)" placeholder="출력 예시를 작성 하세요" required style="height: 100px"></textarea>
                   </div>
                 </div>
               </div>
 
               <div class="row mb-3 position-relative">
-                  <a href="javascript:void(0);" id="addSampleParam">입출력 예시 추가하기</a>
+                <a href="javascript:void(0);" id="addSampleParam">입출력 예시 추가하기</a>
               </div>
 
               <div class="card">
@@ -160,8 +160,20 @@
                 </div>
               </div>
 
+
+              <div class="card" style="display: none" id="scoreForm">
+                <div class="card-body">
+                  <h5 class="card-title">문제 점수 등록
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="scoreSameDivide()">점수 동일 분배</button></h5>
+
+                  <div class="row mb-3 position-relative" id="scoreArray">
+                  </div>
+                  <div class="invalid-feedback">문제 점수 등록은 필수 입니다.</div>
+                </div>
+              </div>
+
               <div class="text-center">
-                <button type="submit" class="btn btn-outline-primary">문제 등록</button>
+                <button type="button" class="btn btn-outline-primary" onclick="ajaxCall()">문제 등록</button>
               </div>
 
             </form>
@@ -228,8 +240,8 @@
                   </div>
                   <br>
                 </div>
+                <div id="previewAddIOExample"></div>
               </div>
-              <div id="previewAddIOExample"></div>
             </div>
           </div>
         </div>
@@ -241,11 +253,10 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">서버 테스트 결과</h5>
+          <h5 class="modal-title" id="problemCreateModalTitle"></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="modal-body" id="problemCreateModalText">
-        </div>
+        <div class="modal-body" id="problemCreateModalText"></div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="problemCreateTestModalClose()">Close</button>
         </div>
@@ -264,9 +275,16 @@
 <!-- ======= Script ======= -->
 <div th:replace="fragments/my-script :: script" />
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
 <!-- End Script -->
 
 <script>
+
+  let plusDivIdx = 0;
+  let ajaxIoFilePath = []
+  const token = $("meta[name='_csrf']").attr("content");
+  const header = $("meta[name='_csrf_header']").attr("content");
+  const groupId = $("meta[name='groupId']").attr("content");
 
   let selectProblemType = function (value) {
     console.log(value);
@@ -277,71 +295,182 @@
     }
   }
 
-  function previewProblemName()  {
-    const name = document.getElementById('problemName').value;
-    document.getElementById("previewProblemName").innerText = name;
-  }
-  function previewProblemDescription()  {
-    const name = document.getElementById('descriptions').value;
-    document.getElementById("previewProblemDescription").innerText = name;
-  }
-  function previewProblemInput0()  {
-    const name = document.getElementById('problemInput0').value;
-    document.getElementById("previewProblemInput0").innerText = name;
-  }
-  function previewProblemOutput0()  {
-    const name = document.getElementById('problemOutput0').value;
-    document.getElementById("previewProblemOutput0").innerText = name;
+
+  function deletePlusDiv(e) {
+
+    let tagId = $(e).attr('id');
+    let tempStrArray = tagId.split("-")
+
+    if (tempStrArray.length >= 2) {
+      let plusDiv = "#plus-div-" + tempStrArray[2];
+      let previewDiv = "#plus-preview-" + tempStrArray[2];
+
+      $(plusDiv).remove();
+      $(previewDiv).remove();
+    }
+
   }
 
-  let ajaxIoFilePath = []
-  const token = $("meta[name='_csrf']").attr("content");
-  const header = $("meta[name='_csrf_header']").attr("content");
-  const groupId = $("meta[name='groupId']").attr("content");
+  function localDateTimeValidation() {
+
+    let createTitle = "시간 오류"
+    let openTime = $("#openTime").val();
+    let closedTime = $("#closedTime").val();
+    let today = new Date().toISOString();
+
+    if (openTime == '' && closedTime != '') {
+      if (today > closedTime) {
+
+        let createText = "마감 시간은 현재 시간 이후만 가능 합니다.";
+        document.getElementById("closedTime").value = '';
+        modalOpen(createTitle, createText);
+
+      }
+    } else if (openTime != '' && closedTime == '') {
+      if (today > openTime) {
+
+        let createText = "오픈 시간은 현재 시간 이후만 가능 합니다.";
+        document.getElementById("openTime").value = '';
+        modalOpen(createTitle, createText);
+
+      }
+    } else if (openTime != '' && closedTime != '') {
+        if (today > openTime || ((today <= openTime) && (openTime >= closedTime))
+        || today > closedTime || ((today <= closedTime) && (openTime >= closedTime))) {
+
+          let createText = "시간을 재설정 하세요.";
+          document.getElementById("openTime").value = '';
+          document.getElementById("closedTime").value = '';
+          modalOpen(createTitle, createText);
+        }
+      }
+    }
+
+    function modalOpen(createTitle, createText) {
+      document.getElementById("problemCreateModalTitle").innerText = createTitle;
+      document.getElementById("problemCreateModalText").innerText = createText;
+
+      problemCreateTestModal();
+    }
+
+
+  function ioConvertPreview(e) {
+    let tagId = $(e).attr('id');
+    let tempStrArray = tagId.split("-")
+
+    if(tempStrArray.length >= 2) {
+      let io = tempStrArray[1];
+      let number = tempStrArray[2];
+      let previewName = "plus-preview-" + io + "-" + number;
+
+      const name = document.getElementById(tagId).value;
+      document.getElementById(previewName).innerText = name;
+    }
+  }
+
+
+
+  function previewProblemTag(e)  {
+    let tagId = $(e).attr('id');
+    let preview;
+
+    if (tagId == "problemName") {
+      preview = "previewProblemName";
+    } else if (tagId == "descriptions") {
+      preview = "previewProblemDescription";
+    } else if (tagId == "problemInput0") {
+      preview = "previewProblemInput0";
+    } else if (tagId == "problemOutput0") {
+      preview = "previewProblemOutput0";
+    }
+
+    const name = document.getElementById(tagId).value;
+    document.getElementById(preview).innerText = name;
+
+  }
+
   $(document).ready(function() {
     $('#addDescriptionParam').click(function() {
       const html = '<br/>  ' +
               '<label class="form-label">문제 설명\n' + '<input type="text" class="form-control form-control-lg" name="descriptions">\n' + '</label>'
       $('#addDescriptionForm').append(html);});});
+
   $(document).ready(function() {
     $('#addSampleParam').click(function() {
       const html =
+              '<div class="plus-div border border-white" id="plus-div-' + plusDivIdx + '">' +
+              '<div class="d-flex justify-content-end">' +
+              '<button type="button" class="btn btn-light rounded-pill plus-delete-button" ' +
+              'id="' + "plus-button-" + plusDivIdx + '"' + 'onclick="deletePlusDiv(this)" aria-label="Close">X</button>' +
+              '</div>' +
               '              <div class="row mb-3 position-relative">\n' +
               '                <label class="col-sm-2 col-form-label">입력 예시 작성 </label>\n' +
               '                <div class="col-sm-10">\n' +
-              '                  <textarea class="form-control" name="inputs" onchange="previewProblemInput0()" placeholder="입력 예시를 작성 하세요" required style="height: 100px"></textarea>\n' +
+              '                  <textarea class="form-control input-plus" name="inputs" placeholder="입력 예시를 작성 하세요" onchange="ioConvertPreview(this)" ' +
+              'id="plus-input-' + plusDivIdx + '"' + 'required style="height: 100px"></textarea>\n' +
               '                </div>' +
               '              </div>\n' +
               '              <div class="row mb-3 position-relative">\n' +
               '                <label class="col-sm-2 col-form-label">출력 예시 작성</label>' +
               '                <div class="col-sm-10">\n' +
-              '                  <textarea class="form-control" name="outputs" onchange="previewProblemOutput0()" placeholder="출력 예시를 작성 하세요" required style="height: 100px"></textarea>' +
+              '                  <textarea class="form-control output-plus" name="outputs" placeholder="출력 예시를 작성 하세요" onchange="ioConvertPreview(this)" ' +
+              'id="plus-output-' + plusDivIdx + '"' +
+              'required style="height: 100px"></textarea>' +
               '                </div>' +
-              '              </div>'
-
-
-
+              '              </div> </div>'
       const previewHtml =
-              '<div>\n' +
-              '                <h1> 입출력 예시 </h1>\n' +
-              '\n' +
+              '<div class="preview-plus-div" ' +
+              'id="plus-preview-' + plusDivIdx + '"' +
+              '>\n' +
               '                <div>\n' +
               '                  <div class="card">\n' +
               '                    <div class="card-body">\n' +
               '                      <h5 class="card-title">\n' +
               '                        입력</h5>\n' +
-              '                      <p class="card-text privewAddInputs"></p>\n' +
+              '                      <p class="card-text previewAddInputs" id="plus-preview-input-' + plusDivIdx + '"></p>\n' +
               '                    </div>\n' +
               '                    <div class="card-body">\n' +
               '                      <h5 class="card-title">출력</h5>\n' +
-              '                      <p class="card-text privewAddOutputs"></p>\n' +
+              '                      <p class="card-text previewAddOutputs"id="plus-preview-output-' + plusDivIdx + '"></p>\n' +
               '                    </div>\n' +
               '                  </div>\n' +
               '                  <br>\n' +
               '                </div>\n' +
               '              </div>'
       $('#addSampleForm').append(html);
-      $('#previewAddIOExample').append(previewHtml);});});
+      $('#previewAddIOExample').append(previewHtml);
+
+      plusDivIdx++;
+
+    });});
+
+
+
+  function ajaxCall() {
+    const form = $("#problemCreateForm")[0];
+    const formData = new FormData(form);
+
+    console.log(formData);
+
+    $.ajax({
+      type: 'POST',
+      contentType: false,
+      processData: false,
+      cache: false,
+      enctype : 'multipart/form-data',
+      url: '/api/v1/groups/admin/' + groupId + '/problems/new',
+      data: formData,
+      beforeSend: function(xhr) {xhr.setRequestHeader(header, token);},
+      async: true,
+      cache: true,
+      success: function(data) {
+        location.href = "/api/v1/groups/admin/" + groupId + "/problems/" + data.problemId;
+      },
+
+      error: function(xhr, status, error) {
+        console.log('error:' + error);
+      }})}
+
 
   jQuery.fn.serializeObject = function() {
     let obj = null;
@@ -378,47 +507,112 @@
         document.getElementById('preFilePath').value = ajaxIoFilePath.folderPath;
         console.log(ajaxIoFilePath)
         alert("등록이 완료 되었습니다.")
+
         $("#ajaxIoUnzipFile").html(""); // 태그 초기화
         $(document).ready(function() {
           for (let i=0; i<ajaxIoFilePath.inputs.length; i++) {
             console.log(ajaxIoFilePath.inputs[i]);
             $('#ajaxIoUnzipFile').each(function () {
 
+              let html;
               if (i % 2 == 0) {
-                const html = '</br> <i class="fa fa-file-text-o fa-2x" aria-hidden="true">&nbsp;&nbsp;' + ajaxIoFilePath.inputs[i] + '&nbsp;&nbsp;&nbsp;&nbsp;</i>'
-                $('#ajaxIoUnzipFile').append(html);
+                html = '</br> <i class="fa fa-file-text-o fa-1x" aria-hidden="true">&nbsp;&nbsp;' + ajaxIoFilePath.inputs[i] + '&nbsp;&nbsp;&nbsp;&nbsp;</i>'
               } else {
-                const html = '<i class="fa fa-file-text-o fa-2x" aria-hidden="true">&nbsp;&nbsp;' + ajaxIoFilePath.inputs[i] + '&nbsp;&nbsp;&nbsp;&nbsp;</i>'
-                $('#ajaxIoUnzipFile').append(html);
+                html = '<i class="fa fa-file-text-o fa-1x" aria-hidden="true">&nbsp;&nbsp;' + ajaxIoFilePath.inputs[i] + '&nbsp;&nbsp;&nbsp;&nbsp;</i>'
               }
+              $('#ajaxIoUnzipFile').append(html);
 
-            }); } });
+            }); }
+
+          removeScoreChildren();
+          for(let i=0; i<ajaxIoFilePath.inputs.length; i++) {
+
+            $('#scoreArray').each(function () {
+              const html = '<label class="col-sm-2 col-form-label" for="socre-' + i + '">' + (i+1) + '번 점수' +'</label>\n' +
+                      '                    <div class="col-sm-10">\n' +
+                      '                      <input type="number" min="1" max="100" step="1" value="0" class="form-control" id="score-' + i + '">\n' +
+                      '                    </div>\n' +
+                      '                    <div class="invalid-feedback">점수 등록은 필수 입니다.</div>'
+
+              $('#scoreArray').append(html);
+            });}
+
+          document.getElementById("scoreForm").style.display = "block";
+
+        });
+
+
         $(document).ready(function() {
           for (let i=0; i<ajaxIoFilePath.outputs.length; i++) {
             $('#ajaxIoUnzipFile').each(function() {
 
+              let html;
               if (i % 2 == 0) {
-                const html = '<i class="fa fa-file-text-o fa-2x" aria-hidden="true">&nbsp;&nbsp;' + ajaxIoFilePath.outputs[i] + '&nbsp;&nbsp;&nbsp;&nbsp;</i>'
-                $('#ajaxIoUnzipFile').append(html);
+                html = '<i class="fa fa-file-text-o fa-1x" aria-hidden="true">&nbsp;&nbsp;' + ajaxIoFilePath.outputs[i] + '&nbsp;&nbsp;&nbsp;&nbsp;</i>'
               } else {
-                const html = '<i class="fa fa-file-text-o fa-2x" aria-hidden="true">&nbsp;&nbsp;' + ajaxIoFilePath.outputs[i] + '&nbsp;&nbsp;&nbsp;&nbsp;</i>'
-                $('#ajaxIoUnzipFile').append(html);
+                html = '<i class="fa fa-file-text-o fa-1x" aria-hidden="true">&nbsp;&nbsp;' + ajaxIoFilePath.outputs[i] + '&nbsp;&nbsp;&nbsp;&nbsp;</i>'
               }
+              $('#ajaxIoUnzipFile').append(html);
 
             });}});},
+
       error: function(xhr, status, error) {
         console.log('error:' + error);
         $("#ioZipFile").val("");
-        alert("파일은 .in, .out 확장자만 가능 합니다.")
+
+        let createTitle = "입축 파일 오류"
+        let createText = "압축 형식은 zip 이며, 압축된 파일은 .in, .out 확장자만 가능 합니다.";
+
+        document.getElementById("problemCreateModalTitle").innerText = createTitle;
+        document.getElementById("problemCreateModalText").innerText = createText;
+
+        problemCreateTestModal();
+
       }
     })
   }
 
+  function scoreSameDivide() {
+    let nameId;
+    let float = false;
+
+    let score = 100 / ajaxIoFilePath.inputs.length;
+
+    console.log(score);
+
+    if (!Number.isInteger(score)) {
+      float = true;
+      score = Math.floor(score);
+      console.log(score);
+    }
+
+    for(let i=0; i<ajaxIoFilePath.inputs.length; i++) {
+      nameId = "#score-" + i;
+      console.log(nameId);
+
+      if (i == (ajaxIoFilePath.inputs.length - 1) && float) {
+        $(nameId).val(score + 1);
+      } else {
+        $(nameId).val(score);
+      }
+    }
+  }
+
+  function removeScoreChildren() {
+    const parent = document.getElementById('scoreArray');
+    parent.innerHTML = "";
+  }
 
 
   function ajaxServerTestCall() {
 
     let formData = new FormData();
+
+    let createTitle = "서버 입출력 테스트"
+    document.getElementById("problemCreateModalTitle").innerText = createTitle;
+
+    let createText = "";
+
     formData.append("problemFile", jQuery('#problemFile')[0].files[0]);
     formData.append("ioZipFile", jQuery('#ioZipFile')[0].files[0]);
     formData.append("preFilePath", document.getElementById('preFilePath').value);
@@ -438,7 +632,7 @@
       success: function(data) {
         console.log(data);
 
-        let createText = "";
+        createText = "";
 
         if (data.ioFileResult) {
           createText += "입출력 결과: PASS \n"
@@ -469,9 +663,17 @@
         problemCreateTestModal();
 
       },
-      error: function(xhr, status, error) {
-        console.log('error:' + error);
-        console.log('status:' + status);
+      error: function(xhr, status) {
+
+        if (status == null || status == "NOT_FOUND") {
+          createText = "올바른 파일을 등록 해주세요.";
+        } else {
+          createText = "일시적인 에러 입니다.";
+        }
+
+        document.getElementById("problemCreateModalText").innerText = createText;
+        problemCreateTestModal();
+
       }
     })
   }

@@ -18,25 +18,21 @@ public abstract class AbstractFileStore implements FileStore {
     @Override
     public UploadFile storeFile(MultipartFile multipartFile, String groupId, String uuid) throws IOException {
 
-        if (multipartFile.isEmpty()) {
-            return null;
-        }
-
-        String originalFileName = multipartFile.getOriginalFilename();
-        log.info("originalFileName = {}", originalFileName);
+        String originalFileName = getOrigianlFileName(multipartFile);
+        if (originalFileName == null) return null;
 
         String newProblemFolder = createNewProblemFolder(groupId, uuid);
         log.info("newProblemFolder = {}", newProblemFolder);
 
-        String storeFileName = createStoreFileName(newProblemFolder, originalFileName);
-        log.info("storeFileName = {}", storeFileName);
+        return getUploadFile(multipartFile, originalFileName, newProblemFolder);
+    }
+    @Override
+    public UploadFile storeFileAlreadyFolder(MultipartFile multipartFile, String groupId, String path) throws IOException {
 
-        multipartFile.transferTo(new File(storeFileName));
+        String originalFileName = getOrigianlFileName(multipartFile);
+        if (originalFileName == null) return null;
 
-        return UploadFile.builder()
-                .uploadFileName(originalFileName)
-                .storeFileName(storeFileName)
-                .build();
+        return getUploadFile(multipartFile, originalFileName, path);
     }
 
     @Override
@@ -49,7 +45,28 @@ public abstract class AbstractFileStore implements FileStore {
 
         return FolderMaker.folderMaker(fileDir + "/" + groupId, uuid);
 
+    }
 
+    private static String getOrigianlFileName(MultipartFile multipartFile) {
+        if (multipartFile.isEmpty()) {
+            return null;
+        }
+
+        String originalFileName = multipartFile.getOriginalFilename();
+        log.info("originalFileName = {}", originalFileName);
+        return originalFileName;
+    }
+
+    private UploadFile getUploadFile(MultipartFile multipartFile, String originalFileName, String newProblemFolder) throws IOException {
+        String storeFileName = createStoreFileName(newProblemFolder, originalFileName);
+        log.info("storeFileName = {}", storeFileName);
+
+        multipartFile.transferTo(new File(storeFileName));
+
+        return UploadFile.builder()
+                .uploadFileName(originalFileName)
+                .storeFileName(storeFileName)
+                .build();
     }
 
 }

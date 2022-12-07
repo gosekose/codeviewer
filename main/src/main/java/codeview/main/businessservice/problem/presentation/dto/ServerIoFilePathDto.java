@@ -7,11 +7,11 @@ import lombok.Data;
 public class ServerIoFilePathDto {
 
     private String mainFilePath;
-    private IoFilePathDto ioFilePathDto;
+    private IoFileDataDto ioFileDataDto;
 
     @Builder
-    public ServerIoFilePathDto(String mainFilePath, IoFilePathDto ioFilePathDto) {
+    public ServerIoFilePathDto(String mainFilePath, IoFileDataDto ioFileDataDto) {
         this.mainFilePath = mainFilePath;
-        this.ioFilePathDto = ioFilePathDto;
+        this.ioFileDataDto = ioFileDataDto;
     }
 }

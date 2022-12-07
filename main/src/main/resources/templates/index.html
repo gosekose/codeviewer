@@ -245,16 +245,16 @@
                 </div>
 
                 <div class="card-body">
-                  <h5 class="card-title">Recent Sales <span>| Today</span></h5>
+                  <h5 class="card-title">최근 공개 문제 <span>| Today</span></h5>
 
                   <table class="table table-borderless datatable">
                     <thead>
                       <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Customer</th>
-                        <th scope="col">Product</th>
-                        <th scope="col">Price</th>
-                        <th scope="col">Status</th>
+                        <th scope="col">문제 번호</th>
+                        <th scope="col">공개 그룹</th>
+                        <th scope="col">문제명</th>
+                        <th scope="col">난이도</th>
+                        <th scope="col">상태</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -675,6 +675,11 @@
 
   <!-- ======= Script ======= -->
   <div th:replace="fragments/my-script :: script" />
+
+  <script th:src="@{/static/assets/vendor/apexcharts/apexcharts.min.js}"></script>
+  <script th:src="@{/static/assets/vendor/chart.js/chart.min.js}"></script>
+  <script th:src="@{/static/assets/vendor/echarts/echarts.min.js}"></script>
+
   <!-- End Script -->
 
 </body>
