@@ -1,7 +1,7 @@
 package codeview.main.serverconnect.application.service;
 
 import codeview.main.businessservice.problem.presentation.dto.ServerIoFilePathDto;
-import codeview.main.serverconnect.presentation.dto.ServerIoFilePathResDto;
+import codeview.main.serverconnect.presentation.dto.ServerIoFileDemoTestResDto;
 import codeview.main.serverconnect.presentation.dto.SolveRequestDto;
 import codeview.main.serverconnect.presentation.dto.SolveResponseDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,6 +19,8 @@ import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -121,7 +123,7 @@ public class HttpConnectionService {
         return result.getBody();
     }
 
-    public ServerIoFilePathResDto requestProblemCreateTest(ServerIoFilePathDto serverIoFilePathDto) throws JsonProcessingException {
+    public ServerIoFileDemoTestResDto requestProblemCreateTest(ServerIoFilePathDto serverIoFilePathDto) throws JsonProcessingException {
 
         //URI를 빌드한다
         URI uri = UriComponentsBuilder
@@ -129,13 +131,24 @@ public class HttpConnectionService {
                 .path("/api/server/problem/demo/test")
                 .queryParam("mainFilePath", serverIoFilePathDto.getMainFilePath())
                 .queryParam("folderPath", serverIoFilePathDto.getIoFileDataDto().getFolderPath())
+                .queryParam("scores", serverIoFilePathDto.getScores())
                 .encode(Charset.defaultCharset())
                 .build()
                 .toUri();
 
         RestTemplate restTemplate = new RestTemplate();
 
-        ResponseEntity<ServerIoFilePathResDto> result = restTemplate.getForEntity(uri, ServerIoFilePathResDto.class);
+        ResponseEntity<ServerIoFileDemoTestResDto> result = restTemplate.getForEntity(uri, ServerIoFileDemoTestResDto.class);
+
+        if (result.getBody().getTotalStatus() == null) {
+            List<Boolean> totalStatus = new ArrayList<>();
+
+            for (int i=0; i<serverIoFilePathDto.getScores().size(); i++) {
+                totalStatus.add(false);
+            }
+
+            result.getBody().setTotalStatus(totalStatus);
+        }
 
         return result.getBody();
     }

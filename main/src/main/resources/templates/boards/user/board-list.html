@@ -1,72 +1,83 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html class="h-100" lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="fragments/header :: header">
-</head>
+<head th:replace="fragments/my-header :: header"></head>
 <head>
   <meta name="groupId" th:content="${groupId}"/>
 </head>
 
-<body data-bs-spy="scroll" data-bs-target="#navScroll">
-<div class="container">
-  <div th:replace="fragments/bodyHeader2 :: bodyHeader" />
-  <main>
+<body>
 
-    <div class="container py-vh-6">
+<!-- ======= Header ======= -->
+<div th:replace="fragments/my-body-header :: bodyHeader" />
+<!-- End Header -->
 
-      <table class="table">
-        <thead>
-        <tr>
-          <th>질문 번호</th>
-          <th>문제 번호</th>
-          <th>문제 이름</th>
-          <th>질문 제목</th>
-          <th>작성자</th>
-          <th>작성 시간</th>
-          <th>수정 시간</th>
-          <td></td>
-        </tr>
-        </thead>
-        <tr th:each="board: ${boardList.getContent()}">
-          <td th:text="${board.boardId}"></td>
-          <td th:text="${board.problemId}"></td>
-          <td th:text="${board.problemName}"></td>
-          <td th:text="${board.boardName}"></td>
-          <td th:text="${board.viewName}"></td>
-          <td th:text="${board.createdAt}"></td>
-          <td th:text="${board.modifiedAt}"></td>
-          <td>
-            <a href="#" class="btn btn-primary" role="button">가입 신청 관리</a>
-          </td>
-        </tr>
-      </table>
+<!-- ======= Sidebar ======= -->
+<div th:replace="fragments/my-sidebar :: sidebar" />
+<!-- End Sidebar-->
 
-      <nav style="text-align: center;">
-        <ul class="pagination">
+<main id="main" class="main">
 
-        </ul>
-      </nav>
+  <div th:replace="fragments/my-pagetitle :: pagetitle('질문 게시판', '질문', '질문 게시판')" />
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">질문 게시판 &nbsp;&nbsp;&nbsp;
+          <a href="#" th:href="@{/api/v1/groups/{id}/problems/board/new (id=${groupId})}"
+             class="btn btn-outline-primary btn-sm" role="button">질문 작성</a>
+        </h5>
+        <p> <code>질문 등록 및 조회</code>를 할 수 있습니다.</p>
+        <!-- Active Table -->
+
+        <table class="table table-bordered">
+          <thead>
+          <tr>
+            <th>질문 번호</th>
+            <th>문제 번호</th>
+            <th>문제 이름</th>
+            <th>질문 제목</th>
+            <th>작성자</th>
+            <th>작성 시간</th>
+          </tr>
+          </thead>
+          <tr th:each="board: ${boardList.getContent()}">
+            <td th:text="${board.boardId}"></td>
+            <td th:text="${board.problemId}"></td>
+            <td th:text="${board.problemName}"></td>
+            <td th:text="${board.boardName}"></td>
+            <td th:text="${board.viewName}"></td>
+            <td th:text="${board.createdAt}"></td>
+          </tr>
+        </table>
+
+        <!-- End Tables without borders -->
+
+      </div>
+
+      <div th:replace="fragments/my-pagination :: pagination" />
 
     </div>
-  </main>
+  </div>
 
+</main><!-- End #main -->
 
-  <div th:replace="fragments/footer :: footer" />
-</div> <!-- /container -->
+<!-- ======= Footer ======= -->
+<div th:replace="fragments/my-footer :: footer" />
+<!-- End Footer -->
 
-<script th:src="@{/static/js/bootstrap.bundle.min.js}"></script>
-<script th:src="@{/static/js/aos.js}"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- ======= Script ======= -->
+<div th:replace="fragments/my-script :: script" />
+<!-- End Script -->
+
 <script>
-  AOS.init({
-    duration: 800, // values from 0 to 3000, with step 50ms
-  });
+
+
 </script>
 
-
 </body>
-
 </html>

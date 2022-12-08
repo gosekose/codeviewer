@@ -1,13 +1,11 @@
 package codeview.main.businessservice.problem.application;
 
-import codeview.main.businessservice.membergroup.application.GroupService;
 import codeview.main.businessservice.membergroup.domain.MemberGroup;
 import codeview.main.businessservice.problem.domain.Problem;
 import codeview.main.businessservice.problem.domain.embedded.ProblemInputIoFile;
 import codeview.main.businessservice.problem.infra.repository.ProblemQueryDslRepositoryImpl;
 import codeview.main.businessservice.problem.infra.repository.ProblemRepository;
 import codeview.main.businessservice.problem.infra.repository.query.*;
-import codeview.main.common.application.FolderRemover;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -25,10 +23,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProblemService {
 
-    private final GroupService groupService;
     private final ProblemRepository problemRepository;
     private final ProblemQueryDslRepositoryImpl problemQueryDslRepository;
-    private final FolderRemover folderRemover;
 
     @Transactional
     public Long save(Problem problem) {
@@ -52,8 +48,8 @@ public class ProblemService {
         return problemQueryDslRepository.searchProblemForBoard(condition, pageable);
     }
 
-    @Cacheable(cacheNames = "problemSearch",
-            key = "#condition.memberGroup + #condition.creator + #condition.myMember + #condition.name + pageable.pageNumber")
+//    @Cacheable(cacheNames = "problemSearch",
+//            key = "#condition.memberGroup + #pageable.pageNumber")
     public Page<ProblemDetailPageDto> getDetailProblems(ProblemDetailPageCondition condition, Pageable pageable) {
         return problemQueryDslRepository.searchDetailPageComplex(condition, pageable);
     }

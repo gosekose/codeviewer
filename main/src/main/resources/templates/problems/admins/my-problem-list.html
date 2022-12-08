@@ -19,46 +19,52 @@
 
 <main id="main" class="main">
 
-  <div class="col-lg-10">
+  <div th:replace="fragments/my-pagetitle :: pagetitle('문제 관리', '문제', '마이 문제 관리')" />
+    <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">마이 문제 관리 &nbsp;&nbsp;&nbsp;
+              <a href="#" th:href="@{/api/v1/groups/admin/{id}/problems/new (id=${groupId})}"
+                 class="btn btn-outline-primary btn-sm" role="button">문제 생성</a>
+              </td>
+            </h5>
+            <p> <code> 출제한 문제에 대한 정보를 확인하고 문제 관리 </code>를 할 수 있습니다.</p>
 
-    <div class="card-body">
-      <h5 class="card-title">내 문제 관리</h5>
-      <p> <code> 출제한 문제에 대한 정보를 확인하고 문제 관리 </code>를 할 수 있습니다.</p>
-      <!-- Active Table -->
+            <!-- Active Table -->
 
-      <table class="table table-bordered">
-        <thead>
-        <tr>
-          <th>문제 번호</th>
-          <th>문제 이름</th>
-          <th>문제 파일명</th>
-          <th>생성 시간</th>
-          <th>변경 시간</th>
-          <td></td>
-        </tr>
-        </thead>
-        <tr th:each="problem: ${problems.getContent()}">
-          <td th:text="${problem.problemId}"></td>
-          <td th:text="${problem.name}"></td>
-          <td th:text="${problem.originalProblemFileName}"></td>
-          <td th:text="${problem.createdAt}"></td>
-          <td th:text="${problem.modifiedAt}"></td>
+            <table class="table table-bordered">
+              <thead>
+              <tr>
+                <th>문제 번호</th>
+                <th>문제 이름</th>
+                <th>문제 파일명</th>
+                <th>생성 시간</th>
+                <th>변경 시간</th>
+                <td></td>
+              </tr>
+              </thead>
+              <tr th:each="problem: ${problems.getContent()}">
+                <td th:text="${problem.problemId}"></td>
+                <td th:text="${problem.name}"></td>
+                <td th:text="${problem.originalProblemFileName}"></td>
+                <td th:text="${problem.createdAt}"></td>
+                <td th:text="${problem.modifiedAt}"></td>
 
-          <td>
-            <a href="#" th:href="@{/api/v1/groups/admin/{groupId}/problems/{problemId} (groupId=${groupId}, problemId=${problem.problemId})}"
-               class="btn btn-primary" role="button">문제 관리</a>
-          </td>
-        </tr>
-      </table>
+                <td>
+                  <a href="#" th:href="@{/api/v1/groups/admin/{groupId}/problems/{problemId} (groupId=${groupId}, problemId=${problem.problemId})}"
+                     class="btn btn-outline-primary btn-sm" role="button">문제 관리</a>
+                </td>
+              </tr>
+            </table>
 
-      <!-- End Tables without borders -->
+            <!-- End Tables without borders -->
 
+          </div>
+          <div th:replace="fragments/my-pagination :: pagination" />
+        <div>
+      </div>
     </div>
-
-    <div th:replace="fragments/my-pagination :: pagination" />
-
   </div>
-
 </main><!-- End #main -->
 
 <!-- ======= Footer ======= -->

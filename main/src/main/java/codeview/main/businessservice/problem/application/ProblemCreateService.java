@@ -120,7 +120,7 @@ public class ProblemCreateService {
 
 
     public ServerIoFilePathDto convertServerFile(Integer groupId, ProblemServerDao problemServerDao, String uuid) throws IOException {
-        List<UploadFile> uploadFiles = getDockerFile(problemServerDao, groupId, uuid);
+        List<UploadFile> uploadFiles = getServerFile(problemServerDao, groupId, uuid);
 
         if (uploadFiles == null ) {
             return null;
@@ -140,6 +140,7 @@ public class ProblemCreateService {
         return ServerIoFilePathDto.builder()
                 .ioFileDataDto(ioFileDataDto)
                 .mainFilePath(uploadFiles.get(0).getStoreFileName())
+                .scores(problemServerDao.getScores())
                 .build();
     }
 
@@ -236,7 +237,7 @@ public class ProblemCreateService {
         return commonFilStore.storeFileAlreadyFolder(dao, String.valueOf(groupId), path);
     }
 
-    public List<UploadFile> getDockerFile(ProblemServerDao dao, Integer groupId, String uuid) throws IOException {
+    public List<UploadFile> getServerFile(ProblemServerDao dao, Integer groupId, String uuid) throws IOException {
 
         return dockerFileStore.dockerStoreFile(dao, String.valueOf(groupId), uuid);
     }

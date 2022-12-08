@@ -68,6 +68,7 @@ public class ProblemAdminUiController {
                                        ProblemDetailPageCondition condition,
                                        Pageable pageable) {
 
+        condition.setMemberGroup(groupService.findById(Long.valueOf(groupId)));
         Page<ProblemDetailPageDto> searchProblems = problemService.getDetailProblems(condition, pageable);
         model.addAttribute("groupId", groupId);
         model.addAttribute("problems", searchProblems);

@@ -9,6 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter
@@ -31,5 +32,6 @@ public class ProblemCreateDao {
     private MultipartFile problemFile;
     private String preFilePath;
     private MultipartFile ioZipFile;
+    private List<Integer> scores = new ArrayList<>();
 
 }

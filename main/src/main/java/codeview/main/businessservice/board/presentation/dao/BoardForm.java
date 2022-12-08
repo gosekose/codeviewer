@@ -29,6 +29,6 @@ public class BoardForm {
 
     private List<MultipartFile> boardMultipartFileList;
 
-    private Integer problemId;
+    private Long problemId;
 
 }

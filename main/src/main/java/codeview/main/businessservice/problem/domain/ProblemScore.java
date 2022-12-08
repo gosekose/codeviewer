@@ -1,5 +1,6 @@
 package codeview.main.businessservice.problem.domain;
 
+import codeview.main.auth.domain.BaseEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import static javax.persistence.FetchType.LAZY;
 @Entity @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProblemScore {
+public class ProblemScore extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "problem_score_id")

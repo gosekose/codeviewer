@@ -1,6 +1,7 @@
 package codeview.main.businessservice.problem.presentation.controller.admin;
 
 import codeview.main.businessservice.problem.application.ProblemCreateService;
+import codeview.main.businessservice.problem.application.ProblemScoreService;
 import codeview.main.businessservice.problem.application.ProblemService;
 import codeview.main.businessservice.problem.domain.Problem;
 import codeview.main.businessservice.problem.presentation.dao.ProblemCreateDao;
@@ -10,7 +11,7 @@ import codeview.main.businessservice.problem.presentation.dto.IoFileDataDto;
 import codeview.main.businessservice.problem.presentation.dto.ProblemIdDto;
 import codeview.main.businessservice.problem.presentation.dto.ServerIoFilePathDto;
 import codeview.main.serverconnect.application.service.HttpConnectionService;
-import codeview.main.serverconnect.presentation.dto.ServerIoFilePathResDto;
+import codeview.main.serverconnect.presentation.dto.ServerIoFileDemoTestResDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,7 @@ public class ProblemAdminRestCreateController {
     private final ProblemCreateService problemCreateService;
 
     private final HttpConnectionService httpConnectionService;
+    private final ProblemScoreService problemScoreService;
 
 //    @PostMapping("/{groupId}/problems/new/3")
 //    public ResponseEntity<ProblemIdDto> postCreateProblem(
@@ -55,6 +57,7 @@ public class ProblemAdminRestCreateController {
             @ModelAttribute ProblemCreateDao problemCreateDao) throws IOException {
 
         Problem problem = problemCreateService.getProblem(groupId, problemCreateDao);
+        problemScoreService.saveByCreateDao(problemCreateDao, problem);
         Long problemId = problemService.save(problem);
 
 
@@ -103,13 +106,14 @@ public class ProblemAdminRestCreateController {
             @PathVariable("groupId") Integer groupId,
             @ModelAttribute ProblemServerDao problemServerDao) throws IOException {
 
-        if (problemServerDao == null || problemServerDao.getProblemFile() == null || problemServerDao.getIoZipFile() == null) {
+        if (problemServerDao == null || problemServerDao.getProblemFile() == null || problemServerDao.getIoZipFile() == null || problemServerDao.getScores() == null) {
             log.info("not found");
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
+
         ServerIoFilePathDto serverIoFilePathDto = problemCreateService.convertServerFile(groupId, problemServerDao, String.valueOf(UUID.randomUUID()));
-        ServerIoFilePathResDto serverIoFilePathDtoReq = httpConnectionService.requestProblemCreateTest(serverIoFilePathDto);
+        ServerIoFileDemoTestResDto serverIoFilePathDtoReq = httpConnectionService.requestProblemCreateTest(serverIoFilePathDto);
 
         log.info("mainFilePath = {}", serverIoFilePathDto.getMainFilePath());
 

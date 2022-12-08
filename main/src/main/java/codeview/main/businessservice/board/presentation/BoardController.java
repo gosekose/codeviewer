@@ -44,7 +44,7 @@ public class BoardController {
     private final BoardMultipartFileService boardMultipartFileService;
     private final MemberService memberService;
 
-    @GetMapping
+    @GetMapping("/new")
     public String getBoardForm(
             @PathVariable("groupId") Integer groupId,
             Model model) {
@@ -55,7 +55,7 @@ public class BoardController {
         return "boards/user/create-board";
     }
 
-    @PostMapping
+    @PostMapping("/new")
     public String postBoardForm(
             @PathVariable("groupId") Long groupId,
             @AuthenticationPrincipal PrincipalUser principalUser,

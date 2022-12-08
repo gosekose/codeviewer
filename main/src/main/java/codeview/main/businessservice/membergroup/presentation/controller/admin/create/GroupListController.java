@@ -72,7 +72,7 @@ public class GroupListController {
 
         log.info("groupForPageDto = {}", groupForPageDto);
 
-        return "problems/admins/my-problems";
+        return "problems/admins/my-problem-list";
     }
 
 
@@ -80,10 +80,6 @@ public class GroupListController {
     public String getError(@RequestParam("status") String status) {
 
         log.info("status = {}", status);
-
-        if (status.equals("403")) {
-            return "errors/403";
-        }
 
         return "errors/404";
 
