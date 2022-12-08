@@ -68,7 +68,9 @@ public class Problem extends BaseEntity {
     private Integer totalScore;
 
     @Builder
-    public Problem(MemberGroup memberGroup, String name, ProblemType problemType, ProblemFile problemFile, ProblemInputIoFile problemInputIoFile, LocalDateTime openTime, LocalDateTime closedTime) {
+    public Problem(MemberGroup memberGroup, String name, ProblemType problemType,
+                   ProblemFile problemFile, ProblemInputIoFile problemInputIoFile, LocalDateTime openTime,
+                   LocalDateTime closedTime, ProblemDifficulty problemDifficulty) {
         this.memberGroup = memberGroup;
         this.name = name;
         this.problemType = problemType;
@@ -76,6 +78,7 @@ public class Problem extends BaseEntity {
         this.problemInputIoFile = problemInputIoFile;
         this.openTime = openTime;
         this.closedTime = closedTime;
+        this.problemDifficulty = problemDifficulty;
     }
 
 }

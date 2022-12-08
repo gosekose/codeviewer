@@ -12,7 +12,11 @@ import codeview.main.businessservice.membergroup.infra.repository.membergroup.Me
 import codeview.main.businessservice.problem.application.ProblemService;
 import codeview.main.businessservice.problem.domain.Problem;
 import codeview.main.businessservice.problem.domain.embedded.ProblemInputIoFile;
+import codeview.main.businessservice.problem.domain.enumtype.ProblemDifficulty;
+import codeview.main.businessservice.solve.domain.LastSolveStatus;
 import codeview.main.businessservice.solve.domain.Solve;
+import codeview.main.businessservice.solve.domain.enumtype.SolveStatus;
+import codeview.main.businessservice.solve.infra.repository.LastSolveStatusRepository;
 import codeview.main.businessservice.solve.infra.repository.SolveRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,8 +42,9 @@ public class TempController {
 
     private final SolveRepository solveRepository;
 
-    static Member solveMember1;
-    static Member solveMember2;
+    private final LastSolveStatusRepository lastSolveStatusRepository;
+
+    static Member solveMember;
 
     @GetMapping("/api/v1/temp/admin/create/group")
     public String createDate(@AuthenticationPrincipal PrincipalUser principalUser, Model model) {
@@ -54,85 +59,123 @@ public class TempController {
          */
         Member member = memberService.findByRegisterId(principalUser.getProviderUser().getId());
 
-        String[] groupNames = new String[] {"if else", "for", "예외처리", "while", "자료구조", "알고리즘", "dp", "파일 읽기"};
+        MemberGroup memberGroup = MemberGroup.builder()
+                .creator(member)
+                .maxMember(10)
+                .description("")
+                .name("iise-test")
+                .joinClosedTime(LocalDateTime.now())
+                .memberGroupVisibility(MemberGroupVisibility.VISIBLE)
+                .groupAutoJoin(GroupAutoJoin.ON)
+                .build();
 
-        int randomName = 0;
+        memberGroupRepository.save(memberGroup);
 
-        for(int i=0; i <5; i++) {
+        solveMember = memberService.findByEmail("1@naver.com");
 
-            randomName = (int) (Math.random() * 7);
+        Problem problem = Problem.builder()
+                .name("problem1-test")
+                .memberGroup(memberGroup)
+                .problemDifficulty(ProblemDifficulty.BRONZE1)
+                .problemInputIoFile(new ProblemInputIoFile(UUID.randomUUID().toString()))
+                .build();
 
-            MemberGroupVisibility visibility = MemberGroupVisibility.VISIBLE;
-            GroupAutoJoin join = GroupAutoJoin.ON;
+        problemService.save(problem);
 
-            if (i > 2) {
-                visibility = MemberGroupVisibility.HIDDEN;
-                join = GroupAutoJoin.OFF;
-            }
+        int countSolveBySolver = solveRepository.getCountSolve(problem, solveMember);
+        Solve solve1 = Solve.builder()
+                .member(solveMember)
+                .number(countSolveBySolver)
+                .score(70)
+                .solveStatus(SolveStatus.FAIL)
+                .problem(problem)
+                .build();
 
-            MemberGroup memberGroup = MemberGroup.builder()
-                    .creator(member)
-                    .maxMember(i + 20)
-                    .description("")
-                    .name(groupNames[randomName])
-                    .joinClosedTime(LocalDateTime.now())
-                    .memberGroupVisibility(visibility)
-                    .groupAutoJoin(join)
-                    .build();
+        solveRepository.save(solve1);
 
-            memberGroupRepository.save(memberGroup);
+        LastSolveStatus saveSolveStatusBySolver = lastSolveStatusRepository.save(
+                LastSolveStatus.builder()
+                        .member(solveMember)
+                        .problem(problem)
+                        .solveStatus(solve1.getSolveStatus())
+                        .build()
+        );
 
-            for (int j = 0; j <= 5; j++) {
-                Member members = memberService.findByEmail(j + "@naver.com");
+        countSolveBySolver = solveRepository.getCountSolve(problem, solveMember);
+        Solve solve2 = Solve.builder()
+                .member(solveMember)
+                .number(countSolveBySolver)
+                .score(100)
+                .solveStatus(SolveStatus.SUCCESS)
+                .problem(problem)
+                .build();
 
-                groupStorageService.save(members, memberGroup);
+        solveRepository.save(solve2);
+        saveSolveStatusBySolver.updateSolveStatus(solve2.getSolveStatus());
 
-                if (j == 0) {
-                    solveMember1 = members;
-                }
-                if (j == 5) {
-                    solveMember2 = members;
-                }
-            }
+        MemberGroup memberGroup1 = MemberGroup.builder()
+                .creator(solveMember)
+                .maxMember(21)
+                .description("")
+                .name("iise-test4")
+                .joinClosedTime(LocalDateTime.now())
+                .memberGroupVisibility(MemberGroupVisibility.VISIBLE)
+                .groupAutoJoin(GroupAutoJoin.ON)
+                .build();
 
-            for (int k = 0; k < 5; k++) {
+        memberGroupRepository.save(memberGroup1);
 
-                Problem problem = Problem.builder()
-                        .name("test" + k)
-                        .memberGroup(memberGroup)
-                        .problemInputIoFile(new ProblemInputIoFile(UUID.randomUUID().toString()))
-                        .build();
-
-                problemService.save(problem);
-
-                for (int s = 0; s < 5; s++) {
-                    int countSolve1 = solveRepository.getCountSolve(problem, solveMember1);
-                    int countSolve2 = solveRepository.getCountSolve(problem, solveMember2);
-                    Solve solve1 = Solve.builder()
-                            .member(solveMember1)
-                            .number(countSolve1)
-                            .score(s * 15 + ((int) (Math.random() * 25)))
-                            .problem(problem)
-                            .build();
-
-                    Solve solve2 = Solve.builder()
-                            .member(solveMember2)
-                            .number(countSolve2)
-                            .score(s * 20 + ((int) (Math.random() * 25)))
-                            .problem(problem)
-                            .build();
-
-                    solveRepository.save(solve1);
-                    solveRepository.save(solve2);
-
-                }
-
-            }
+        for(int i=0; i<50; i++) {
+            problemService.save(Problem.builder()
+                    .name("test"+ (i+10))
+                    .memberGroup(memberGroup1)
+                    .problemDifficulty(ProblemDifficulty.GOLD2)
+                    .problemInputIoFile(new ProblemInputIoFile(UUID.randomUUID().toString()))
+                    .build());
         }
+
+        Problem problem1 = Problem.builder()
+                .name("test1")
+                .memberGroup(memberGroup1)
+                .problemDifficulty(ProblemDifficulty.GOLD1)
+                .problemInputIoFile(new ProblemInputIoFile(UUID.randomUUID().toString()))
+                .build();
+
+        problemService.save(problem1);
+
+        int countSolveByMember = solveRepository.getCountSolve(problem1, member);
+        Solve solve3 = Solve.builder()
+                .member(member)
+                .number(countSolveByMember)
+                .score(70)
+                .solveStatus(SolveStatus.FAIL)
+                .problem(problem1)
+                .build();
+
+        solveRepository.save(solve3);
+
+        LastSolveStatus saveSolveStatusByMember = lastSolveStatusRepository.save(
+                LastSolveStatus.builder()
+                        .member(member)
+                        .problem(problem1)
+                        .solveStatus(solve3.getSolveStatus())
+                        .build()
+        );
+
+        countSolveByMember = solveRepository.getCountSolve(problem1, member);
+        Solve solve4 = Solve.builder()
+                .member(member)
+                .number(countSolveByMember)
+                .score(90)
+                .solveStatus(SolveStatus.SUCCESS)
+                .problem(problem1)
+                .build();
+
+        solveRepository.save(solve4);
+        saveSolveStatusByMember.updateSolveStatus(solve4.getSolveStatus());
 
         log.info("member id = {}", member.getId());
         log.info("memberGroup 저장 완료");
-
 
         return "redirect:/";
 

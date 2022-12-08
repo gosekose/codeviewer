@@ -18,6 +18,7 @@ import static codeview.main.businessservice.groupstorage.domain.QGroupStorage.gr
 import static codeview.main.businessservice.member.domain.QMember.member;
 import static codeview.main.businessservice.membergroup.domain.QMemberGroup.memberGroup;
 import static codeview.main.businessservice.problem.domain.QProblem.problem;
+import static codeview.main.businessservice.solve.domain.QLastSolveStatus.lastSolveStatus;
 
 
 @Repository
@@ -150,6 +151,50 @@ public class ProblemQueryDslRepositoryImpl implements ProblemQueryDslRepository 
         return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 
+    @Override
+    public List<VisibleRecentProblemDto> searchVisibleRecentProblem(VisibleRecentProblemCondition condition) {
+        return query
+                .select(
+                        new QVisibleRecentProblemDto(
+                                problem.id,
+                                memberGroup.name,
+                                problem.name,
+                                problem.problemDifficulty,
+                                lastSolveStatus.solveStatus
+                        )
+                )
+                .from(problem)
+                .leftJoin(lastSolveStatus)
+                .on(
+                        problem.id.eq(lastSolveStatus.problem.id),
+                        solveMemberIdEq(condition.getMemberId())
+                )
+                .join(problem.memberGroup, memberGroup)
+                .on(memberGroup.memberGroupVisibility.eq(condition.getMemberGroupVisibility()))
+                .orderBy(problem.createdAt.desc())
+                .limit(30)
+                .fetch();
+
+    }
+
+    @Override
+    public List<VisibleRecentProblemNoLoginDto> searchVisibleRecentProblemNoLogin(VisibleRecentProblemCondition condition) {
+        return query
+                .select(
+                        new QVisibleRecentProblemNoLoginDto(
+                                problem.id,
+                                memberGroup.name,
+                                problem.name,
+                                problem.problemDifficulty
+                        )
+                )
+                .from(problem)
+                .join(problem.memberGroup, memberGroup)
+                .on(memberGroup.memberGroupVisibility.eq(condition.getMemberGroupVisibility()))
+                .orderBy(problem.createdAt.desc())
+                .limit(30)
+                .fetch();
+    }
 
     private BooleanExpression nameContains(String name) {
         return name != null? problem.name.contains(name) : null;
@@ -178,5 +223,9 @@ public class ProblemQueryDslRepositoryImpl implements ProblemQueryDslRepository 
 
     private BooleanExpression memberIdEq(Long memberId) {
         return memberId != null ? groupStorage.member.id.eq(memberId) : null;
+    }
+
+    private BooleanExpression solveMemberIdEq(Long memberId) {
+        return memberId != null ? lastSolveStatus.member.id.eq(memberId) : null;
     }
 }

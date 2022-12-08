@@ -1,6 +1,5 @@
 package codeview.main.businessservice.solve.domain;
 
-import codeview.main.auth.domain.BaseEntity;
 import codeview.main.businessservice.member.domain.Member;
 import codeview.main.businessservice.problem.domain.Problem;
 import codeview.main.businessservice.solve.domain.enumtype.SolveStatus;
@@ -11,44 +10,37 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity @Getter
+import static javax.persistence.EnumType.STRING;
+import static javax.persistence.FetchType.LAZY;
+
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Solve extends BaseEntity {
+@Entity
+public class LastSolveStatus {
 
     @Id @GeneratedValue
-    @Column(name = "solve_id")
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "problem_id")
     private Problem problem;
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
 
-    private int number;
-
-    private String codeAddress;
-
-    private int score;
-
-    @Enumerated(EnumType.STRING)
+    @Enumerated(STRING)
     private SolveStatus solveStatus;
 
-
     @Builder
-    public Solve(Problem problem, Member member, int number, String codeAddress, int score, SolveStatus solveStatus) {
+    public LastSolveStatus(Problem problem, Member member, SolveStatus solveStatus) {
         this.problem = problem;
         this.member = member;
-        this.number = number;
-        this.codeAddress = codeAddress;
-        this.score = score;
         this.solveStatus = solveStatus;
     }
 
-    public void updateNumber(int number) {
-        this.number = number;
+    public void updateSolveStatus(SolveStatus solveStatus) {
+        this.solveStatus = solveStatus;
     }
 }
