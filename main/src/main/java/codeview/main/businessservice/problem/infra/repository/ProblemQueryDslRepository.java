@@ -18,4 +18,7 @@ public interface ProblemQueryDslRepository {
 
     Page<ProblemDetailPageDto> searchDetailPageComplex(ProblemDetailPageCondition condition, Pageable pageable);
 
+    List<VisibleRecentProblemDto> searchVisibleRecentProblem(VisibleRecentProblemCondition condition);
+    List<VisibleRecentProblemNoLoginDto> searchVisibleRecentProblemNoLogin(VisibleRecentProblemCondition condition);
+
 }

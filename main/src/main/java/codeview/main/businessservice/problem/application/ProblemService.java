@@ -62,4 +62,14 @@ public class ProblemService {
         return problemRepository.findByMemberGroupForInputFolderPath(memberGroup);
     }
 
+    public List<VisibleRecentProblemDto> searchVisibleRecentProblem(VisibleRecentProblemCondition condition) {
+        return problemQueryDslRepository.searchVisibleRecentProblem(condition);
+    }
+
+    public List<VisibleRecentProblemNoLoginDto> searchVisibleRecentProblemNoLogin(VisibleRecentProblemCondition condition) {
+        return problemQueryDslRepository.searchVisibleRecentProblemNoLogin(condition);
+    }
+
+
+
 }
