@@ -1,113 +1,163 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html class="h-100" lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
-<head th:replace="fragments/header :: header">
+<head th:replace="fragments/my-header :: header">
 </head>
+
 <head>
   <meta name="groupId" th:content="${groupId}"/>
   <meta name="problemId" th:content="${problemId}"/>
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <style>
+    .custom-container-flex {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .io-overflow-auto {
+      overflow: auto;
+      height: 50px;
+    }
+    .text-overflow-auto {
+      overflow: auto;
+      height: 70px;
+    }
+    .title-overflow-auto {
+      overflow: auto;
+      height: 30px;
+    }
+    .text-height {
+      height: 100px;
+    }
+  </style>
 </head>
+<body>
 
+<!-- ======= Header ======= -->
+<div th:replace="fragments/my-body-header :: bodyHeader" />
+<!-- End Header -->
 
-<body data-bs-spy="scroll" data-bs-target="#navScroll">
-<div class="container">
-  <div th:replace="fragments/bodyHeader2 :: bodyHeader" />
+<!-- ======= Sidebar ======= -->
+<div th:replace="fragments/my-sidebar :: sidebar" />
+<!-- End Sidebar-->
 
+<main id="main" class="main">
 
+  <div th:replace="fragments/my-pagetitle :: pagetitle('문제 풀기', '문제', '문제 풀기')" />
 
-    <div class="d-flex h-100 w-100" style="margin-top: 70px">
+  <div>
+    <div id="preview">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title" th:text="${problemId} + '번 문제'">문제</h5>
 
-  <div class="h-100 container-fluid">
-
-    <div class="h-100 row d-flex align-items-stretch">
-
-      <div class="col-12 col-md-7 col-lg-6 d-flex align-items-start flex-column px-vw-5">
-
-        <main class="mb-auto col-12">
-          <div sec:authorize="isAuthenticated()">
-
+          <div class="mb-auto col-5">
+            <div>
+              <h1>문제명</h1>
+              <div>
+                <div class="card">
+                  <div class="card-header" id="problemTypePreview" th:text="${problemAdminEditDto.problemType}">
+                    문제 타입
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <div class="title-overflow-auto" id="previewProblemName" th:text="${problemAdminEditDto.name}">
+                        문제명
+                      </div>
+                    </h5>
+                    <p class="card-text overflow-auto">
+                    </p>
+                  </div>
+                </div>
+                <br>
+              </div>
+            </div>
             <div>
               <h1> 문제 설명 </h1>
-
-            <div th:each="des: ${descriptions}">
-              <div class="card">
-                <div class="card-header" th:text="${des.getNumber()} + 번">
-                  Featured
-                </div>
-                <div class="card-body">
-                  <h5 class="card-title" th:text="${des.getDescription()}">
-                    Special title treatment</h5>
-                  <p class="card-text"></p>
-                </div>
-              </div>
-              <br>
-            </div>
-            </div>
-
-            <div>
-              <h1> 입출력 예시 </h1>
-
-              <div th:each="io: ${ioExamples}">
+              <div>
                 <div class="card">
-                  <div class="card-header" th:text="${io.getNumber()} + 번">
-                    Featured
-                  </div>
                   <div class="card-body">
-                    <h5 class="card-title">
-                      입력</h5>
-                    <p class="card-text" th:text="${io.getInputSource()}"></p>
-                  </div>
-                  <div class="card-body">
-                    <h5 class="card-title">
-                      출력</h5>
-                    <p class="card-text" th:text="${io.getOutputSource()}"></p>
+
+                    <div th:each="des: ${descriptions}">
+                      <h5 class="card-title overflow-auto text-overflow-auto" id="previewProblemDescription" th:text="${des.getDescription()}">
+                        입력</h5>
+                      <p class="card-text"></p>
+                    </div>
+
                   </div>
                 </div>
                 <br>
               </div>
             </div>
 
-          </div>
-        </main>
+            <div>
+              <h1> 입출력 예시 </h1>
 
-      </div>
-
-      <div class="col-12 col-md-15 col-lg-5">
-
-        <div class="d-flex align-items-end flex-column">
-
-          <main class="mb-auto col-12">
-
-            <form>
-              <div class="form-group">
-                <label for="problemSource">답안 소스</label>
-                <textarea class="form-control" id="problemSource" rows="3"></textarea>
+              <div th:each="io: ${ioExamples}">
+                <div>
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">
+                        입력</h5>
+                      <p class="card-text io-overflow-auto" th:text="${io.getInputSource()}"></p>
+                    </div>
+                    <div class="card-body">
+                      <h5 class="card-title">출력</h5>
+                      <p class="card-text io-overflow-auto" th:text="${io.getOutputSource()}"></p>
+                    </div>
+                  </div>
+                  <br>
+                </div>
               </div>
-            </form>
-
-
-          </main>
-
+            </div>
+          </div>
         </div>
-
       </div>
-
     </div>
-    <div th:replace="fragments/footer :: footer" />
-  </div> <!-- /container -->
+  </div>
 
-  <script th:src="@{/static/js/bootstrap.bundle.min.js}"></script>
-  <script th:src="@{/static/js/aos.js}"></script>
-  <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+  <form>
+    <div class="form-group">
+      <label for="problemSource">답안 소스</label>
+      <textarea class="form-control" id="problemSource" rows="3"></textarea>
+    </div>
+  </form>
 
-  <script>
-    AOS.init({
-      duration: 800, // values from 0 to 3000, with step 50ms
-    });
-  </script>
+  <div class="modal fade show" id="problemCreateModal" tabindex="-1" style="display: none;" aria-modal="true" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="problemCreateModalTitle"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="problemCreateModalText"></div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="problemCreateTestModalClose()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-</div> </div></body>
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<div th:replace="fragments/my-footer :: footer" />
+<!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- ======= Script ======= -->
+<div th:replace="fragments/my-script :: script" />
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+<!-- End Script -->
+
+<script>
+
+</script>
+
+</body>
 </html>

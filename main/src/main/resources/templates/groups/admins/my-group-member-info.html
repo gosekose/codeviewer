@@ -23,73 +23,74 @@
 
 <main id="main" class="main">
 
-  <div class="col-lg-10">
+  <div th:replace="fragments/my-pagetitle :: pagetitle('그룹 회원 정보 조회', '그룹', '마이 그룹 회원 정보 조회')" />
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title"> 마이 그룹 회원 정보 조회 </h5>
+        <p> <code>회원의 정보, 문제 해결 차트 등</code>을 확인 할 수 있습니다.</p>
 
-    <div class="card-body">
-      <h5 class="card-title"> 내 그룹 회원 정보 조회 </h5>
-      <p> <code>회원의 정보, 문제 해결 차트 등</code>을 확인 할 수 있습니다.</p>
+        <div class="row d-flex justify-content-between align-items-center">
 
-      <div class="row d-flex justify-content-between align-items-center">
+          <table class="table table-bordered">
+            <thead>
+            <tr>
+              <th>학교</th>
+              <th>학과</th>
+              <th>학번</th>
+              <th>그룹 권한</th>
+              <th>가입 시간</th>
+            </tr>
+            </thead>
+            <td th:text="${memberInfo.schoolName}"></td>
+            <td th:text="${memberInfo.department}"></td>
+            <td th:text="${memberInfo.privateIdInSchool}"></td>
+            <td th:text="${memberInfo.memberGroupAuthority}"></td>
+            <td th:text="${memberInfo.joinTime}"></td>
+          </table>
 
-        <table class="table table-bordered">
-          <thead>
-          <tr>
-            <th>학교</th>
-            <th>학과</th>
-            <th>학번</th>
-            <th>그룹 권한</th>
-            <th>가입 시간</th>
-          </tr>
-          </thead>
-          <td th:text="${memberInfo.schoolName}"></td>
-          <td th:text="${memberInfo.department}"></td>
-          <td th:text="${memberInfo.privateIdInSchool}"></td>
-          <td th:text="${memberInfo.memberGroupAuthority}"></td>
-          <td th:text="${memberInfo.joinTime}"></td>
-        </table>
+          <table class="table table-bordered" style="margin-top: 25px">
+            <thead>
+            <tr>
+              <th>문제 번호</th>
+              <th>문제 이름</th>
+              <th>시도 횟수</th>
+              <th>최고 점수</th>
+              <th>마지막 변경 시간</th>
+              <td></td>
+            </tr>
+            </thead>
+            <tr th:each="solve: ${solves}">
+              <td th:text="${solve.problemId}"></td>
+              <td th:text="${solve.problemName}"></td>
+              <td th:text="${solve.triedSolveCount}"></td>
+              <td th:text="${solve.maxScore}"></td>
+              <td th:text="${solve.lastModifiedTime}"></td>
+              <td>
+                <button type="button" onclick="chartShowFnc(this)" class="btn btn-outline-primary btn-sm" th:value="${solve.problemId}">차트 확인</button>
+              </td>
+            </tr>
+          </table>
 
-        <table class="table table-bordered" style="margin-top: 25px">
-          <thead>
-          <tr>
-            <th>문제 번호</th>
-            <th>문제 이름</th>
-            <th>시도 횟수</th>
-            <th>최고 점수</th>
-            <th>마지막 변경 시간</th>
-            <td></td>
-          </tr>
-          </thead>
-          <tr th:each="solve: ${solves}">
-            <td th:text="${solve.problemId}"></td>
-            <td th:text="${solve.problemName}"></td>
-            <td th:text="${solve.triedSolveCount}"></td>
-            <td th:text="${solve.maxScore}"></td>
-            <td th:text="${solve.lastModifiedTime}"></td>
-            <td>
-              <button type="button" onclick="chartShowFnc(this)" class="btn btn-primary" th:value="${solve.problemId}">차트 확인</button>
-            </td>
-          </tr>
-        </table>
+          <div class="col-lg-5">
+            <div class="container">
+              <canvas id="myChart1"></canvas>
+            </div>
+          </div>
 
-        <div class="col-lg-5">
-          <div class="container">
-            <canvas id="myChart1"></canvas>
+          <div class="col-lg-5">
+            <div class="container">
+              <canvas id="myChart2"></canvas>
+            </div>
           </div>
         </div>
 
-        <div class="col-lg-5">
-          <div class="container">
-            <canvas id="myChart2"></canvas>
-          </div>
-        </div>
+        <div th:replace="fragments/my-pagination :: pagination" />
+
+        <!-- End Tables without borders -->
+
       </div>
-
-      <div th:replace="fragments/my-pagination :: pagination" />
-
-      <!-- End Tables without borders -->
-
     </div>
-
   </div>
 
 </main><!-- End #main -->

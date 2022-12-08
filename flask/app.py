@@ -169,17 +169,19 @@ class RequestProblemDemoServer(Resource):
 
     def get_subprocess(self, command):
 
-        out, err = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE).communicate(timeout=2)
+        out, err = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE).communicate(timeout=5)
 
         return out, err
 
 
-    def python_problem_create_test(self, main_file_Path, folder_path) :
+    def python_problem_create_test(self, main_file_Path, folder_path, scores) :
     
-        self.io_file_result = True
-        self.io_process_result = True
-        self.runtime_result = True
-        self.server_result = True
+        self.io_file_result = False
+        self.io_process_result = False
+        self.runtime_result = False
+        self.server_result = False
+        self.total_score = 0
+        self.total_status = [False] * len(scores)
 
         try:
             
@@ -220,6 +222,14 @@ class RequestProblemDemoServer(Resource):
                         if (answer != result):
                             self.io_file_result = False
 
+                        else :
+                            self.total_score += int(scores[length-1])
+                            self.total_status[length-1] = True
+                            self.io_file_result = True
+                            self.io_process_result = True
+                            self.runtime_result = True
+                            self.server_result = True
+
                     except:
                         self.io_process_result = False
                     
@@ -231,7 +241,7 @@ class RequestProblemDemoServer(Resource):
         except:
             self.server_result = False
 
-        return self.io_file_result, self.io_process_result, self.runtime_result, self.server_result
+        return self.io_file_result, self.io_process_result, self.runtime_result, self.server_result, self.total_score, self.total_status
 
 
 
@@ -241,14 +251,21 @@ class RequestProblemDemoServer(Resource):
 
             main_file_path = request.args.get("mainFilePath")
             folder_path = request.args.get("folderPath")
+            scores = request.args.getlist("scores")
 
-            io_file_result, io_process_result, runtime_result, server_result = self.python_problem_create_test(main_file_path, folder_path)
+            print("\n\n\n scores = ", scores)
+
+            io_file_result, io_process_result, runtime_result, server_result, total_score, total_status = self.python_problem_create_test(main_file_path, folder_path, scores)
             
+            print("\n\n\n totalScore = ", total_score)
+
             response = make_response(jsonify({
                 "ioFileResult": io_file_result,
                 "ioProcessResult": io_process_result,
                 "runtimeResult": runtime_result,
-                "serverResult": server_result
+                "serverResult": server_result,
+                "totalScore": total_score,
+                "totalStatus": total_status
             }))
         
         except :
@@ -257,7 +274,9 @@ class RequestProblemDemoServer(Resource):
                 "ioFileResult": False,
                 "ioProcessResult": False,
                 "runtimeResult": False,
-                "serverResult": False
+                "serverResult": False,
+                "totalScore": 0,
+                "totalStatus": None
             }))
 
         response.headers.add("Access-Control-Allow-Origin", "*")

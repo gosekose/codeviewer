@@ -46,16 +46,7 @@
 
 <main id="main" class="main">
 
-  <div class="pagetitle">
-    <h1>문제</h1>
-    <nav>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">홈</a></li>
-        <li class="breadcrumb-item">그룹</li>
-        <li class="breadcrumb-item active">문제</li>
-      </ol>
-    </nav>
-  </div>
+  <div th:replace="fragments/my-pagetitle :: pagetitle('문제 편집', '문제', '문제 편집')" />
 
   <div>
     <div id="preview">

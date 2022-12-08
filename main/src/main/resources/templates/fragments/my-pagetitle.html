@@ -1,0 +1,17 @@
+<html class="h-100" lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<div th:fragment="pagetitle(title, li2, li3)">
+  <div class="pagetitle">
+    <h1 th:text="${title}">문제 생성</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item" ><a href="/">홈</a></li>
+        <li class="breadcrumb-item" th:text="${li2}">그룹</li>
+        <li class="breadcrumb-item active" th:text="${li3}">문제</li>
+      </ol>
+    </nav>
+  </div>
+</div>

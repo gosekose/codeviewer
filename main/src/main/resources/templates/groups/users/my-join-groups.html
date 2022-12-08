@@ -17,34 +17,40 @@
 
 <main id="main" class="main">
 
-    <div class="col-lg-10">
+    <div class="col-lg-12">
 
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>그룹 번호</th>
-                <th>그룹 이름</th>
-                <th>그룹장 이름</th>
-                <th>그룹장 학교</th>
-                <th>그룹장 학과</th>
-                <td></td>
-            </tr>
-            </thead>
-            <tr th:each="group: ${groupList.getContent()}">
-                <td th:text="${group.groupId}"></td>
-                <td th:text="${group.groupName}"></td>
-                <td th:text="${group.creatorName}"></td>
-                <td th:text="${group.creatorSchoolName}"></td>
-                <td th:text="${group.creatorDepartment}"></td>
-                <td>
-                    <a href="#" th:href="@{/api/v1/groups/{id}/problems (id=${group.groupId})}"
-                       class="btn btn-primary" role="button">그룹 이동</a>
-                </td>
-            </tr>
-        </table>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">가입 그룹</h5>
+                <p> <code>가입한 그룹의 정보</code>를 확인할 수 있습니다.</p>
+                <!-- Active Table -->
 
-        <div th:replace="fragments/my-pagination :: pagination" />
-
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>그룹 번호</th>
+                        <th>그룹 이름</th>
+                        <th>그룹장 이름</th>
+                        <th>그룹장 학교</th>
+                        <th>그룹장 학과</th>
+                        <td></td>
+                    </tr>
+                    </thead>
+                    <tr th:each="group: ${groupList.getContent()}">
+                        <td th:text="${group.groupId}"></td>
+                        <td th:text="${group.groupName}"></td>
+                        <td th:text="${group.creatorName}"></td>
+                        <td th:text="${group.creatorSchoolName}"></td>
+                        <td th:text="${group.creatorDepartment}"></td>
+                        <td>
+                            <a href="#" th:href="@{/api/v1/groups/{id}/problems (id=${group.groupId})}"
+                               class="btn btn-outline-primary btn-sm" role="button">그룹 이동</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div th:replace="fragments/my-pagination :: pagination" />
+        </div>
     </div>
 
 </main><!-- End #main -->
