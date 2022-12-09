@@ -35,6 +35,7 @@ import java.util.UUID;
 
 @Service
 @Slf4j
+@Transactional
 @RequiredArgsConstructor
 public class ProblemCreateService {
 
@@ -91,8 +92,10 @@ public class ProblemCreateService {
                 .problemType(problemCreateDao.getProblemType())
                 .openTime(problemCreateDao.getOpenTime())
                 .closedTime(problemCreateDao.getClosedTime())
+                .problemDifficulty(problemCreateDao.getProblemDifficulty())
                 .problemFile(FileConverter.toProblemFile(problemFile))
                 .problemInputIoFile(ProblemInputIoFile.builder().inputStoreFolderPath(ioFileDataDto.getFolderPath()).build())
+                .totalScore(problemCreateDao.getTotalScore())
                 .build();
         return problem;
     }

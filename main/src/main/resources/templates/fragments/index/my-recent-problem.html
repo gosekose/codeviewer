@@ -1,0 +1,67 @@
+<html class="h-100" lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<div th:fragment="recentProblem(recentProblem, success, fail)">
+  <div class="col-12">
+    <div class="card recent-sales overflow-auto">
+
+      <div class="filter">
+        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+          <li class="dropdown-header text-start">
+            <h6>Filter</h6>
+          </li>
+
+          <li><a class="dropdown-item" href="#">Today</a></li>
+          <li><a class="dropdown-item" href="#">This Month</a></li>
+          <li><a class="dropdown-item" href="#">This Year</a></li>
+        </ul>
+      </div>
+
+      <div class="card-body">
+        <h5 class="card-title">최근 등록 문제 <span>| Today</span></h5>
+
+        <table class="table table-borderless datatable">
+          <thead>
+          <tr>
+            <th scope="col">문제 번호</th>
+            <th scope="col">공개 그룹명</th>
+            <th scope="col">문제명</th>
+            <th scope="col">난이도</th>
+            <th scope="col">상태</th>
+          </tr>
+          </thead>
+          <tbody>
+          <div sec:authorize="isAnonymous()">
+            <tr th:each="problem: ${recentProblem}">
+              <td th:text="${problem.problemId}"></td>
+              <td th:text="${problem.memberGroupName}"></td>
+              <td th:text="${problem.problemName}" class="text-primary"></td>
+              <td th:text="${problem.problemDifficulty}"></td>
+              <td><span class="badge bg-primary">미해결</span></td>
+            </tr>
+          </div>
+
+          <div sec:authorize="isAuthenticated()">
+            <tr th:each="problem: ${recentProblem}">
+              <td th:text="${problem.problemId}"></td>
+              <td th:text="${problem.memberGroupName}"></td>
+              <td th:text="${problem.problemName}" class="text-primary"></td>
+              <td th:text="${problem.problemDifficulty}"></td>
+              <div th:if="${problem.solveStatus} == ${success}"><td><span class="badge bg-success">성공</span></td></div>
+              <div th:if="${problem.solveStatus} == ${fail}"><td><span class="badge bg-danger">실패</span></td></div>
+              <div th:if="${problem.solveStatus} == null"><td><span class="badge bg-primary">도전</span></td></div>
+            </tr>
+          </div>
+          </tbody>
+        </table>
+
+        <ul id="pagingul">
+        </ul>
+
+      </div>
+    </div>
+  </div>
+</div>

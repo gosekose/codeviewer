@@ -56,7 +56,7 @@
 
           <div class="mb-auto col-8">
 
-            <form class="needs-validation" id="problemCreateForm" novalidate method="post" enctype="multipart/form-data">
+            <form class="needs-validation" id="problemCreateDao" novalidate method="post" enctype="multipart/form-data">
 
               <div class="row mb-3 position-relative">
                 <label class="col-sm-2 col-form-label" for="selectProblem">문제 출제 형식</label>
@@ -67,6 +67,7 @@
                     <option value="testType">시험형</option>
                   </select>
                   <div class="invalid-feedback"> 출제 형태를 선택하세요 </div>
+                  <input type="text" id="problemType" name="problemType" value="HOMEWORKTYPE" style="display: none">
                 </div>
               </div>
 
@@ -92,6 +93,19 @@
                 </div>
                 <div class="invalid-tooltip"></div>
               </div>
+
+              <div class="row mb-3">
+                <label for="selectProblemDifficulty" class="col-sm-2 col-form-label">난이도 선택</label>
+                <div class="col-sm-10">
+                  <select id="selectProblemDifficulty" name="selectProblemDifficulty" class="form-select">
+                    <option th:each="problemDifficulty : ${problemDifficulties}" th:value="${problemDifficulty.value}"
+                            th:text="${problemDifficulty.key}">공개</option>
+                  </select>
+                </div>
+                <input type="text" id="problemDifficulty" name="problemDifficulty" value="BRONZE1" style="display: none">
+                <div class="invalid-tooltip"></div>
+              </div>
+
 
               <div class="row mb-3 position-relative">
                 <label class="col-sm-2 col-form-label" for="descriptions">문제 설명</label>
@@ -160,12 +174,12 @@
                         </div>
                         <div class="invalid-feedback">문제 점수 등록은 필수 입니다.</div>
                       </div>
+                      <input type="number" id="totalScore" name="totalScore" value="0" style="display: none">
                     </div>
 
                   </div>
                 </div>
               </div>
-
 
               <div class="text-center">
                 <button type="button" class="btn btn-outline-primary" onclick="ajaxCall()">문제 등록</button>
@@ -243,21 +257,7 @@
     </div>
   </div>
 
-
-  <div class="modal fade show" id="problemCreateModal" tabindex="-1" style="display: none;" aria-modal="true" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="problemCreateModalTitle"></h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body" id="problemCreateModalText"></div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="problemCreateTestModalClose()">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <div th:replace="fragments/my-modal :: myCustomModal" />
 
 </main><!-- End #main -->
 
@@ -276,6 +276,7 @@
 <script>
 
   let plusDivIdx = 0;
+  let totalScore = 0;
   let ajaxIoFilePath = []
   let scoreArray = []
 
@@ -287,10 +288,26 @@
     console.log(value);
     if (value == "homeworkType") {
       $("#problemTypePreview").text("과제형");
+      $("#problemType").val("HOMEWORKTYPE")
     } else if (value == "testType") {
       $("#problemTypePreview").text("시험형");
+      $("#problemType").val("TESTTYPE")
     }
   }
+
+  window.onload = function () {
+    $("#problemType").val("HOMEWORKTYPE");
+    $("#problemDifficulty").val("BRONZE1");
+    $("#totalScore").val(0);
+  }
+
+  $("select[name=selectProblemDifficulty]").change(function(){
+    let result = $("select[name=selectProblemDifficulty] option:selected").val();
+    $("#problemDifficulty").val(result);
+    console.log(result);
+  });
+
+
 
 
   function deletePlusDiv(e) {
@@ -444,7 +461,7 @@
 
 
   function ajaxCall() {
-    const form = $("#problemCreateForm")[0];
+    const form = $("#problemCreateDao")[0];
     const formData = new FormData(form);
 
     console.log(formData);
@@ -460,12 +477,17 @@
       beforeSend: function(xhr) {xhr.setRequestHeader(header, token);},
       async: true,
       cache: true,
+      statusCode: {
+        400:function(data) {
+          console.log(data);
+          console.log("status = " + data.status)
+        }},
       success: function(data) {
         location.href = "/api/v1/groups/admin/" + groupId + "/problems/" + data.problemId;
       },
 
-      error: function(xhr, status, error) {
-        console.log('error:' + error);
+      error: function(status) {
+        console.log(status);
       }})}
 
 
@@ -562,6 +584,14 @@
     })
   }
 
+  function totalScoreChange() {
+    totalScore = 0;
+    for(let i=0; i<scoreArray.length; i++) {
+      totalScore += Number(scoreArray[i]);
+    }
+    $("#totalScore").val(totalScore);
+  }
+
   function changeScore(e) {
     let idx = $(e).attr('id');
     idx = idx.split("-")[1];
@@ -569,8 +599,10 @@
     let tagId = $(e).attr('id');
     const scoreValue = document.getElementById(tagId).value;
     scoreArray[idx] = scoreValue;
-  }
 
+    totalScoreChange();
+
+  }
 
   function scoreSameDivide() {
     scoreArray = []
@@ -599,8 +631,7 @@
         $(nameId).val(score);
       }
     }
-    console.log(scoreArray);
-
+    totalScoreChange();
   }
 
   function removeScoreChildren() {

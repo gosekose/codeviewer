@@ -10,6 +10,9 @@
 <head>
   <meta name="groupId" th:content="${groupId}"/>
   <meta name="problemId" th:content="${problemId}"/>
+  <link th:href="@{/static/libs/codemirror/codemirror.css}" rel="stylesheet">
+  <link th:href="@{/static/libs/codemirror/show-hint.css}" rel="stylesheet">
+
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
   <style>
     .custom-container-flex {
@@ -52,10 +55,17 @@
     <div id="preview">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title" th:text="${problemId} + '번 문제'">문제</h5>
-
-          <div class="mb-auto col-5">
+          <div>
+            </br>
+            <h5 class="card-title" style="display:inline;" th:text="${problemId} + '번 문제 &nbsp;&nbsp;&nbsp;'"></h5>
+            <a href="#" th:href="@{/api/v1/groups/admin/{id}/problems (id=${groupId})}"
+               class="btn btn-outline-primary btn-sm" role="button">문제 목록 조회</a>
+            <a href="#" th:href="@{/api/v1/groups/admin/{id}/problems (id=${groupId})}"
+               class="btn btn-outline-primary btn-sm" role="button">문제 편집</a>
+          </div>
+          <div class="mb-auto col-10">
             <div>
+              <br>
               <h1>문제명</h1>
               <div>
                 <div class="card">
@@ -100,8 +110,7 @@
                 <div>
                   <div class="card">
                     <div class="card-body">
-                      <h5 class="card-title">
-                        입력</h5>
+                      <h5 class="card-title">입력</h5>
                       <p class="card-text io-overflow-auto" th:text="${io.getInputSource()}"></p>
                     </div>
                     <div class="card-body">
@@ -113,27 +122,50 @@
                 </div>
               </div>
             </div>
+
+            <div>
+              <h1> 입력 </h1>
+                <div>
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">
+                        코드 작성</h5>
+
+                      <div class="row mb-3 position-relative">
+                        <label class="col-sm-1 col-form-label" for="selectProblem">언어 선택</label>
+                        <div class="col-sm-2">
+                          <select aria-label="select example" class="form-select" id="selectProblem" onchange="selectLanguage(this.value)" required>
+                            <option value="python" checked>파이썬</option>
+                            <option value="java8">자바</option>
+                          </select>
+                        </div>
+                      </div>
+                      <!--  Start java editor /-->
+                      <div>
+                        <textarea id="myPythonEditor" rows="4" cols="8"></textarea>
+                      </div>
+                      <div style="display: none">
+                        <textarea id="myJavaEditor" rows="4" cols="8"></textarea>
+                      </div>
+                      <!--  End java editor /-->
+
+                    </div>
+                  </div>
+                  <br>
+                </div>
+            </div>
           </div>
+
         </div>
       </div>
     </div>
   </div>
 
+  <!-- ======= modal ======= -->
+  <div th:replace="fragments/my-modal :: myCustomModal" />
+  <!-- End modal -->
 
-  <div class="modal fade show" id="problemCreateModal" tabindex="-1" style="display: none;" aria-modal="true" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="problemCreateModalTitle"></h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body" id="problemCreateModalText"></div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="problemCreateTestModalClose()">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
+
 
 </main><!-- End #main -->
 
@@ -147,11 +179,56 @@
 <div th:replace="fragments/my-script :: script" />
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 
-<!-- End Script -->
+<script th:src="@{/static/libs/codemirror/codemirror.js}"></script>
+<script th:src="@{/static/libs/codemirror/python.js}"></script>
+<script th:src="@{/static/libs/codemirror/clike.js}"></script>
+<script th:src="@{/static/libs/codemirror/matchbrackets.js}"></script>
+<script th:src="@{/static/libs/codemirror/show-hint.js}"></script>
 
 <script>
 
-</script>
+  const textareaPython = document.getElementById('myPythonEditor');
 
+  let pythonEditor = CodeMirror.fromTextArea(textareaPython, {
+    lineNumbers: true,
+    lineWrapping: true,
+    matchBrackets: true,
+    theme: "default",
+    mode: "python",
+    val: textareaPython.value
+  });
+
+  const textareaJava = document.getElementById('myJavaEditor');
+  let javaEditor = CodeMirror.fromTextArea(textareaJava, {
+    lineNumbers: true,
+    lineWrapping: true,
+    matchBrackets: true,
+    theme: "default",
+    mode: "text/java",
+    val: textareaJava.value
+  });
+
+
+  let selectLanguage = function (value) {
+    if (value == "python") {
+      document.getElementById("myJavaEditor").style.display = "none";
+      document.getElementById("myPythonEditor").style.display = "block";
+    } else if (value == "java8") {
+      document.getElementById("myPythonEditor").style.display = "none";
+      document.getElementById("myJavaEditor").style.display = "block";
+    }
+  }
+
+  let mac = CodeMirror.keyMap.default == CodeMirror.keyMap.macDefault;
+  CodeMirror.keyMap.default[(mac ? "Cmd" : "Ctrl") + "-Space"] = "autocomplete";
+
+  // function fn_msg() {
+  //   let text = editor.getValue();
+  //   alert(text);
+  // }
+
+<!-- End Script -->
+
+</script>
 </body>
 </html>

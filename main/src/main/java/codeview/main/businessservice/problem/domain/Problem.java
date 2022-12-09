@@ -4,7 +4,6 @@ import codeview.main.auth.domain.BaseEntity;
 import codeview.main.businessservice.membergroup.domain.MemberGroup;
 import codeview.main.businessservice.problem.domain.embedded.ProblemFile;
 import codeview.main.businessservice.problem.domain.embedded.ProblemInputIoFile;
-import codeview.main.businessservice.problem.domain.embedded.SolvePython;
 import codeview.main.businessservice.problem.domain.enumtype.ProblemDifficulty;
 import codeview.main.businessservice.problem.domain.enumtype.ProblemType;
 import codeview.main.businessservice.problemdescription.domain.ProblemDescription;
@@ -58,19 +57,18 @@ public class Problem extends BaseEntity {
     private LocalDateTime openTime;
     private LocalDateTime closedTime;
 
-    private String solveJavaAddress;
-
-    @Embedded
-    private SolvePython solvePython;
-
+    @Enumerated(STRING)
     private ProblemDifficulty problemDifficulty;
 
     private Integer totalScore;
 
+    private String allowedLanguage;
+
     @Builder
     public Problem(MemberGroup memberGroup, String name, ProblemType problemType,
                    ProblemFile problemFile, ProblemInputIoFile problemInputIoFile, LocalDateTime openTime,
-                   LocalDateTime closedTime, ProblemDifficulty problemDifficulty) {
+                   LocalDateTime closedTime, ProblemDifficulty problemDifficulty,
+                   Integer totalScore, String allowedLanguage) {
         this.memberGroup = memberGroup;
         this.name = name;
         this.problemType = problemType;
@@ -79,6 +77,8 @@ public class Problem extends BaseEntity {
         this.openTime = openTime;
         this.closedTime = closedTime;
         this.problemDifficulty = problemDifficulty;
+        this.totalScore = totalScore;
+        this.allowedLanguage = allowedLanguage;
     }
 
 }

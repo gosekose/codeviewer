@@ -41,7 +41,7 @@
                     </div>
 
                     <div class="row mb-3">
-                        <label th:for="joinClosedTime" class="col-sm-2 col-form-label">그룹명</label>
+                        <label th:for="joinClosedTime" class="col-sm-2 col-form-label">가입 만료 날짜</label>
                         <div class="col-sm-10">
                             <input type="datetime-local" id="joinClosedTime" class="form-control" onchange="localDateTimeValidation()"
                                    th:errorclass="field-error" th:field="*{joinClosedTime}"  placeholder="마감 시간은 현재 시간 이후만 가능 합니다." autofocus>
@@ -71,31 +71,42 @@
                         </div>
                     </div>
 
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="groupAutoJoin">
-                        <label class="form-check-label" for="groupAutoJoin">자동 가입 설정</label>
-                    </div>
-
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="passwordStatus">
-                        <label class="form-check-label" for="passwordStatus">가입 비밀번호 설정</label>
-                    </div>
-
-                    <div id="passwordOnOff" class="col-sm-10">
-                        <div class="mb-3">
-                            <label th:for="password" autocomplete="false" class="form-label">가입 비밀번호</label>
-                            <input type="password" class="form-control form-control-lg" id="key" th:field="*{password}">
-                            <div id="keyShow">SHOW</div>
+                    <div class="row mb-3">
+                        <label th:for="memberGroupVisibility" class="col-sm-2 col-form-label">공개 여부</label>
+                        <div class="col-sm-10">
+                            <select th:field="*{memberGroupVisibility}" class="form-select">
+                                <option value="">그룹 공개 여부</option>
+                                <option th:each="visibility : ${visibilities}" th:value="${visibility.value}"
+                                        th:text="${visibility.key}">공개</option>
+                            </select>
                         </div>
+                        <div class="field-error" th:errors="*{memberGroupVisibility}"></div>
                     </div>
-                    <div>
-                        </br>
+
+                    <div class="form-check form-switch">
+                        <label class="form-check-label" for="groupAutoJoin">자동 가입 설정</label>
+                        <input class="form-check-input" type="checkbox" id="groupAutoJoin" checked>
+                        <input type="text" id="hidden-groupAutoJoin" th:field="*{groupAutoJoin}" value="ON" style="display: none">
                     </div>
+
+                    <div class="form-check form-switch">
+                        <label class="form-check-label" for="passwordStatus">가입 비밀번호 설정</label>
+                        <input class="form-check-input" type="checkbox" id="passwordStatus">
+                    </div>
+
+                    <div id="passwordOnOff" class="row mb-3">
+                        <label th:for="password" autocomplete="false" class="col-sm-2 col-form-label">가입 비밀번호</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" id="key" th:field="*{password}">
+                        </div>
+                        <div id="keyShow">SHOW</div>
+                    </div>
+
 
                     <div class="text-center">
                         <div class="row mb-3">
                             <div class="col-sm-10">
-                                <button type="submit" class="btn btn-primary">Submit Form</button>
+                                <button type="submit" class="btn btn-primary">그룹 생성</button>
                             </div>
                         </div>
                     </div>
@@ -143,6 +154,7 @@
 
     window.onload = function () {
         $("#passwordStatus").value = "OFF";
+        $("#hidden-groupAutoJoin").val("ON");
         $("#passwordOnOff").hide();
     }
 
@@ -151,10 +163,14 @@
     $("#groupAutoJoin").change(function(){
         if($(this).prop("checked") == true){
             //run code
+
+            $("#hidden-groupAutoJoin").val("ON");
             this.value="ON";
             console.log(this.value);
         }else{
             //run code
+
+            $("#hidden-groupAutoJoin").val("OFF");
             this.value="OFF";
             console.log(this.value);
         }
