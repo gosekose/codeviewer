@@ -18,7 +18,7 @@ public abstract class AbstractFileStore implements FileStore {
     @Override
     public UploadFile storeFile(MultipartFile multipartFile, String groupId, String uuid) throws IOException {
 
-        String originalFileName = getOrigianlFileName(multipartFile);
+        String originalFileName = getOriginalFileName(multipartFile);
         if (originalFileName == null) return null;
 
         String newProblemFolder = createNewProblemFolder(groupId, uuid);
@@ -29,7 +29,7 @@ public abstract class AbstractFileStore implements FileStore {
     @Override
     public UploadFile storeFileAlreadyFolder(MultipartFile multipartFile, String groupId, String path) throws IOException {
 
-        String originalFileName = getOrigianlFileName(multipartFile);
+        String originalFileName = getOriginalFileName(multipartFile);
         if (originalFileName == null) return null;
 
         return getUploadFile(multipartFile, originalFileName, path);
@@ -47,7 +47,7 @@ public abstract class AbstractFileStore implements FileStore {
 
     }
 
-    private static String getOrigianlFileName(MultipartFile multipartFile) {
+    private static String getOriginalFileName(MultipartFile multipartFile) {
         if (multipartFile.isEmpty()) {
             return null;
         }

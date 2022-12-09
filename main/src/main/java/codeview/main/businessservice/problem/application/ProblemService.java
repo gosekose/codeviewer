@@ -32,6 +32,7 @@ public class ProblemService {
         return savedProblem.getId();
     }
 
+    @Cacheable(cacheNames = "problem", key="#id")
     public Problem findById(Long id) {
         Optional<Problem> findProblem = problemRepository.findById(id);
 

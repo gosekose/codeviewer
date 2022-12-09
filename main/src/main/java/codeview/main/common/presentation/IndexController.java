@@ -8,6 +8,7 @@ import codeview.main.businessservice.problem.application.ProblemService;
 import codeview.main.businessservice.problem.infra.repository.query.VisibleRecentProblemCondition;
 import codeview.main.businessservice.problem.infra.repository.query.VisibleRecentProblemDto;
 import codeview.main.businessservice.problem.infra.repository.query.VisibleRecentProblemNoLoginDto;
+import codeview.main.businessservice.solve.domain.enumtype.SolveStatus;
 import codeview.main.common.application.CsrfProviderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,10 +57,14 @@ public class IndexController {
 
             model.addAttribute("user", userName);
             model.addAttribute("recentProblem", visibleRecentProblemDtos);
+            model.addAttribute("success", SolveStatus.SUCCESS);
+            model.addAttribute("fail", SolveStatus.FAIL);
+            model.addAttribute("totalRecentProblemCnt", visibleRecentProblemDtos.size());
 
         } else {
             List<VisibleRecentProblemNoLoginDto> visibleRecentProblemNoLoginDtos = problemService.searchVisibleRecentProblemNoLogin(condition);
             model.addAttribute("recentProblem", visibleRecentProblemNoLoginDtos);
+            model.addAttribute("totalRecentProblemCnt", visibleRecentProblemNoLoginDtos.size());
         }
 
         model.addAttribute("_csrf", csrfProviderService.createCsrf(request));

@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -46,6 +47,7 @@ public class TempController {
 
     static Member solveMember;
 
+    @Transactional
     @GetMapping("/api/v1/temp/admin/create/group")
     public String createDate(@AuthenticationPrincipal PrincipalUser principalUser, Model model) {
 
@@ -126,12 +128,48 @@ public class TempController {
         memberGroupRepository.save(memberGroup1);
 
         for(int i=0; i<50; i++) {
-            problemService.save(Problem.builder()
-                    .name("test"+ (i+10))
+
+            Problem problemTest = Problem.builder()
+                    .name("test" + (i + 10))
                     .memberGroup(memberGroup1)
                     .problemDifficulty(ProblemDifficulty.GOLD2)
                     .problemInputIoFile(new ProblemInputIoFile(UUID.randomUUID().toString()))
-                    .build());
+                    .build();
+
+            problemService.save(problemTest);
+
+
+
+            if (i>40) {
+
+                SolveStatus solveStatus;
+
+                if (Math.random() > 0.5) {
+                    solveStatus = SolveStatus.SUCCESS;
+                } else {
+                    solveStatus = SolveStatus.FAIL;
+                }
+
+                int countSolveByMemberTest = solveRepository.getCountSolve(problemTest, member);
+                Solve solveTest = Solve.builder()
+                        .member(member)
+                        .number(countSolveByMemberTest)
+                        .score(70)
+                        .solveStatus(solveStatus)
+                        .problem(problemTest)
+                        .build();
+
+                solveRepository.save(solveTest);
+
+                LastSolveStatus lastSolveStatus = LastSolveStatus.builder()
+                        .member(member)
+                        .problem(problemTest)
+                        .solveStatus(solveTest.getSolveStatus())
+                        .build();
+
+                lastSolveStatusRepository.save(lastSolveStatus);
+            }
+
         }
 
         Problem problem1 = Problem.builder()
@@ -154,13 +192,13 @@ public class TempController {
 
         solveRepository.save(solve3);
 
-        LastSolveStatus saveSolveStatusByMember = lastSolveStatusRepository.save(
-                LastSolveStatus.builder()
-                        .member(member)
-                        .problem(problem1)
-                        .solveStatus(solve3.getSolveStatus())
-                        .build()
-        );
+        LastSolveStatus lastSolveStatus = LastSolveStatus.builder()
+                .member(member)
+                .problem(problem1)
+                .solveStatus(solve3.getSolveStatus())
+                .build();
+
+        LastSolveStatus saveSolveStatusByMember = lastSolveStatusRepository.save(lastSolveStatus);
 
         countSolveByMember = solveRepository.getCountSolve(problem1, member);
         Solve solve4 = Solve.builder()

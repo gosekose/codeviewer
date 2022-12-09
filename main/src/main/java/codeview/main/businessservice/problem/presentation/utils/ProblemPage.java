@@ -10,8 +10,8 @@ import codeview.main.businessservice.problemdescription.domain.ProblemIoExample;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
 import java.util.List;
@@ -19,6 +19,7 @@ import java.util.List;
 @Slf4j
 @Getter
 @Component
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ProblemPage {
 
@@ -26,7 +27,6 @@ public class ProblemPage {
     private final ProblemDescriptionService problemDescriptionService;
     private final ProblemIoExampleService problemIoExampleService;
 
-    @Cacheable(cacheNames = "problem", key = "#groupId + #problemId")
     public void getProblemPage(Model model, Integer groupId, Integer problemId) {
 
         Problem problem = problemService.findById(Long.valueOf(problemId));
@@ -46,8 +46,6 @@ public class ProblemPage {
         model.addAttribute("ioExamples", ioExamples);
         model.addAttribute("problemAdminEditDto", problemAdminEditDto);
 
-        log.info("descriptions = {}", descriptions.size());
-        log.info("ioExamples = {}", ioExamples.size());
     }
 
 

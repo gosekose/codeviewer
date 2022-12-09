@@ -26,7 +26,7 @@ public class ProblemScoreService {
         }
 
         try{
-            for(int i=0; i<problemCreateDao.getScores().size(); i++) {
+            for(int i = 0; i< problemCreateDao.getScores().size(); i++) {
                 log.info("number = {}", i+1);
                 problemScoreRepository.save(
                         ProblemScore.builder()
