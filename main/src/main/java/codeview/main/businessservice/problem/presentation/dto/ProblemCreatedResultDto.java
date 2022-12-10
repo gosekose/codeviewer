@@ -21,12 +21,14 @@ public class ProblemCreatedResultDto<T> {
     private T preFilePath;
     private T scores;
     private T totalScore;
+    private T problemLanguage;
     private T message;
 
     @Builder
 
     public ProblemCreatedResultDto(T problemId, T problemType, T problemName, T openTime, T closedTime, T problemDifficulty,
-                                   T descriptions, T inputs, T outputs, T preFilePath, T scores, T totalScore, T message) {
+                                   T descriptions, T inputs, T outputs, T preFilePath, T scores, T totalScore,
+                                   T problemLanguage, T message) {
         this.problemId = problemId;
         this.problemType = problemType;
         this.problemName = problemName;
@@ -39,6 +41,7 @@ public class ProblemCreatedResultDto<T> {
         this.preFilePath = preFilePath;
         this.scores = scores;
         this.totalScore = totalScore;
+        this.problemLanguage = problemLanguage;
         this.message = message;
     }
 }

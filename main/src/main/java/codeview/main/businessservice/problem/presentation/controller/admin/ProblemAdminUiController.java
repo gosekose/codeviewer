@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.MalformedURLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -57,8 +58,8 @@ public class ProblemAdminUiController {
     @ModelAttribute("problemLanguages")
     public Map<String, ProblemLanguage> languages() {
         Map<String, ProblemLanguage> problemLanguageMap = new LinkedHashMap<>();
-        problemLanguageMap.put("python", ProblemLanguage.PYTHON);
-        problemLanguageMap.put("java8", ProblemLanguage.JAVA8);
+        problemLanguageMap.put("python3", ProblemLanguage.python3);
+        problemLanguageMap.put("java11", ProblemLanguage.java11);
         return problemLanguageMap;
     }
 
@@ -82,7 +83,7 @@ public class ProblemAdminUiController {
     public String getProblemIdAdminPage(
             @PathVariable("groupId") Integer groupId,
             @PathVariable("problemId") Integer problemId,
-            Model model) {
+            Model model) throws MalformedURLException {
 
         problemPage.getProblemPage(model, groupId, problemId);
 
@@ -104,6 +105,5 @@ public class ProblemAdminUiController {
 
         return "problems/admins/my-problem-list";
     }
-
 
 }

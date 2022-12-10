@@ -62,13 +62,16 @@ public class Problem extends BaseEntity {
 
     private Integer totalScore;
 
-    private String allowedLanguage;
+    private String problemLanguage;
+
+    private String problemFileHash;
+    private String uploadZipFileHash;
 
     @Builder
     public Problem(MemberGroup memberGroup, String name, ProblemType problemType,
                    ProblemFile problemFile, ProblemInputIoFile problemInputIoFile, LocalDateTime openTime,
                    LocalDateTime closedTime, ProblemDifficulty problemDifficulty,
-                   Integer totalScore, String allowedLanguage) {
+                   Integer totalScore, String problemLanguage, String problemFileHash, String uploadZipFileHash) {
         this.memberGroup = memberGroup;
         this.name = name;
         this.problemType = problemType;
@@ -78,7 +81,9 @@ public class Problem extends BaseEntity {
         this.closedTime = closedTime;
         this.problemDifficulty = problemDifficulty;
         this.totalScore = totalScore;
-        this.allowedLanguage = allowedLanguage;
+        this.problemLanguage = problemLanguage;
+        this.problemFileHash = problemFileHash;
+        this.uploadZipFileHash = uploadZipFileHash;
     }
 
 }

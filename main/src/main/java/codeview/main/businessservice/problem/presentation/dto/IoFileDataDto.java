@@ -9,6 +9,9 @@ import java.util.List;
 public class IoFileDataDto {
 
     private String folderPath;
+
+    private String uploadName;
+
     private List<String> inputs = new ArrayList<>();
     private List<String> outputs = new ArrayList<>();
 
