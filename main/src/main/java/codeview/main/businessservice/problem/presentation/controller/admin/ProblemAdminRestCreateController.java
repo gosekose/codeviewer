@@ -10,6 +10,7 @@ import codeview.main.businessservice.problem.presentation.dao.ProblemServerDao;
 import codeview.main.businessservice.problem.presentation.dto.IoFileDataDto;
 import codeview.main.businessservice.problem.presentation.dto.ProblemCreatedResultDto;
 import codeview.main.businessservice.problem.presentation.dto.ServerIoFilePathDto;
+import codeview.main.businessservice.problem.presentation.error.BindingError;
 import codeview.main.serverconnect.application.service.HttpConnectionService;
 import codeview.main.serverconnect.presentation.dto.ServerIoFileDemoTestResDto;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 @RestController
@@ -36,70 +38,32 @@ public class ProblemAdminRestCreateController {
 
     private final HttpConnectionService httpConnectionService;
     private final ProblemScoreService problemScoreService;
-
-//    @PostMapping("/{groupId}/problems/new/3")
-//    public ResponseEntity<ProblemCreatedResultDto> postCreateProblem(
-//            @PathVariable("groupId") Integer groupId,
-//            @ModelAttribute ProblemCreateDao problemCreateDao) throws IOException {
-//
-//        Problem problem = problemCreateService.getProblem(groupId, problemCreateDao);
-//        Long problemId = problemService.save(problem);
-//        problemCreateService.saveProblemData(problemCreateDao, problem);
-//
-//        return new ResponseEntity<ProblemCreatedResultDto>(ProblemCreatedResultDto
-//                .builder()
-//                .problemId(problemId)
-//                .build(), HttpStatus.OK);
-//    }
-
+    
     @Transactional
     @PostMapping("/{groupId}/problems/new")
     public ResponseEntity<ProblemCreatedResultDto> postCreateProblem2(
             @PathVariable("groupId") Integer groupId,
             @Validated @ModelAttribute ProblemCreateDao problemCreateDao,
-            BindingResult bindingResult) throws IOException {
+            BindingResult bindingResult) throws IOException, NoSuchAlgorithmException {
 
         if (problemCreateDao.getProblemFile() == null || problemCreateDao.getProblemFile().isEmpty() ||
             problemCreateDao.getIoZipFile() == null || problemCreateDao.getIoZipFile().isEmpty()
         ) {
-            return new ResponseEntity<>(ProblemCreatedResultDto
-                    .builder()
-                    .message("파일 업로드는 반드시 필요합니다.")
-                    .build(),
-                    HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(ProblemCreatedResultDto.builder().message("파일 업로드는 반드시 필요합니다.").build(), HttpStatus.BAD_REQUEST);
         }
 
         if (bindingResult.hasErrors()) {
             log.info("errors = {}", bindingResult);
-            
-            return new ResponseEntity<>(ProblemCreatedResultDto
-                    .builder()
-                    .message("bindingError")
-                    .problemType(bindingResult.getFieldValue("problemType"))
-                    .problemName(bindingResult.getFieldValue("problemName"))
-                    .openTime(bindingResult.getFieldValue("openTime"))
-                    .closedTime(bindingResult.getFieldValue("closedTime"))
-                    .problemDifficulty(bindingResult.getFieldValue("problemDifficulty"))
-                    .descriptions(bindingResult.getFieldValue("descriptions"))
-                    .inputs(bindingResult.getFieldValue("inputs"))
-                    .outputs(bindingResult.getFieldValue("outputs"))
-                    .scores(bindingResult.getFieldValue("scores"))
-                    .totalScore(bindingResult.getFieldValue("totalScore"))
-                    .build(),
-                    HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(BindingError.getProblemCreatedResult(bindingResult), HttpStatus.BAD_REQUEST);
         }
-
 
         Problem problem = problemCreateService.getProblem(groupId, problemCreateDao);
         problemScoreService.saveByCreateDao(problemCreateDao, problem);
         Long problemId = problemService.save(problem);
 
         if (problemCreateDao.getPreFilePath() != null && !problemCreateDao.getPreFilePath().equals("")) {
-            log.info("problemIoFilDao.getPreFilePath = {}", problemCreateDao.getPreFilePath());
             problemCreateService.deletePreFile(problemCreateDao.getPreFilePath());
-            log.info("delete complete");
         }
-
 
         problemCreateService.saveProblemData(problemCreateDao, problem);
 
@@ -123,7 +87,6 @@ public class ProblemAdminRestCreateController {
         if (problemIoFileDao.getPreFilePath() != null && !problemIoFileDao.getPreFilePath().equals("")) {
             problemCreateService.deletePreFile(problemIoFileDao.getPreFilePath());
         }
-
 
         IoFileDataDto ioFileDataDto = problemCreateService.convertIoZip(groupId, problemIoFileDao.getIoZipFile(), String.valueOf(UUID.randomUUID()));
 

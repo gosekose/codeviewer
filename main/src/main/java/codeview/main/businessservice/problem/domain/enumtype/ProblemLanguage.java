@@ -1,6 +1,6 @@
 package codeview.main.businessservice.problem.domain.enumtype;
 
 public enum ProblemLanguage {
-    PYTHON,
-    JAVA8
+    python3,
+    java11
 }

@@ -2,10 +2,7 @@ package codeview.main.businessservice.problem.presentation.dao;
 
 import codeview.main.businessservice.problem.domain.enumtype.ProblemDifficulty;
 import codeview.main.businessservice.problem.domain.enumtype.ProblemType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -63,6 +60,5 @@ public class ProblemCreateDao {
     private Integer totalScore;
 
     @NotNull
-    private String allowedLanguage;
-
+    private String problemLanguage;
 }

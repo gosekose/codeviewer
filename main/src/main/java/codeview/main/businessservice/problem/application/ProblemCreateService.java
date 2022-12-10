@@ -4,6 +4,7 @@ import codeview.main.businessservice.membergroup.application.GroupService;
 import codeview.main.businessservice.membergroup.domain.MemberGroup;
 import codeview.main.businessservice.problem.domain.embedded.ProblemInputIoFile;
 import codeview.main.businessservice.problem.infra.util.FileConverter;
+import codeview.main.businessservice.problem.infra.util.FileHash;
 import codeview.main.businessservice.problem.infra.util.FileUnZip;
 import codeview.main.businessservice.problem.infra.util.filestore.CommonFilStore;
 import codeview.main.businessservice.problem.infra.util.filestore.DockerFileStore;
@@ -29,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -75,16 +77,22 @@ public class ProblemCreateService {
     }
 
 
-    public Problem getProblem(Integer groupId, ProblemCreateDao problemCreateDao) throws IOException {
+    public Problem getProblem(Integer groupId, ProblemCreateDao problemCreateDao) throws IOException, NoSuchAlgorithmException {
 
         UploadFile problemFile = getUploadFile(problemCreateDao.getProblemFile(), groupId, String.valueOf(UUID.randomUUID()));
+        String problemFileHash = FileHash.makeFileHashSha256(problemFile.getStoreFileName());
+
         String[] split = problemFile.getStoreFileName().split("/");
         String newStringPath = getString(split);
 
-        log.info("newStringPath = {}", newStringPath);
         IoFileDataDto ioFileDataDto = convertIoZipAlreadyFolder(groupId, problemCreateDao.getIoZipFile(), newStringPath);
-        log.info("Service ioFileDataDto = {}", ioFileDataDto.getFolderPath());
 
+        ProblemInputIoFile problemInputIoFile = ProblemInputIoFile.builder()
+                .inputStoreFolderPath(ioFileDataDto.getFolderPath())
+                .uploadZipFileName(ioFileDataDto.getUploadName())
+                .build();
+
+        String uploadZipFileHash = FileHash.makeFileHashSha256(problemInputIoFile.getInputStoreFolderPath() + "/" + ioFileDataDto.getUploadName());
 
         Problem problem = Problem.builder()
                 .name(problemCreateDao.getProblemName())
@@ -94,8 +102,11 @@ public class ProblemCreateService {
                 .closedTime(problemCreateDao.getClosedTime())
                 .problemDifficulty(problemCreateDao.getProblemDifficulty())
                 .problemFile(FileConverter.toProblemFile(problemFile))
-                .problemInputIoFile(ProblemInputIoFile.builder().inputStoreFolderPath(ioFileDataDto.getFolderPath()).build())
+                .problemInputIoFile(problemInputIoFile)
                 .totalScore(problemCreateDao.getTotalScore())
+                .problemLanguage(problemCreateDao.getProblemLanguage())
+                .problemFileHash(problemFileHash)
+                .uploadZipFileHash(uploadZipFileHash)
                 .build();
         return problem;
     }
@@ -114,8 +125,13 @@ public class ProblemCreateService {
     public IoFileDataDto convertIoZipAlreadyFolder(Integer groupId, MultipartFile multipartFile, String path) {
         try{
             UploadFile uploadFile = getUploadFileAlreadyFolder(multipartFile, groupId, path);
+
             Path newPath = unzipAndSave(uploadFile);
-            return ioFileClientReturn(newPath);
+            IoFileDataDto ioFileDataDto = ioFileClientReturn(newPath);
+
+            ioFileDataDto.setUploadName(uploadFile.getUploadFileName());
+
+            return ioFileDataDto;
         } catch (Exception e) {
             return null;
         }

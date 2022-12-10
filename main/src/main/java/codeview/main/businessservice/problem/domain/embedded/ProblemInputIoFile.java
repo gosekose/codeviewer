@@ -13,9 +13,11 @@ import javax.persistence.Embeddable;
 public class ProblemInputIoFile {
 
     private String inputStoreFolderPath;
+    private String uploadZipFileName;
 
     @Builder
-    public ProblemInputIoFile(String inputStoreFolderPath) {
+    public ProblemInputIoFile(String inputStoreFolderPath, String uploadZipFileName) {
         this.inputStoreFolderPath = inputStoreFolderPath;
+        this.uploadZipFileName = uploadZipFileName;
     }
 }

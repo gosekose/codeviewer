@@ -79,7 +79,7 @@ public class TempController {
                 .name("problem1-test")
                 .memberGroup(memberGroup)
                 .problemDifficulty(ProblemDifficulty.BRONZE1)
-                .problemInputIoFile(new ProblemInputIoFile(UUID.randomUUID().toString()))
+                .problemInputIoFile(new ProblemInputIoFile(UUID.randomUUID().toString(), "add.zip"))
                 .build();
 
         problemService.save(problem);
@@ -133,7 +133,7 @@ public class TempController {
                     .name("test" + (i + 10))
                     .memberGroup(memberGroup1)
                     .problemDifficulty(ProblemDifficulty.GOLD2)
-                    .problemInputIoFile(new ProblemInputIoFile(UUID.randomUUID().toString()))
+                    .problemInputIoFile(new ProblemInputIoFile(UUID.randomUUID().toString(), "add.zip"))
                     .build();
 
             problemService.save(problemTest);
@@ -176,7 +176,7 @@ public class TempController {
                 .name("test1")
                 .memberGroup(memberGroup1)
                 .problemDifficulty(ProblemDifficulty.GOLD1)
-                .problemInputIoFile(new ProblemInputIoFile(UUID.randomUUID().toString()))
+                .problemInputIoFile(new ProblemInputIoFile(UUID.randomUUID().toString(), "sort.zip"))
                 .build();
 
         problemService.save(problem1);

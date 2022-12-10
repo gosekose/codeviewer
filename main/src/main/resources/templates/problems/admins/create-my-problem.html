@@ -106,6 +106,17 @@
                 <div class="invalid-tooltip"></div>
               </div>
 
+              <div class="row mb-3">
+                <legend class="col-form-label col-sm-2 pt-0">가능 언어 선택</legend>
+                <div class="col-sm-10">
+                  <div class="form-check" th:each="problemLanguage : ${problemLanguages}">
+                    <input class="form-check-input" type="checkbox" th:id="${problemLanguage.key}" th:value="${problemLanguage.value}"
+                           onchange="checkLanguageBox()" name="languageCheck" checked>
+                    <label class="form-check-label" th:for="${problemLanguage.key}" th:text="${problemLanguage.key}"></label>
+                  </div>
+                </div>
+                <input type="text" id="problemLanguage" name="problemLanguage" value="python3&java11" style="display: none">
+              </div>
 
               <div class="row mb-3 position-relative">
                 <label class="col-sm-2 col-form-label" for="descriptions">문제 설명</label>
@@ -298,6 +309,7 @@
   window.onload = function () {
     $("#problemType").val("HOMEWORKTYPE");
     $("#problemDifficulty").val("BRONZE1");
+    $("#problemLanguage").val("python3&java11");
     $("#totalScore").val(0);
   }
 
@@ -306,6 +318,22 @@
     $("#problemDifficulty").val(result);
     console.log(result);
   });
+
+
+  function checkLanguageBox() {
+    let lg = null;
+
+    $('input:checkbox[name=languageCheck]').each(function (index) {
+      if($(this).is(":checked")==true){
+        if (lg == null) {
+          lg = $(this).val() + "&";
+        } else {
+          lg += $(this).val() + "&";}}});
+
+    if (lg != null) {lg = lg.substring(0, lg.length-1)} else {lg = null;}
+    $("#problemLanguage").val(lg);
+    console.log($("#problemLanguage").val());
+  }
 
 
 
