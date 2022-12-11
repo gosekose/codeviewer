@@ -15,9 +15,15 @@ public class ProblemInputIoFile {
     private String inputStoreFolderPath;
     private String uploadZipFileName;
 
+    private String uploadZipFileHash;
+
     @Builder
     public ProblemInputIoFile(String inputStoreFolderPath, String uploadZipFileName) {
         this.inputStoreFolderPath = inputStoreFolderPath;
         this.uploadZipFileName = uploadZipFileName;
+    }
+
+    public void updateHash(String uploadZipFileHash) {
+        this.uploadZipFileHash = uploadZipFileHash;
     }
 }

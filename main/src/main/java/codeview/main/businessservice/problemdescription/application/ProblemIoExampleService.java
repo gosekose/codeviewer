@@ -5,7 +5,6 @@ import codeview.main.businessservice.problemdescription.domain.ProblemIoExample;
 import codeview.main.businessservice.problemdescription.infra.repository.ProblemIoExampleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,9 +33,18 @@ public class ProblemIoExampleService {
                 () -> { throw new IllegalArgumentException("존재 하지 않는 입출력 예시 입니다."); });
     }
 
-    @Cacheable(cacheNames = "problemIoExample", key="#problem.id")
+//    @Cacheable(cacheNames = "problemIoExample", key="#problem.id")
     public List<ProblemIoExample> findAllByProblem(Problem problem) {
         return problemIoExampleRepository.findAllByProblem(problem);
+    }
+
+
+    public void deleteByProblemIoExample(ProblemIoExample problemIoExample) {
+        problemIoExampleRepository.delete(problemIoExample);
+    }
+
+    public void flush() {
+        problemIoExampleRepository.flush();
     }
 
 }

@@ -31,4 +31,10 @@ public class ProblemIoExample {
         this.outputSource = outputSource;
         this.problem = problem;
     }
+
+    public void updateProblemIoExample(int number, String inputSource, String outputSource) {
+        this.number = number;
+        this.inputSource = inputSource;
+        this.outputSource = outputSource;
+    }
 }

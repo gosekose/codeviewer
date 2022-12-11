@@ -21,4 +21,5 @@ public interface SolveRepository extends JpaRepository<Solve, Long> {
 
     @Query("select s from Solve s inner join s.problem")
     List<SolvesOfProblemChartMyScoreDto> getSolveChart();
+
 }

@@ -6,6 +6,7 @@ import codeview.main.businessservice.problem.domain.embedded.ProblemFile;
 import codeview.main.businessservice.problem.domain.embedded.ProblemInputIoFile;
 import codeview.main.businessservice.problem.domain.enumtype.ProblemDifficulty;
 import codeview.main.businessservice.problem.domain.enumtype.ProblemType;
+import codeview.main.businessservice.problem.presentation.dao.ProblemCreateDao;
 import codeview.main.businessservice.problemdescription.domain.ProblemDescription;
 import codeview.main.businessservice.problemdescription.domain.ProblemIoExample;
 import codeview.main.businessservice.solve.domain.Solve;
@@ -64,9 +65,6 @@ public class Problem extends BaseEntity {
 
     private String problemLanguage;
 
-    private String problemFileHash;
-    private String uploadZipFileHash;
-
     @Builder
     public Problem(MemberGroup memberGroup, String name, ProblemType problemType,
                    ProblemFile problemFile, ProblemInputIoFile problemInputIoFile, LocalDateTime openTime,
@@ -82,8 +80,28 @@ public class Problem extends BaseEntity {
         this.problemDifficulty = problemDifficulty;
         this.totalScore = totalScore;
         this.problemLanguage = problemLanguage;
-        this.problemFileHash = problemFileHash;
-        this.uploadZipFileHash = uploadZipFileHash;
     }
+
+    /**
+     * problem update
+     */
+    public void updateProblemNotFiles(ProblemCreateDao dao) {
+        this.name = dao.getProblemName();
+        this.problemType = dao.getProblemType();
+        this.openTime = dao.getOpenTime();
+        this.closedTime = dao.getClosedTime();
+        this.problemDifficulty = dao.getProblemDifficulty();
+        this.totalScore = dao.getTotalScore();
+        this.problemLanguage = dao.getProblemLanguage();
+    }
+
+    public void updateProblemFile(ProblemFile problemFile, String problemFileHash) {
+        this.problemFile = problemFile;
+    }
+
+    public void updateIoFileZip(ProblemInputIoFile inputIoFile, String ioZipFileHash) {
+        this.problemInputIoFile = inputIoFile;
+    }
+
 
 }
