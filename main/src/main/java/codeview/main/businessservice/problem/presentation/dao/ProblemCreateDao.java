@@ -15,7 +15,6 @@ import java.util.List;
 
 @Getter @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class ProblemCreateDao {
 
     @NotNull
@@ -61,4 +60,22 @@ public class ProblemCreateDao {
 
     @NotNull
     private String problemLanguage;
+
+    @Builder
+    public ProblemCreateDao(ProblemType problemType, String problemName, LocalDateTime openTime, LocalDateTime closedTime, ProblemDifficulty problemDifficulty, List<String> descriptions, List<String> inputs, List<String> outputs, MultipartFile problemFile, String preFilePath, MultipartFile ioZipFile, List<Integer> scores, Integer totalScore, String problemLanguage) {
+        this.problemType = problemType;
+        this.problemName = problemName;
+        this.openTime = openTime;
+        this.closedTime = closedTime;
+        this.problemDifficulty = problemDifficulty;
+        this.descriptions = descriptions;
+        this.inputs = inputs;
+        this.outputs = outputs;
+        this.problemFile = problemFile;
+        this.preFilePath = preFilePath;
+        this.ioZipFile = ioZipFile;
+        this.scores = scores;
+        this.totalScore = totalScore;
+        this.problemLanguage = problemLanguage;
+    }
 }

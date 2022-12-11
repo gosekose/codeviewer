@@ -15,9 +15,15 @@ public class ProblemFile {
     private String problemUploadName;
     private String problemStoreName;
 
+    private String problemFileHash;
+
     @Builder
     public ProblemFile(String problemUploadName, String problemStoreName) {
         this.problemUploadName = problemUploadName;
         this.problemStoreName = problemStoreName;
+    }
+
+    public void updateHash(String problemFileHash) {
+        this.problemFileHash = problemFileHash;
     }
 }

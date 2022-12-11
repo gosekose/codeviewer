@@ -33,4 +33,9 @@ public class ProblemDescription extends BaseEntity {
         this.number = number;
         this.description = description;
     }
+
+    public void updateDescriptions(int number, String description) {
+        this.number = number;
+        this.description = description;
+    }
 }

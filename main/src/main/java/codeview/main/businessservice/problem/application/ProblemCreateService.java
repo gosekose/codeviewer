@@ -2,6 +2,7 @@ package codeview.main.businessservice.problem.application;
 
 import codeview.main.businessservice.membergroup.application.GroupService;
 import codeview.main.businessservice.membergroup.domain.MemberGroup;
+import codeview.main.businessservice.problem.domain.embedded.ProblemFile;
 import codeview.main.businessservice.problem.domain.embedded.ProblemInputIoFile;
 import codeview.main.businessservice.problem.infra.util.FileConverter;
 import codeview.main.businessservice.problem.infra.util.FileHash;
@@ -79,10 +80,10 @@ public class ProblemCreateService {
 
     public Problem getProblem(Integer groupId, ProblemCreateDao problemCreateDao) throws IOException, NoSuchAlgorithmException {
 
-        UploadFile problemFile = getUploadFile(problemCreateDao.getProblemFile(), groupId, String.valueOf(UUID.randomUUID()));
-        String problemFileHash = FileHash.makeFileHashSha256(problemFile.getStoreFileName());
+        UploadFile uploadProblemFile = getUploadFile(problemCreateDao.getProblemFile(), groupId, String.valueOf(UUID.randomUUID()));
+        String problemFileHash = FileHash.makeFileHashSha256(uploadProblemFile.getStoreFileName());
 
-        String[] split = problemFile.getStoreFileName().split("/");
+        String[] split = uploadProblemFile.getStoreFileName().split("/");
         String newStringPath = getString(split);
 
         IoFileDataDto ioFileDataDto = convertIoZipAlreadyFolder(groupId, problemCreateDao.getIoZipFile(), newStringPath);
@@ -92,7 +93,11 @@ public class ProblemCreateService {
                 .uploadZipFileName(ioFileDataDto.getUploadName())
                 .build();
 
+        ProblemFile problemFile = FileConverter.toProblemFile(uploadProblemFile);
+        problemFile.updateHash(problemFileHash);
+
         String uploadZipFileHash = FileHash.makeFileHashSha256(problemInputIoFile.getInputStoreFolderPath() + "/" + ioFileDataDto.getUploadName());
+        problemInputIoFile.updateHash(uploadZipFileHash);
 
         Problem problem = Problem.builder()
                 .name(problemCreateDao.getProblemName())
@@ -101,12 +106,10 @@ public class ProblemCreateService {
                 .openTime(problemCreateDao.getOpenTime())
                 .closedTime(problemCreateDao.getClosedTime())
                 .problemDifficulty(problemCreateDao.getProblemDifficulty())
-                .problemFile(FileConverter.toProblemFile(problemFile))
+                .problemFile(problemFile)
                 .problemInputIoFile(problemInputIoFile)
                 .totalScore(problemCreateDao.getTotalScore())
                 .problemLanguage(problemCreateDao.getProblemLanguage())
-                .problemFileHash(problemFileHash)
-                .uploadZipFileHash(uploadZipFileHash)
                 .build();
         return problem;
     }

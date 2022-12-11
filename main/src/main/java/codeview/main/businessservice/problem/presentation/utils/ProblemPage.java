@@ -1,8 +1,10 @@
 package codeview.main.businessservice.problem.presentation.utils;
 
 import codeview.main.businessservice.problem.application.ProblemCreateService;
+import codeview.main.businessservice.problem.application.ProblemScoreService;
 import codeview.main.businessservice.problem.application.ProblemService;
 import codeview.main.businessservice.problem.domain.Problem;
+import codeview.main.businessservice.problem.domain.ProblemScore;
 import codeview.main.businessservice.problem.infra.util.filestore.CommonFilStore;
 import codeview.main.businessservice.problem.presentation.dto.IoFileDataDto;
 import codeview.main.businessservice.problem.presentation.dto.ProblemAdminEditDto;
@@ -35,11 +37,14 @@ public class ProblemPage {
 
     private final ProblemCreateService problemCreateService;
 
+    private final ProblemScoreService problemScoreService;
+
     public void getProblemPage(Model model, Integer groupId, Integer problemId) throws MalformedURLException {
 
         Problem problem = problemService.findById(Long.valueOf(problemId));
         List<ProblemDescription> descriptions = problemDescriptionService.findAllByProblem(problem);
         List<ProblemIoExample> ioExamples = problemIoExampleService.findAllByProblem(problem);
+        List<ProblemScore> problemScoreByProblem = problemScoreService.findProblemScoreByProblem(problem);
 
         String inputStoreFolderPath = problem.getProblemInputIoFile().getInputStoreFolderPath();
         IoFileDataDto ioFileDataDto = problemCreateService.ioFileClientReturn(Path.of(inputStoreFolderPath));
@@ -62,6 +67,7 @@ public class ProblemPage {
         model.addAttribute("descriptions", descriptions);
         model.addAttribute("ioExamples", ioExamples);
         model.addAttribute("problemAdminEditDto", problemAdminEditDto);
+        model.addAttribute("scores", problemScoreByProblem);
         model.addAttribute("ioFileDataDto", ioFileDataDto);
     }
 

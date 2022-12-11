@@ -11,6 +11,7 @@
   <meta name="_csrf" th:content="${_csrf.token}"/>
   <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
   <meta name="groupId" th:content="${groupId}"/>
+  <meta name="problemId" th:content="${problemId}"/>
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
  <style>
     .custom-container-flex {
@@ -241,16 +242,24 @@
                       </div>
                     </div>
 
-                    <div class="card" style="display: none" id="scoreForm">
+                    <div class="card" style="display: block" id="scoreForm">
                       <div class="card-body">
                         <h5 class="card-title">문제 점수 등록
                           <button type="button" class="btn btn-outline-primary btn-sm" onclick="scoreSameDivide()">점수 동일 분배</button></h5>
 
                         <div class="row mb-3 position-relative" id="scoreArray">
+                          <th:block th:each="score, idx : ${scores}">
+                            <label class="col-sm-2 col-form-label" th:for="|score-${idx.index}|" th:text="|${idx.count} 번 점수|"></label>
+                            <div class="col-sm-10">
+                              <input type="number" min="1" max="100" name="scores" step="1" value="0" class="form-control" th:id="|score-${idx.index}|" onchange="changeScore(this)"
+                                     th:value="${score.score}">
+                            </div>
+                          </th:block>
                         </div>
                         <div class="invalid-feedback">문제 점수 등록은 필수 입니다.</div>
                       </div>
-                      <input type="number" id="totalScore" name="totalScore" value="0" style="display: none">
+                      <input type="number" id="totalScore" name="totalScore" value="0" style="display: none"
+                             th:value="${problemAdminEditDto.getTotalScore()}">
                     </div>
 
                   </div>
@@ -359,6 +368,7 @@
   const token = $("meta[name='_csrf']").attr("content");
   const header = $("meta[name='_csrf_header']").attr("content");
   const groupId = $("meta[name='groupId']").attr("content");
+  const problemId = $("meta[name='problemId']").attr("content");
 
   let selectProblemType = function (value) {
     console.log(value);
@@ -497,6 +507,7 @@
     }
 
     const name = document.getElementById(tagId).value;
+    console.log(name);
     document.getElementById(preview).innerText = name;
 
   }
@@ -564,13 +575,16 @@
 
     console.log(formData);
 
+    console.log($("#problemName").val());
+
+
     $.ajax({
       type: 'POST',
       contentType: false,
       processData: false,
       cache: false,
       enctype : 'multipart/form-data',
-      url: '/api/v1/groups/admin/' + groupId + '/problems/new',
+      url: '/api/v1/groups/admin/' + groupId + '/problems/'+ problemId + '/edit',
       data: formData,
       beforeSend: function(xhr) {xhr.setRequestHeader(header, token);},
       async: true,
@@ -586,7 +600,9 @@
 
       error: function(status) {
         console.log(status);
-      }})}
+        alert("error");
+      }})
+  }
 
 
   jQuery.fn.serializeObject = function() {

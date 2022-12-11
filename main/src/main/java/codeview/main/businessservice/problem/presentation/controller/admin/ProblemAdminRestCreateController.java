@@ -1,6 +1,7 @@
 package codeview.main.businessservice.problem.presentation.controller.admin;
 
 import codeview.main.businessservice.problem.application.ProblemCreateService;
+import codeview.main.businessservice.problem.application.ProblemEditService;
 import codeview.main.businessservice.problem.application.ProblemScoreService;
 import codeview.main.businessservice.problem.application.ProblemService;
 import codeview.main.businessservice.problem.domain.Problem;
@@ -10,7 +11,7 @@ import codeview.main.businessservice.problem.presentation.dao.ProblemServerDao;
 import codeview.main.businessservice.problem.presentation.dto.IoFileDataDto;
 import codeview.main.businessservice.problem.presentation.dto.ProblemCreatedResultDto;
 import codeview.main.businessservice.problem.presentation.dto.ServerIoFilePathDto;
-import codeview.main.businessservice.problem.presentation.error.BindingError;
+import codeview.main.businessservice.problem.presentation.error.ProblemError;
 import codeview.main.serverconnect.application.service.HttpConnectionService;
 import codeview.main.serverconnect.presentation.dto.ServerIoFileDemoTestResDto;
 import lombok.RequiredArgsConstructor;
@@ -38,23 +39,20 @@ public class ProblemAdminRestCreateController {
 
     private final HttpConnectionService httpConnectionService;
     private final ProblemScoreService problemScoreService;
+    private final ProblemEditService problemEditService;
+
+    private final ProblemError problemError;
     
     @Transactional
     @PostMapping("/{groupId}/problems/new")
-    public ResponseEntity<ProblemCreatedResultDto> postCreateProblem2(
+    public ResponseEntity<ProblemCreatedResultDto> postCreateProblem(
             @PathVariable("groupId") Integer groupId,
             @Validated @ModelAttribute ProblemCreateDao problemCreateDao,
             BindingResult bindingResult) throws IOException, NoSuchAlgorithmException {
 
-        if (problemCreateDao.getProblemFile() == null || problemCreateDao.getProblemFile().isEmpty() ||
-            problemCreateDao.getIoZipFile() == null || problemCreateDao.getIoZipFile().isEmpty()
-        ) {
-            return new ResponseEntity<>(ProblemCreatedResultDto.builder().message("파일 업로드는 반드시 필요합니다.").build(), HttpStatus.BAD_REQUEST);
-        }
-
-        if (bindingResult.hasErrors()) {
-            log.info("errors = {}", bindingResult);
-            return new ResponseEntity<>(BindingError.getProblemCreatedResult(bindingResult), HttpStatus.BAD_REQUEST);
+        ResponseEntity responseEntity = problemError.checkCreateError(problemCreateDao, bindingResult);
+        if (responseEntity != null) {
+            return responseEntity;
         }
 
         Problem problem = problemCreateService.getProblem(groupId, problemCreateDao);
@@ -72,6 +70,39 @@ public class ProblemAdminRestCreateController {
                 .problemId(problemId)
                 .build(), HttpStatus.OK);
     }
+
+
+
+    @Transactional
+    @PostMapping("/{groupId}/problems/{problemId}/edit")
+    public ResponseEntity<ProblemCreatedResultDto> postEditProblem(
+            @PathVariable("groupId") Integer groupId,
+            @PathVariable("problemId") Integer problemId,
+            @Validated @ModelAttribute ProblemCreateDao problemCreateDao,
+            BindingResult bindingResult) throws IOException, NoSuchAlgorithmException {
+
+        ResponseEntity responseEntity = problemError.checkCommonError(problemCreateDao, bindingResult);
+        if(responseEntity != null) {
+            return responseEntity;
+        }
+
+        Problem problem = problemService.findById(Long.valueOf(problemId));
+        Problem updateProblem = problemEditService.editProblem(problem, problemCreateDao);
+        problemEditService.editProblemIoExample(updateProblem, problemCreateDao);
+        problemEditService.editProblemDescription(updateProblem, problemCreateDao);
+
+//        if (problemCreateDao.getPreFilePath() != null && !problemCreateDao.getPreFilePath().equals("")) {
+//            problemCreateService.deletePreFile(problemCreateDao.getPreFilePath());
+//        }
+//
+//        problemCreateService.saveProblemData(problemCreateDao, problem);
+
+        return new ResponseEntity<ProblemCreatedResultDto>(ProblemCreatedResultDto
+                .builder()
+                .problemId(problemId)
+                .build(), HttpStatus.OK);
+    }
+
 
 
 
