@@ -153,9 +153,16 @@
                   <div class="row mb-3 position-relative">
                     <label class="col-sm-2 col-form-label" for="problemFile">문제 파일 등록</label>
                     <div class="col-sm-10">
-                      <input aria-label="file example" class="form-control form-control-lg" required type="file" id="problemFile" name="problemFile">
+                      <input aria-label="file example" class="form-control form-control-lg" required type="file"
+                             id="problemFile" name="problemFile" onchange="problemFileChange()" accept=".py, .java">
                     </div>
                     <div class="invalid-feedback">문제 등록은 필수입니다.</div>
+                  </div>
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">문제 파일</h5>
+                      <div id="problemFileBoard"></div>
+                    </div>
                   </div>
 
                   <div id="divZipForm">
@@ -286,7 +293,7 @@
 
 <script>
 
-  let plusDivIdx = 0;
+  let plusDivIdx = 1;
   let totalScore = 0;
   let ajaxIoFilePath = []
   let scoreArray = []
@@ -530,6 +537,19 @@
           obj[this.name].push(this.value)} else { obj[this.name] = this.value }}); } }
     } catch (e) { alert(e.message); } finally { }
     return obj;};
+
+
+  function problemFileChange() {
+    $("#problemFileBoard").html(""); // 태그 초기화
+    $(document).ready(function() {
+
+      $('#problemFileBoard').each(function () {
+        let problemFile = $("#problemFile").val().split("\\")
+        let html = '<i class="fa fa-file-text-o fa-1x" aria-hidden="true">&nbsp;&nbsp;' + problemFile[problemFile.length-1] + '&nbsp;&nbsp;&nbsp;&nbsp;</i>'
+        $('#problemFileBoard').append(html);
+      });
+    });
+  }
 
 
   function ajaxZipCall() {

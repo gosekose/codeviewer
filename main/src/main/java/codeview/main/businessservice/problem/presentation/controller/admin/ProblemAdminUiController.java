@@ -6,6 +6,7 @@ import codeview.main.businessservice.problem.application.ProblemCreateService;
 import codeview.main.businessservice.problem.application.ProblemService;
 import codeview.main.businessservice.problem.domain.enumtype.ProblemDifficulty;
 import codeview.main.businessservice.problem.domain.enumtype.ProblemLanguage;
+import codeview.main.businessservice.problem.domain.enumtype.ProblemType;
 import codeview.main.businessservice.problem.infra.repository.query.ProblemDetailPageCondition;
 import codeview.main.businessservice.problem.infra.repository.query.ProblemDetailPageDto;
 import codeview.main.businessservice.problem.presentation.utils.ProblemPage;
@@ -63,6 +64,14 @@ public class ProblemAdminUiController {
         return problemLanguageMap;
     }
 
+    @ModelAttribute("problemTypes")
+    public Map<String, ProblemType> problemType() {
+        Map<String, ProblemType> problemTypeMap = new LinkedHashMap<>();
+        problemTypeMap.put("과제형", ProblemType.HOMEWORKTYPE);
+        problemTypeMap.put("시험형", ProblemType.TESTTYPE);
+        return problemTypeMap;
+    }
+
     @GetMapping("/new")
     public String getCreateProblem(
             @PathVariable("groupId") String groupId,
@@ -89,8 +98,23 @@ public class ProblemAdminUiController {
 
         log.info("problemAdmin groupId = {}, problemId = {}", groupId, problemId);
 
+        return "problems/admins/admin-my-problem";
+    }
+
+    @GetMapping("/{problemId}/edit")
+    public String getProblemIdEditPage(
+            @PathVariable("groupId") Integer groupId,
+            @PathVariable("problemId") Integer problemId,
+            Model model) throws MalformedURLException {
+
+        problemPage.getProblemPage(model, groupId, problemId);
+
+        log.info("problemAdmin groupId = {}, problemId = {}", groupId, problemId);
+
         return "problems/admins/edit-my-problem";
     }
+
+
 
     @GetMapping
     public String getProblemsAdminPage(@PathVariable("groupId") Integer groupId,
