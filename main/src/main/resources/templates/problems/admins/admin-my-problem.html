@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html class="h-100" lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="fragments/my-header :: header">
+</head>
+
+<head>
+  <meta name="groupId" th:content="${groupId}"/>
+  <meta name="problemId" th:content="${problemId}"/>
+  <link th:href="@{/static/libs/codemirror/codemirror.css}" rel="stylesheet">
+  <link th:href="@{/static/libs/codemirror/show-hint.css}" rel="stylesheet">
+
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <style>
+    .custom-container-flex {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+    .io-overflow-auto {
+      overflow: auto;
+      height: 50px;
+    }
+    .text-overflow-auto {
+      overflow: auto;
+      height: 70px;
+    }
+    .title-overflow-auto {
+      overflow: auto;
+      height: 30px;
+    }
+    .text-height {
+      height: 100px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ======= Header ======= -->
+<div th:replace="fragments/my-body-header :: bodyHeader" />
+<!-- End Header -->
+
+<!-- ======= Sidebar ======= -->
+<div th:replace="fragments/my-sidebar :: sidebar" />
+<!-- End Sidebar-->
+
+<main id="main" class="main">
+
+  <div th:replace="fragments/my-pagetitle :: pagetitle('문제 관리', '문제', '문제 관리')" />
+
+  <div>
+    <div id="preview">
+      <div class="card">
+        <div class="card-body">
+          <div>
+            </br>
+            <h5 class="card-title" style="display:inline;" th:text="${problemId} + '번 문제 &nbsp;&nbsp;&nbsp;'"></h5>
+            <a href="#" th:href="@{/api/v1/groups/admin/{id}/problems (id=${groupId})}"
+               class="btn btn-outline-primary btn-sm" role="button">문제 목록 조회</a>
+            <a href="#" th:href="@{/api/v1/groups/admin/{id}/problems/{problemId}/edit (id=${groupId}, problemId=${problemId})}"
+               class="btn btn-outline-primary btn-sm" role="button">문제 편집</a>
+          </div>
+          <div class="mb-auto col-10">
+            <div>
+              <br>
+              <h1>문제명</h1>
+              <div>
+                <div class="card">
+                  <div class="card-header" id="problemTypePreview" th:text="${problemAdminEditDto.problemType}">
+                    문제 타입
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <div class="title-overflow-auto" id="previewProblemName" th:text="${problemAdminEditDto.name}">
+                        문제명
+                      </div>
+                    </h5>
+                    <p class="card-text overflow-auto">
+                    </p>
+                  </div>
+                </div>
+                <br>
+              </div>
+            </div>
+            <div>
+              <h1> 문제 설명 </h1>
+              <div>
+                <div class="card">
+                  <div class="card-body">
+
+                    <div th:each="des: ${descriptions}">
+                    <h5 class="card-title overflow-auto text-overflow-auto" id="previewProblemDescription" th:text="${des.getDescription()}">
+                      입력</h5>
+                    <p class="card-text"></p>
+                    </div>
+
+                  </div>
+                </div>
+                <br>
+              </div>
+            </div>
+
+            <div>
+              <h1> 입출력 예시 </h1>
+
+              <div th:each="io: ${ioExamples}">
+                <div>
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">입력</h5>
+                      <p class="card-text io-overflow-auto" th:text="${io.getInputSource()}"></p>
+                    </div>
+                    <div class="card-body">
+                      <h5 class="card-title">출력</h5>
+                      <p class="card-text io-overflow-auto" th:text="${io.getOutputSource()}"></p>
+                    </div>
+                  </div>
+                  <br>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h1> 입력 </h1>
+                <div>
+                  <div class="card">
+                    <div class="card-body">
+                      <h5 class="card-title">
+                        코드 작성</h5>
+
+                      <div class="row mb-3 position-relative">
+                        <label class="col-sm-1 col-form-label" for="selectProblem">언어 선택</label>
+                        <div class="col-sm-2">
+                          <select aria-label="select example" class="form-select" id="selectProblem" onchange="selectLanguage(this.value)" required>
+                            <option value="python" checked>파이썬</option>
+                            <option value="java8">자바</option>
+                          </select>
+                        </div>
+                      </div>
+                      <!--  Start java editor /-->
+                      <div>
+                        <textarea id="myPythonEditor" rows="4" cols="8"></textarea>
+                      </div>
+                      <div style="display: none">
+                        <textarea id="myJavaEditor" rows="4" cols="8"></textarea>
+                      </div>
+                      <!--  End java editor /-->
+
+                    </div>
+                  </div>
+                  <br>
+                </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= modal ======= -->
+  <div th:replace="fragments/my-modal :: myCustomModal" />
+  <!-- End modal -->
+
+
+
+</main><!-- End #main -->
+
+<!-- ======= Footer ======= -->
+<div th:replace="fragments/my-footer :: footer" />
+<!-- End Footer -->
+
+<a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+<!-- ======= Script ======= -->
+<div th:replace="fragments/my-script :: script" />
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+<script th:src="@{/static/libs/codemirror/codemirror.js}"></script>
+<script th:src="@{/static/libs/codemirror/python.js}"></script>
+<script th:src="@{/static/libs/codemirror/clike.js}"></script>
+<script th:src="@{/static/libs/codemirror/matchbrackets.js}"></script>
+<script th:src="@{/static/libs/codemirror/show-hint.js}"></script>
+
+<script>
+
+  const textareaPython = document.getElementById('myPythonEditor');
+
+  let pythonEditor = CodeMirror.fromTextArea(textareaPython, {
+    lineNumbers: true,
+    lineWrapping: true,
+    matchBrackets: true,
+    theme: "default",
+    mode: "python",
+    val: textareaPython.value
+  });
+
+  const textareaJava = document.getElementById('myJavaEditor');
+  let javaEditor = CodeMirror.fromTextArea(textareaJava, {
+    lineNumbers: true,
+    lineWrapping: true,
+    matchBrackets: true,
+    theme: "default",
+    mode: "text/java",
+    val: textareaJava.value
+  });
+
+
+  let selectLanguage = function (value) {
+    if (value == "python") {
+      document.getElementById("myJavaEditor").style.display = "none";
+      document.getElementById("myPythonEditor").style.display = "block";
+    } else if (value == "java8") {
+      document.getElementById("myPythonEditor").style.display = "none";
+      document.getElementById("myJavaEditor").style.display = "block";
+    }
+  }
+
+  let mac = CodeMirror.keyMap.default == CodeMirror.keyMap.macDefault;
+  CodeMirror.keyMap.default[(mac ? "Cmd" : "Ctrl") + "-Space"] = "autocomplete";
+
+  // function fn_msg() {
+  //   let text = editor.getValue();
+  //   alert(text);
+  // }
+
+<!-- End Script -->
+
+</script>
+</body>
+</html>

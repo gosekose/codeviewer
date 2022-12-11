@@ -1,7 +1,5 @@
 package codeview.main.businessservice.problem.presentation.dto;
 
-import codeview.main.businessservice.problem.domain.embedded.ProblemFile;
-import codeview.main.businessservice.problem.domain.embedded.ProblemInputIoFile;
 import codeview.main.businessservice.problem.domain.enumtype.ProblemDifficulty;
 import codeview.main.businessservice.problem.domain.enumtype.ProblemType;
 import lombok.Builder;
@@ -15,8 +13,8 @@ public class ProblemAdminEditDto {
     private String name;
     private ProblemType problemType;
 
-    private ProblemFile problemFile;
-    private ProblemInputIoFile problemInputIoFile;
+    private String problemFileName;
+    private String problemInputIoFileName;
     private LocalDateTime openTime;
     private LocalDateTime closedTime;
     private ProblemDifficulty problemDifficulty;
@@ -24,11 +22,11 @@ public class ProblemAdminEditDto {
     private String problemLanguage;
 
     @Builder
-    public ProblemAdminEditDto(String name, ProblemType problemType, ProblemFile problemFile, ProblemInputIoFile problemInputIoFile, LocalDateTime openTime, LocalDateTime closedTime, ProblemDifficulty problemDifficulty, Integer totalScore, String problemLanguage) {
+    public ProblemAdminEditDto(String name, ProblemType problemType, String problemFileName, String problemInputIoFileName, LocalDateTime openTime, LocalDateTime closedTime, ProblemDifficulty problemDifficulty, Integer totalScore, String problemLanguage) {
         this.name = name;
         this.problemType = problemType;
-        this.problemFile = problemFile;
-        this.problemInputIoFile = problemInputIoFile;
+        this.problemFileName = problemFileName;
+        this.problemInputIoFileName = problemInputIoFileName;
         this.openTime = openTime;
         this.closedTime = closedTime;
         this.problemDifficulty = problemDifficulty;
