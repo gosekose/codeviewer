@@ -15,8 +15,21 @@ public abstract class AbstractFileStore implements FileStore {
     @Value("${file.dir}")
     private String fileDir;
 
+
+    /**
+     *
+     * 업로드를 처음할 때 저장하는 메소드
+     * upload/io
+     *
+     * @param multipartFile
+     * @param groupId
+     * @param uuid
+     * @return
+     * @throws IOException
+     */
+
     @Override
-    public UploadFile storeFile(MultipartFile multipartFile, String groupId, String uuid) throws IOException {
+    public UploadFile makeStoreFolder(MultipartFile multipartFile, String groupId, String uuid) throws IOException {
 
         String originalFileName = getOriginalFileName(multipartFile);
         if (originalFileName == null) return null;
@@ -24,15 +37,47 @@ public abstract class AbstractFileStore implements FileStore {
         String newProblemFolder = createNewProblemFolder(groupId, uuid);
         log.info("newProblemFolder = {}", newProblemFolder);
 
-        return getUploadFile(multipartFile, originalFileName, newProblemFolder);
+        return makeUploadFile(multipartFile, originalFileName, newProblemFolder);
     }
+
+    /**
+     *
+     * upload/io를 거치고, 압축이 풀린 파일이 존재할 때, 파일 경로를 저장하는데 사용하는 메소드
+     *
+     * @param multipartFile
+     * @param groupId
+     * @param path
+     * @return
+     * @throws IOException
+     */
     @Override
-    public UploadFile storeFileAlreadyFolder(MultipartFile multipartFile, String groupId, String path) throws IOException {
+    public UploadFile retainAlreadyFolder(MultipartFile multipartFile, String groupId, String path) throws IOException {
 
         String originalFileName = getOriginalFileName(multipartFile);
         if (originalFileName == null) return null;
 
-        return getUploadFile(multipartFile, originalFileName, path);
+        return makeUploadFile(multipartFile, originalFileName, path);
+    }
+
+
+    /**
+     *
+     * 저장된 압축 파일 폴더에 임시 폴더를 생성하여 파일을 저장하기 위한 edit 메소드
+     *
+     * @param multipartFile
+     * @param path
+     * @return
+     * @throws IOException
+     */
+    @Override
+    public UploadFile updateUploadFileForEdit(MultipartFile multipartFile, String path) throws IOException {
+        String originalFileName = getOriginalFileName(multipartFile);
+        if (originalFileName == null) return null;
+
+        String newProblemFolder = updateNewProblemFolderAndRetainFolder(path);
+        log.info("newProblemFolder = {}", newProblemFolder);
+
+        return makeUploadFile(multipartFile, originalFileName, newProblemFolder);
     }
 
     @Override
@@ -40,11 +85,23 @@ public abstract class AbstractFileStore implements FileStore {
         return  newProblemFolder + "/" + originalFileName;
     }
 
+
     @Override
     public String createNewProblemFolder(String groupId, String uuid) {
-
         return FolderMaker.folderMaker(fileDir + "/" + groupId, uuid);
+    }
 
+
+    /**
+     *
+     * 저장된 파일 경로에 새로은 폴더를 생성하여, 파일을 수정할 때, 임시로 파일 경로를 생성하는 메소드
+     *
+     * @param alreadyPath
+     * @return
+     */
+    @Override
+    public String updateNewProblemFolderAndRetainFolder(String alreadyPath) {
+        return FolderMaker.folderMaker(alreadyPath, "tempFolder");
     }
 
     private static String getOriginalFileName(MultipartFile multipartFile) {
@@ -57,7 +114,7 @@ public abstract class AbstractFileStore implements FileStore {
         return originalFileName;
     }
 
-    private UploadFile getUploadFile(MultipartFile multipartFile, String originalFileName, String newProblemFolder) throws IOException {
+    private UploadFile makeUploadFile(MultipartFile multipartFile, String originalFileName, String newProblemFolder) throws IOException {
         String storeFileName = createStoreFileName(newProblemFolder, originalFileName);
         log.info("storeFileName = {}", storeFileName);
 

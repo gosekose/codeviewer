@@ -83,7 +83,7 @@ public class ProblemAdminUiController {
         model.addAttribute("_csrf", csrfProviderService.createCsrf(request));
         model.addAttribute("groupId", groupId);
 
-        problemCreateService.deleteNotFolderPath(memberGroup);
+        problemCreateService.removeFolderNotUsedInGroup(memberGroup);
 
         return "problems/admins/create-my-problem";
     }
@@ -94,7 +94,7 @@ public class ProblemAdminUiController {
             @PathVariable("problemId") Integer problemId,
             Model model) throws MalformedURLException {
 
-        problemPage.getProblemPage(model, groupId, problemId);
+        problemPage.getProblemAdminEditDto(model, groupId, problemId);
 
         log.info("problemAdmin groupId = {}, problemId = {}", groupId, problemId);
 
@@ -107,7 +107,7 @@ public class ProblemAdminUiController {
             @PathVariable("problemId") Integer problemId,
             Model model) throws MalformedURLException {
 
-        problemPage.getProblemPage(model, groupId, problemId);
+        problemPage.getProblemAdminEditDto(model, groupId, problemId);
 
         log.info("problemAdmin groupId = {}, problemId = {}", groupId, problemId);
 

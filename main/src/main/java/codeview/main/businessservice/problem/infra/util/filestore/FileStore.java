@@ -9,10 +9,14 @@ import java.io.IOException;
 @Component
 public interface FileStore {
 
-    UploadFile storeFile(MultipartFile multipartFile, String groupId, String newProblemFolder) throws IOException;
-    UploadFile storeFileAlreadyFolder(MultipartFile multipartFile, String groupId, String path) throws IOException;
+    UploadFile makeStoreFolder(MultipartFile multipartFile, String groupId, String newProblemFolder) throws IOException;
+    UploadFile retainAlreadyFolder(MultipartFile multipartFile, String groupId, String path) throws IOException;
+
+    UploadFile updateUploadFileForEdit(MultipartFile multipartFile, String path) throws IOException;
 
     String createStoreFileName(String newProblemPath, String originalFileName);
+
+    String updateNewProblemFolderAndRetainFolder(String alreadyPath);
 
     String createNewProblemFolder(String groupId, String uuid);
 

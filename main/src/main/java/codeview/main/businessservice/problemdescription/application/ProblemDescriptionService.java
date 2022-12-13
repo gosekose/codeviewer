@@ -36,10 +36,12 @@ public class ProblemDescriptionService {
         return problemDescriptionRepository.findAllByProblem(problem);
     }
 
+    @Transactional
     public void deleteByProblemDescription(ProblemDescription problemDescription) {
         problemDescriptionRepository.delete(problemDescription);
     }
 
+    @Transactional
     public void flush() {
         problemDescriptionRepository.flush();
     }

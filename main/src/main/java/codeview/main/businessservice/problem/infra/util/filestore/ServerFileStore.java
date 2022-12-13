@@ -14,10 +14,10 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class DockerFileStore extends AbstractFileStore{
+public class ServerFileStore extends AbstractFileStore{
 
 
-    public List<UploadFile> dockerStoreFile(ProblemServerDao dao, String groupId, String uuid) throws IOException {
+    public List<UploadFile> serverStoreFile(ProblemServerDao dao, String groupId, String uuid) throws IOException {
 
         List<UploadFile> result = new ArrayList<>();
         MultipartFile[] problemFiles = new MultipartFile[] { dao.getProblemFile(), dao.getIoZipFile() };

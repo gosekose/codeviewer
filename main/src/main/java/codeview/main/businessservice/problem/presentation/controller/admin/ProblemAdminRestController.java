@@ -1,5 +1,7 @@
 package codeview.main.businessservice.problem.presentation.controller.admin;
 
+import codeview.main.businessservice.membergroup.application.GroupService;
+import codeview.main.businessservice.membergroup.domain.MemberGroup;
 import codeview.main.businessservice.problem.application.ProblemCreateService;
 import codeview.main.businessservice.problem.application.ProblemEditService;
 import codeview.main.businessservice.problem.application.ProblemScoreService;
@@ -31,16 +33,14 @@ import java.util.UUID;
 @RequestMapping("/api/v1/groups/admin")
 @Slf4j
 @RequiredArgsConstructor
-public class ProblemAdminRestCreateController {
+public class ProblemAdminRestController {
 
     private final ProblemService problemService;
-
+    private final GroupService groupService;
     private final ProblemCreateService problemCreateService;
-
     private final HttpConnectionService httpConnectionService;
     private final ProblemScoreService problemScoreService;
     private final ProblemEditService problemEditService;
-
     private final ProblemError problemError;
     
     @Transactional
@@ -52,18 +52,21 @@ public class ProblemAdminRestCreateController {
 
         ResponseEntity responseEntity = problemError.checkCreateError(problemCreateDao, bindingResult);
         if (responseEntity != null) {
+            log.info("responseEntity = {}", responseEntity);
             return responseEntity;
         }
 
-        Problem problem = problemCreateService.getProblem(groupId, problemCreateDao);
-        problemScoreService.saveByCreateDao(problemCreateDao, problem);
-        Long problemId = problemService.save(problem);
+        Problem problem = problemCreateService.saveProblemAndFiles(groupId, problemCreateDao);
 
-        if (problemCreateDao.getPreFilePath() != null && !problemCreateDao.getPreFilePath().equals("")) {
-            problemCreateService.deletePreFile(problemCreateDao.getPreFilePath());
+        if (problem == null) {
+            return new ResponseEntity<>(ProblemCreatedResultDto.builder().message("입출력 파일의 개수가 다릅니다.").build(), HttpStatus.BAD_REQUEST);
         }
 
-        problemCreateService.saveProblemData(problemCreateDao, problem);
+        removeProblemTemporaryUUidFolder(problemCreateDao.getPreFilePath(), groupId);
+
+        problemScoreService.saveProblemScore(problemCreateDao, problem); // score save;
+        problemCreateService.saveDesAndIoExample(problemCreateDao, problem); // descriptions, ioExamples save
+        Long problemId = problemService.save(problem);
 
         return new ResponseEntity<ProblemCreatedResultDto>(ProblemCreatedResultDto
                 .builder()
@@ -87,14 +90,17 @@ public class ProblemAdminRestCreateController {
         }
 
         Problem problem = problemService.findById(Long.valueOf(problemId));
-        Problem updateProblem = problemEditService.editProblem(problem, problemCreateDao);
+        Problem updateProblem = problemEditService.editProblem(groupId, problem, problemCreateDao);
+
         problemEditService.editProblemIoExample(updateProblem, problemCreateDao);
         problemEditService.editProblemDescription(updateProblem, problemCreateDao);
+        problemEditService.editProblemScore(updateProblem, problemCreateDao);
 
-//        if (problemCreateDao.getPreFilePath() != null && !problemCreateDao.getPreFilePath().equals("")) {
-//            problemCreateService.deletePreFile(problemCreateDao.getPreFilePath());
-//        }
-//
+        if (problemCreateDao.getPreFilePath() != null && !problemCreateDao.getPreFilePath().equals("")) {
+            MemberGroup memberGroup = groupService.findById(Long.valueOf(groupId));
+            problemCreateService.removeFolderNotUsedInGroup(memberGroup);
+        }
+
 //        problemCreateService.saveProblemData(problemCreateDao, problem);
 
         return new ResponseEntity<ProblemCreatedResultDto>(ProblemCreatedResultDto
@@ -102,8 +108,6 @@ public class ProblemAdminRestCreateController {
                 .problemId(problemId)
                 .build(), HttpStatus.OK);
     }
-
-
 
 
     @PostMapping("/{groupId}/problems/upload/io")
@@ -115,11 +119,15 @@ public class ProblemAdminRestCreateController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
-        if (problemIoFileDao.getPreFilePath() != null && !problemIoFileDao.getPreFilePath().equals("")) {
-            problemCreateService.deletePreFile(problemIoFileDao.getPreFilePath());
-        }
+        removeProblemTemporaryUUidFolder(problemIoFileDao.getPreFilePath(), groupId);
+
 
         IoFileDataDto ioFileDataDto = problemCreateService.convertIoZip(groupId, problemIoFileDao.getIoZipFile(), String.valueOf(UUID.randomUUID()));
+
+        String[] split = ioFileDataDto.getFolderPath().split("/");
+        String folderPath = split[split.length-2] + "/" + split[split.length-1];
+        ioFileDataDto.setFolderPath(folderPath);
+
 
         if (ioFileDataDto == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
@@ -127,6 +135,34 @@ public class ProblemAdminRestCreateController {
 
         return new ResponseEntity(ioFileDataDto, HttpStatus.OK);
     }
+
+
+    @PostMapping("/{groupId}/problems/{problemId}/upload/io")
+    public ResponseEntity<IoFileDataDto> uploadEditIoFile(
+            @PathVariable("groupId") Integer groupId,
+            @PathVariable("problemId") Integer problemId,
+            @ModelAttribute ProblemIoFileDao problemIoFileDao) throws IOException {
+
+        if (problemIoFileDao == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
+        if (problemIoFileDao.getPreFilePath() != null && !problemIoFileDao.getPreFilePath().equals("")) {
+            problemCreateService.removeFolder(problemIoFileDao.getPreFilePath());
+        }
+
+        Problem problem = problemService.findById(Long.valueOf(problemId));
+
+        IoFileDataDto ioFileDataDto = problemEditService.convertIoZipRetainFolder(problemIoFileDao.getIoZipFile(), problem.getProblemInputIoFile().getInputStoreFolderPath());
+
+        if (ioFileDataDto == null) {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity(ioFileDataDto, HttpStatus.OK);
+    }
+
+
 
     @PostMapping("/{groupId}/problems/upload/server")
     public ResponseEntity<ServerIoFilePathDto> problemDockerTest(
@@ -138,7 +174,6 @@ public class ProblemAdminRestCreateController {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
-
         ServerIoFilePathDto serverIoFilePathDto = problemCreateService.convertServerFile(groupId, problemServerDao, String.valueOf(UUID.randomUUID()));
         ServerIoFileDemoTestResDto serverIoFilePathDtoReq = httpConnectionService.requestProblemCreateTest(serverIoFilePathDto);
 
@@ -147,4 +182,12 @@ public class ProblemAdminRestCreateController {
         return new ResponseEntity(serverIoFilePathDtoReq, HttpStatus.OK);
     }
 
+
+    private void removeProblemTemporaryUUidFolder(String problemIoFileDao, Integer groupId) {
+        if (problemIoFileDao != null && !problemIoFileDao.equals("")) {
+            if (problemIoFileDao.split("/")[0].equals(String.valueOf(groupId))) {
+                problemCreateService.removeFolderPreFile(problemIoFileDao);
+            }
+        }
+    }
 }

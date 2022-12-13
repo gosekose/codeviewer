@@ -39,10 +39,12 @@ public class ProblemIoExampleService {
     }
 
 
+    @Transactional
     public void deleteByProblemIoExample(ProblemIoExample problemIoExample) {
         problemIoExampleRepository.delete(problemIoExample);
     }
 
+    @Transactional
     public void flush() {
         problemIoExampleRepository.flush();
     }

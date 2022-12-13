@@ -2,24 +2,25 @@ package codeview.main.businessservice.problem.application;
 
 import codeview.main.businessservice.membergroup.application.GroupService;
 import codeview.main.businessservice.membergroup.domain.MemberGroup;
+import codeview.main.businessservice.problem.domain.Problem;
 import codeview.main.businessservice.problem.domain.embedded.ProblemFile;
 import codeview.main.businessservice.problem.domain.embedded.ProblemInputIoFile;
 import codeview.main.businessservice.problem.infra.util.FileConverter;
 import codeview.main.businessservice.problem.infra.util.FileHash;
 import codeview.main.businessservice.problem.infra.util.FileUnZip;
-import codeview.main.businessservice.problem.infra.util.filestore.CommonFilStore;
-import codeview.main.businessservice.problem.infra.util.filestore.DockerFileStore;
+import codeview.main.businessservice.problem.infra.util.filestore.IoFileStore;
+import codeview.main.businessservice.problem.infra.util.filestore.ProblemFileStore;
+import codeview.main.businessservice.problem.infra.util.filestore.ServerFileStore;
 import codeview.main.businessservice.problem.presentation.dao.ProblemCreateDao;
 import codeview.main.businessservice.problem.presentation.dao.ProblemServerDao;
 import codeview.main.businessservice.problem.presentation.dto.IoFileDataDto;
 import codeview.main.businessservice.problem.presentation.dto.ServerIoFilePathDto;
-import codeview.main.businessservice.problem.domain.Problem;
-import codeview.main.common.application.FolderRemover;
-import codeview.main.common.domain.UploadFile;
 import codeview.main.businessservice.problemdescription.domain.ProblemDescription;
 import codeview.main.businessservice.problemdescription.domain.ProblemIoExample;
 import codeview.main.businessservice.problemdescription.infra.repository.ProblemDescriptionRepository;
 import codeview.main.businessservice.problemdescription.infra.repository.ProblemIoExampleRepository;
+import codeview.main.common.application.FolderRemover;
+import codeview.main.common.domain.UploadFile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,12 +28,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,8 +40,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProblemCreateService {
 
-    private final CommonFilStore commonFilStore;
-    private final DockerFileStore dockerFileStore;
+    private final ProblemFileStore problemFileStore;
+    private final IoFileStore ioFileStore;
+
+    private final ServerFileStore serverFileStore;
     private final GroupService groupService;
 
     private final ProblemService problemService;
@@ -52,11 +52,20 @@ public class ProblemCreateService {
     private final ProblemDescriptionRepository problemDescriptionRepository;
 
     private final FolderRemover folderRemover;
+    private final FileUnZip fileUnZip;
 
     @Value("${file.dir}")
     String dirPath;
 
 
+    /**
+     *
+     * problem io 예시 텍스트를 저장하는 메소드
+     *
+     * @param problemCreateDao
+     * @param problem
+     * @param i
+     */
     private void saveProblemIoExample(ProblemCreateDao problemCreateDao, Problem problem, int i) {
         problemIoExampleRepository.save(
                 ProblemIoExample.builder()
@@ -68,6 +77,14 @@ public class ProblemCreateService {
         );
     }
 
+    /**
+     *
+     * problem의 설명 텍스트를 저장하는 메소드
+     *
+     * @param problemCreateDao
+     * @param problem
+     * @param i
+     */
     private void saveProblemDescription(ProblemCreateDao problemCreateDao, Problem problem, int i) {
         problemDescriptionRepository.save(
                 ProblemDescription.builder()
@@ -78,26 +95,28 @@ public class ProblemCreateService {
     }
 
 
-    public Problem getProblem(Integer groupId, ProblemCreateDao problemCreateDao) throws IOException, NoSuchAlgorithmException {
+    /**
+     *
+     * 문제와 파일을 저장하는 메소드
+     * 입출력에 사용되는 파일이 null 인 경우, problem 저장 X
+     *
+     * @param groupId
+     * @param problemCreateDao
+     * @return
+     * @throws IOException
+     * @throws NoSuchAlgorithmException
+     */
+    public Problem saveProblemAndFiles(Integer groupId, ProblemCreateDao problemCreateDao) throws IOException, NoSuchAlgorithmException {
 
-        UploadFile uploadProblemFile = getUploadFile(problemCreateDao.getProblemFile(), groupId, String.valueOf(UUID.randomUUID()));
-        String problemFileHash = FileHash.makeFileHashSha256(uploadProblemFile.getStoreFileName());
+        UploadFile uploadProblemFile = problemFileStore.makeStoreFolder(
+                problemCreateDao.getProblemFile(), String.valueOf(groupId), String.valueOf(UUID.randomUUID()));
 
-        String[] split = uploadProblemFile.getStoreFileName().split("/");
-        String newStringPath = getString(split);
+        ProblemFile problemFile = makeProblemFile(uploadProblemFile);
+        ProblemInputIoFile problemInputIoFile = makeProblemIoZipFile(groupId, problemCreateDao, uploadProblemFile);
 
-        IoFileDataDto ioFileDataDto = convertIoZipAlreadyFolder(groupId, problemCreateDao.getIoZipFile(), newStringPath);
-
-        ProblemInputIoFile problemInputIoFile = ProblemInputIoFile.builder()
-                .inputStoreFolderPath(ioFileDataDto.getFolderPath())
-                .uploadZipFileName(ioFileDataDto.getUploadName())
-                .build();
-
-        ProblemFile problemFile = FileConverter.toProblemFile(uploadProblemFile);
-        problemFile.updateHash(problemFileHash);
-
-        String uploadZipFileHash = FileHash.makeFileHashSha256(problemInputIoFile.getInputStoreFolderPath() + "/" + ioFileDataDto.getUploadName());
-        problemInputIoFile.updateHash(uploadZipFileHash);
+        if (problemInputIoFile == null) {
+            return null;
+        }
 
         Problem problem = Problem.builder()
                 .name(problemCreateDao.getProblemName())
@@ -115,11 +134,50 @@ public class ProblemCreateService {
     }
 
 
+
+    public ProblemFile makeProblemFile(UploadFile uploadProblemFile) throws IOException, NoSuchAlgorithmException {
+
+        ProblemFile problemFile = FileConverter.toProblemFile(uploadProblemFile);
+        problemFile.updateHash(FileHash.makeFileHashSha256(uploadProblemFile.getStoreFileName()));
+
+        return problemFile;
+    }
+
+    public ProblemInputIoFile makeProblemIoZipFile(Integer groupId, ProblemCreateDao problemCreateDao, UploadFile uploadProblemFile) throws IOException, NoSuchAlgorithmException {
+        String[] split = uploadProblemFile.getStoreFileName().split("/");
+        String newStringPath = fileUnZip.getString(split);
+
+        IoFileDataDto ioFileDataDto = convertIoZipAlreadyFolder(groupId, problemCreateDao.getIoZipFile(), newStringPath);
+
+        if (ioFileDataDto == null) {
+            return null;
+        }
+
+        ProblemInputIoFile problemInputIoFile = ProblemInputIoFile.builder()
+                .inputStoreFolderPath(ioFileDataDto.getFolderPath())
+                .uploadZipFileName(ioFileDataDto.getUploadName())
+                .build();
+
+        problemInputIoFile.updateHash(FileHash.makeFileHashSha256(problemInputIoFile.getInputStoreFolderPath() + "/" + ioFileDataDto.getUploadName()));
+
+        return problemInputIoFile;
+    }
+
+
+    /**
+     *
+     * getUploadFile: 새로운 경로를 생성하여 업로드 파일을 저장
+     *
+     * @param groupId
+     * @param multipartFile
+     * @param uuid
+     * @return
+     */
     public IoFileDataDto convertIoZip(Integer groupId, MultipartFile multipartFile, String uuid) {
         try{
-            UploadFile uploadFile = getUploadFile(multipartFile, groupId, uuid);
-            Path newPath = unzipAndSave(uploadFile);
-            return ioFileClientReturn(newPath);
+            UploadFile uploadFile = ioFileStore.makeStoreFolder(multipartFile, String.valueOf(groupId), uuid);
+            Path newPath = fileUnZip.unzipAndSave(uploadFile);
+            return ioFileStore.makeIoFileDataDto(newPath);
         } catch (Exception e) {
             return null;
         }
@@ -127,10 +185,14 @@ public class ProblemCreateService {
 
     public IoFileDataDto convertIoZipAlreadyFolder(Integer groupId, MultipartFile multipartFile, String path) {
         try{
-            UploadFile uploadFile = getUploadFileAlreadyFolder(multipartFile, groupId, path);
+            UploadFile uploadFile = ioFileStore.retainAlreadyFolder(multipartFile, String.valueOf(groupId), path);
 
-            Path newPath = unzipAndSave(uploadFile);
-            IoFileDataDto ioFileDataDto = ioFileClientReturn(newPath);
+            Path newPath = fileUnZip.unzipAndSave(uploadFile);
+            IoFileDataDto ioFileDataDto = ioFileStore.makeIoFileDataDto(newPath);
+
+            if (ioFileDataDto == null) {
+                return null;
+            }
 
             ioFileDataDto.setUploadName(uploadFile.getUploadFileName());
 
@@ -142,22 +204,13 @@ public class ProblemCreateService {
 
 
     public ServerIoFilePathDto convertServerFile(Integer groupId, ProblemServerDao problemServerDao, String uuid) throws IOException {
-        List<UploadFile> uploadFiles = getServerFile(problemServerDao, groupId, uuid);
+        List<UploadFile> uploadFiles = serverFileStore.serverStoreFile(problemServerDao, String.valueOf(groupId), uuid);
 
-        if (uploadFiles == null ) {
-            return null;
-        }
+        if (uploadFiles == null ) {return null;}
 
         UploadFile uploadFile = uploadFiles.get(1);
-
-        log.info("uploadFile.getStoreFileName() = {}", uploadFile.getStoreFileName());
-
-        Path newPath = unzipAndSave(uploadFile);
-
-        log.info("newPath = {}", newPath);
-
-
-        IoFileDataDto ioFileDataDto = ioFileClientReturn(newPath);
+        Path newPath = fileUnZip.unzipAndSave(uploadFile);
+        IoFileDataDto ioFileDataDto = ioFileStore.makeIoFileDataDto(newPath);
 
         return ServerIoFilePathDto.builder()
                 .ioFileDataDto(ioFileDataDto)
@@ -166,76 +219,8 @@ public class ProblemCreateService {
                 .build();
     }
 
-    private static Path unzipAndSave(UploadFile uploadFile) {
-        Path originalPath = Paths.get(uploadFile.getStoreFileName());
-        String[] split = uploadFile.getStoreFileName().split("/");
-
-        String newStringPath = getString(split);
-
-        Path newPath = Paths.get(newStringPath);
-        FileUnZip.unzipFile(originalPath, newPath);
-        return newPath;
-    }
-
-    private static String getString(String[] split) {
-        String newStringPath = "";
-
-        for (int i = 0; i < split.length-1; i++) {
-            newStringPath += split[i];
-
-            if (i != (split.length-2)) {
-                newStringPath += "/";
-            }
-        }
-        return newStringPath;
-    }
-
-    public IoFileDataDto ioFileClientReturn(Path path) {
-
-        try{
-            IoFileDataDto ioFileDataDto = new IoFileDataDto();
-            ioFileDataDto.setFolderPath(String.valueOf(path));
-
-            File fileUri = new File(path.toUri());
-
-            File[] files = fileUri.listFiles();
-
-            Arrays.sort(files);
-
-
-            for (File file : files) {
-                if(file.isFile()) {
-
-                    log.info("fileName = {}", file.getPath());
-                    String[] pathString = file.getPath().split("\\.");
-                    if (pathString.length != 0) {
-                        if (pathString[pathString.length-1].equals("in")) {
-                            ioFileDataDto.addInputs(pathLastFileName(file));
-
-                        } else if (pathString[pathString.length-1].equals("out")) {
-                            ioFileDataDto.addOutputs(pathLastFileName(file));
-                        }
-                    }
-                }
-            }
-
-            if (ioFileDataDto.getInputs().size() == 0 || ioFileDataDto.getOutputs().size() == 0) {
-                log.info("for delete path = {}", ioFileDataDto.getFolderPath());
-                folderRemover.removePart(new File(ioFileDataDto.getFolderPath()));
-                return null;
-            }
-
-            return ioFileDataDto;
-
-        } catch (Exception e) {
-             return null;
-        }
-
-
-    }
-
     @Transactional
-    public void saveProblemData(ProblemCreateDao problemCreateDao, Problem problem) {
+    public void saveDesAndIoExample(ProblemCreateDao problemCreateDao, Problem problem) {
 
         if (problemCreateDao.getDescriptions() != null) {
             for (int i = 0; i< problemCreateDao.getDescriptions().size(); i++) {
@@ -248,70 +233,20 @@ public class ProblemCreateService {
         }
     }
 
-
-    public UploadFile getUploadFile(MultipartFile dao, Integer groupId, String uuid) throws IOException {
-
-        return commonFilStore.storeFile(dao, String.valueOf(groupId), uuid);
-    }
-
-    public UploadFile getUploadFileAlreadyFolder(MultipartFile dao, Integer groupId, String path) throws IOException {
-
-        return commonFilStore.storeFileAlreadyFolder(dao, String.valueOf(groupId), path);
-    }
-
-    public List<UploadFile> getServerFile(ProblemServerDao dao, Integer groupId, String uuid) throws IOException {
-
-        return dockerFileStore.dockerStoreFile(dao, String.valueOf(groupId), uuid);
-    }
-
-    public void deletePreFile(String preFilePath) {
+    public void removeFolder(String preFilePath) {
         folderRemover.removeFolder(preFilePath);
     }
 
-    public void deleteNotFolderPath(MemberGroup memberGroup) {
+    public void removeFolderNotUsedInGroup(MemberGroup memberGroup) {
 
         List<ProblemInputIoFile> folders = problemService.findByMemberGroupForInputFolderPath(memberGroup);
-        for (ProblemInputIoFile folder : folders) {
-            log.info("folderList = {}", folder.getInputStoreFolderPath());
-        }
 
         String path = dirPath + "/" + memberGroup.getId();
 
-        log.info("path = {}", path);
-
-        File folder = new File(path);
-        File[] folder_list = folder.listFiles();
-        boolean flag = false;
-
-        if (folders == null && folder_list == null) {
-            log.info("if1");
-            return ;
-        }
-        else if (folders == null && folder_list != null) {
-            log.info("if2");
-            folderRemover.removeAllFile(path);
-        }
-        else if (folders != null && folder_list != null) {
-
-            log.info("if3");
-
-            for (File file : folder_list) {
-                for (int i=0; i<folders.size(); i++) {
-                    if (file.getPath().equals(folders.get(i).getInputStoreFolderPath())) {
-                        flag = true;
-                        break;
-                    }
-                }
-                if (!flag) {
-                    folderRemover.removePart(file);
-                }
-                flag = false;
-            }
-        }
+        folderRemover.removeFolderNotUsed(folders, path);
     }
 
-    private static String pathLastFileName(File file) {
-        String[] split = file.getPath().split("/");
-        return split[split.length - 1];
+    public void removeFolderPreFile(String preFilePath) {
+        folderRemover.removeFolder(dirPath + "/" + preFilePath);
     }
 }

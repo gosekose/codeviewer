@@ -60,13 +60,12 @@ public class ProblemError {
             return new ResponseEntity<>(getProblemCreatedResult(bindingResult), HttpStatus.BAD_REQUEST);
         }
 
-        if (problemCreateValidator(problemCreateDao)) {
+        if (!problemCreateValidator(problemCreateDao)) {
             return new ResponseEntity<>(ProblemCreatedResultDto.builder().message("총합 점수가 다릅니다.").build(), HttpStatus.BAD_REQUEST);
         }
 
-        if (problemCreateDao.getInputs().size() != problemCreateDao.getOutputs().size() ||
-                problemCreateDao.getInputs().size() != problemCreateDao.getScores().size()) {
-            return new ResponseEntity<>(ProblemCreatedResultDto.builder().message("입출력 파일의 개수가 다릅니다.").build(), HttpStatus.BAD_REQUEST);
+        if (problemCreateDao.getInputs().size() != problemCreateDao.getOutputs().size()) {
+            return new ResponseEntity<>(ProblemCreatedResultDto.builder().message("입출력 예시의 개수가 다릅니다.").build(), HttpStatus.BAD_REQUEST);
         }
 
         return null;

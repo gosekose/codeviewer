@@ -2,6 +2,7 @@ package codeview.main.businessservice.problem.application;
 
 import codeview.main.businessservice.member.infra.MemberRepository;
 import codeview.main.businessservice.problem.domain.Problem;
+import codeview.main.businessservice.problem.domain.ProblemScore;
 import codeview.main.businessservice.problem.infra.repository.ProblemRepository;
 import codeview.main.businessservice.problem.presentation.dao.ProblemCreateDao;
 import codeview.main.businessservice.problemdescription.application.ProblemDescriptionService;
@@ -41,6 +42,9 @@ class ProblemEditServiceTest {
     @Autowired
     ProblemDescriptionService problemDescriptionService;
 
+    @Autowired
+    ProblemScoreService problemScoreService;
+
     static Problem staticProblem;
     static Long problemId;
 
@@ -48,7 +52,7 @@ class ProblemEditServiceTest {
     @Test
     public void 문제_편집_저장_테스트() throws Exception {
         //given
-        problemEditService.editProblem(staticProblem,
+        problemEditService.editProblem(10, staticProblem,
                 ProblemCreateDao.builder()
                         .problemName("test1213")
                         .build());
@@ -129,7 +133,7 @@ class ProblemEditServiceTest {
     }
 
     @Test
-    public void 문제_ds_예시_수정_개수_동일() throws Exception {
+    public void 문제_description_예시_수정_개수_동일() throws Exception {
         //given
         List<String> descriptions = Arrays.asList("testDes1", "testDes2");
 
@@ -149,7 +153,7 @@ class ProblemEditServiceTest {
 
 
     @Test
-    public void 문제_ds_예시_수정_개수_적음() throws Exception {
+    public void 문제_description_예시_수정_개수_적음() throws Exception {
         //given
         List<String> descriptions = Arrays.asList("testDes1");
 
@@ -166,7 +170,7 @@ class ProblemEditServiceTest {
     }
 
     @Test
-    public void 문제_ds_예시_수정_개수_많음() throws Exception {
+    public void 문제_description_예시_수정_개수_많음() throws Exception {
         //given
         List<String> descriptions = Arrays.asList("testDes1", "testDes2", "testDes3");
 
@@ -187,6 +191,63 @@ class ProblemEditServiceTest {
     }
 
 
+
+    @Test
+    public void 문제_score_예시_수정_개수_동일() throws Exception {
+        //given
+        List<Integer> scores = Arrays.asList(30, 40);
+
+        ProblemCreateDao dao = ProblemCreateDao.builder().scores(scores).build();
+        //when
+        problemEditService.editProblemScore(staticProblem, dao);
+        List<ProblemScore> problemScores = problemScoreService.findProblemScoreByProblem(staticProblem);
+
+        //then
+        assertThat(problemScores.size()).isEqualTo(2);
+        assertThat(problemScores.get(0).getScore()).isEqualTo(30);
+        assertThat(problemScores.get(0).getNumber()).isEqualTo(1);
+        assertThat(problemScores.get(1).getScore()).isEqualTo(40);
+        assertThat(problemScores.get(1).getNumber()).isEqualTo(2);
+
+    }
+
+
+    @Test
+    public void 문제_score_예시_수정_개수_적음() throws Exception {
+        //given
+        List<Integer> scores = Arrays.asList(30);
+
+        ProblemCreateDao dao = ProblemCreateDao.builder().scores(scores).build();
+        //when
+        problemEditService.editProblemScore(staticProblem, dao);
+        List<ProblemScore> problemScores = problemScoreService.findProblemScoreByProblem(staticProblem);
+
+        //then
+        assertThat(problemScores.size()).isEqualTo(1);
+        assertThat(problemScores.get(0).getScore()).isEqualTo(30);
+        assertThat(problemScores.get(0).getNumber()).isEqualTo(1);
+    }
+
+    @Test
+    public void 문제_score_예시_수정_개수_많음() throws Exception {
+        //given
+        List<Integer> scores = Arrays.asList(30, 40, 50);
+
+        ProblemCreateDao dao = ProblemCreateDao.builder().scores(scores).build();
+        //when
+        problemEditService.editProblemScore(staticProblem, dao);
+        List<ProblemScore> problemScores = problemScoreService.findProblemScoreByProblem(staticProblem);
+
+        //then
+        assertThat(problemScores.size()).isEqualTo(3);
+        assertThat(problemScores.get(0).getScore()).isEqualTo(30);
+        assertThat(problemScores.get(0).getNumber()).isEqualTo(1);
+        assertThat(problemScores.get(1).getScore()).isEqualTo(40);
+        assertThat(problemScores.get(1).getNumber()).isEqualTo(2);
+        assertThat(problemScores.get(2).getScore()).isEqualTo(50);
+        assertThat(problemScores.get(2).getNumber()).isEqualTo(3);
+
+    }
 
 
     @BeforeEach
@@ -236,6 +297,22 @@ class ProblemEditServiceTest {
         problemDescriptionService.save(ds2);
         problemDescriptionService.flush();
 
+
+        ProblemScore ps1 = ProblemScore.builder()
+                .problem(problem)
+                .score(20)
+                .number(1)
+                .build();
+
+        ProblemScore ps2 = ProblemScore.builder()
+                .problem(problem)
+                .score(30)
+                .number(2)
+                .build();
+
+        problemScoreService.save(ps1);
+        problemScoreService.save(ps2);
+        problemScoreService.flush();
 
     }
 

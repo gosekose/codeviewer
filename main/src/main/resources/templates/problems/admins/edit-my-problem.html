@@ -632,7 +632,7 @@
       processData: false,
       cache: false,
       enctype : 'multipart/form-data',
-      url: '/api/v1/groups/admin/' + groupId + '/problems/upload/io',
+      url: '/api/v1/groups/admin/' + groupId + '/problems/' + problemId + '/upload/io',
       data: formData,
       beforeSend: function(xhr) {xhr.setRequestHeader(header, token);},
       async: true,

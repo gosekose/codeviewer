@@ -1,6 +1,7 @@
 package codeview.main.businessservice.problem.infra.util;
 
 
+import codeview.main.common.domain.UploadFile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -65,6 +67,31 @@ public class FileUnZip {
             throw new IOException("Bad zip entry: " + zipEntry.getName());
         }
         return normalizePath;
+    }
+
+
+    public Path unzipAndSave(UploadFile uploadFile) {
+        Path originalPath = Paths.get(uploadFile.getStoreFileName());
+        String[] split = uploadFile.getStoreFileName().split("/");
+
+        String newStringPath = getString(split);
+
+        Path newPath = Paths.get(newStringPath);
+        unzipFile(originalPath, newPath);
+        return newPath;
+    }
+
+    public String getString(String[] split) {
+        String newStringPath = "";
+
+        for (int i = 0; i < split.length-1; i++) {
+            newStringPath += split[i];
+
+            if (i != (split.length-2)) {
+                newStringPath += "/";
+            }
+        }
+        return newStringPath;
     }
 
 }

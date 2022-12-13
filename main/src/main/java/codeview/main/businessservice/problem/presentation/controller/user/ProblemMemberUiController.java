@@ -51,7 +51,7 @@ public class ProblemMemberUiController {
             @PathVariable("problemId") Integer problemId,
             Model model) throws MalformedURLException {
 
-        problemPage.getProblemPage(model,groupId, problemId);
+        problemPage.getProblemAdminEditDto(model,groupId, problemId);
 
         log.info("problemAdmin groupId = {}, problemId = {}", groupId, problemId);
 

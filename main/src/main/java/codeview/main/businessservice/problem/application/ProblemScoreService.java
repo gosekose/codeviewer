@@ -20,7 +20,7 @@ public class ProblemScoreService {
     private final ProblemScoreRepository problemScoreRepository;
 
     @Transactional
-    public void saveByCreateDao(ProblemCreateDao problemCreateDao, Problem problem) {
+    public void saveProblemScore(ProblemCreateDao problemCreateDao, Problem problem) {
 
         if (problemCreateDao == null || problemCreateDao.getScores() == null) {
             return ;
@@ -41,8 +41,22 @@ public class ProblemScoreService {
         }
     }
 
+    @Transactional
+    public Long save(ProblemScore problemScore) {
+        ProblemScore savedProblemScore = problemScoreRepository.save(problemScore);
+        return savedProblemScore.getId();
+    }
+
     public List<ProblemScore> findProblemScoreByProblem(Problem problem) {
         return problemScoreRepository.findProblemScoreByProblem(problem);
     }
 
+    public void flush() {
+        problemScoreRepository.flush();
+    }
+
+    @Transactional
+    public void deleteProblemScore(ProblemScore problemScore) {
+        problemScoreRepository.delete(problemScore);
+    }
 }

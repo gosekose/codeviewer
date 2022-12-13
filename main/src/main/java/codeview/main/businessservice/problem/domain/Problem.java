@@ -95,8 +95,11 @@ public class Problem extends BaseEntity {
         this.problemLanguage = dao.getProblemLanguage();
     }
 
-    public void updateProblemFile(ProblemFile problemFile, String problemFileHash) {
+    public void updateProblemFile(ProblemFile problemFile) {
         this.problemFile = problemFile;
+    }
+    public void updateProblemInputIoFile(ProblemInputIoFile problemInputIoFile) {
+        this.problemInputIoFile = problemInputIoFile;
     }
 
     public void updateIoFileZip(ProblemInputIoFile inputIoFile, String ioZipFileHash) {
