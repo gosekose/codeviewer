@@ -30,7 +30,7 @@ public class BoardMultipartFileService {
         if (boardForm.getBoardMultipartFileList() != null) {
 
             for (MultipartFile multipartFile : boardForm.getBoardMultipartFileList()) {
-                UploadFile uploadFile = commonFilStore.storeFile(multipartFile, String.valueOf(groupId), UUID.randomUUID().toString());
+                UploadFile uploadFile = commonFilStore.makeStoreFolder(multipartFile, String.valueOf(groupId), UUID.randomUUID().toString());
 
                 BoardMultipartFile boardMultipartFile = BoardMultipartFile.builder()
                         .board(board)

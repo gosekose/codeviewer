@@ -3,6 +3,6 @@ package codeview.main.businessservice.problem.infra.util.filestore;
 import org.springframework.stereotype.Component;
 
 @Component
-public class JavaFileStore extends AbstractFileStore {
+public class ProblemFileStore extends AbstractFileStore {
 
 }

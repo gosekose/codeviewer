@@ -32,4 +32,9 @@ public class ProblemScore extends BaseEntity {
         this.number = number;
         this.score = score;
     }
+
+    public void updateProblemScore(int number, int score) {
+        this.number = number;
+        this.score = score;
+    }
 }
