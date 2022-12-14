@@ -20,5 +20,6 @@ public interface FileStore {
 
     String createNewProblemFolder(String groupId, String uuid);
 
+    void copyFile(String originalFilePath, String newFilePath) throws IOException;
 
 }

@@ -59,34 +59,52 @@ public class ProblemEditService {
 
         if (!problemFileChange && ioZipFileChange) {
 
-            return null;
+            String newUUID = String.valueOf(UUID.randomUUID());
+
+            String newProblemFolder = problemFileStore.createNewProblemFolder(String.valueOf(groupId), newUUID);
+            String uploadStorePath = newProblemFolder + "/" + problem.getProblemFile().getProblemUploadName();
+
+            problemFileStore.copyFile(problem.getProblemFile().getProblemStoreName(), uploadStorePath);
+
+            UploadFile uploadProblemFile = UploadFile
+                    .builder()
+                    .uploadFileName(problem.getProblemFile().getProblemUploadName())
+                    .storeFileName(uploadStorePath)
+                    .build();
+
+            return updateProblemFileAndIoZipFile(problemCreateService, uploadProblemFile, groupId, dao, problem, problemRepository);
+
         } else if (problemFileChange && !ioZipFileChange) {
 
-            return null;
+            String toRemoveFile = problem.getProblemFile().getProblemStoreName();
+
+            UploadFile uploadProblemFile = problemFileStore.retainAlreadyFolder(
+                    dao.getProblemFile(), String.valueOf(groupId), problem.getProblemInputIoFile().getInputStoreFolderPath());
+
+            ProblemFile problemFile = problemCreateService.makeProblemFile(uploadProblemFile);
+            problem.updateProblemFile(problemFile);
+            problemRepository.saveAndFlush(problem);
+
+            folderRemover.removeFileOne(toRemoveFile);
+
+            return problem;
+
         } else if (problemFileChange && ioZipFileChange) {
 
             UploadFile uploadProblemFile = problemFileStore.makeStoreFolder(
                     dao.getProblemFile(), String.valueOf(groupId), String.valueOf(UUID.randomUUID()));
 
-            ProblemFile problemFile = problemCreateService.makeProblemFile(uploadProblemFile);
-            ProblemInputIoFile problemInputIoFile = problemCreateService.makeProblemIoZipFile(groupId, dao, uploadProblemFile);
-
-            if (problemFile == null || problemInputIoFile == null) {
-                return null;
-            }
-
-            problem.updateProblemFile(problemFile);
-            problem.updateProblemInputIoFile(problemInputIoFile);
-            problemRepository.saveAndFlush(problem);
-            return problem;
+            return updateProblemFileAndIoZipFile(problemCreateService, uploadProblemFile, groupId, dao, problem, problemRepository);
 
         } else {
             problem.updateProblemNotFiles(dao);
             problemRepository.saveAndFlush(problem);
+
             return problem;
         }
 
     }
+
 
     @Transactional
     public void editProblemIoExample(Problem problem, ProblemCreateDao dao) {
@@ -236,6 +254,22 @@ public class ProblemEditService {
         folderRemover.removeFilesExceptFolder(preFilePath);
     }
 
+
+    @Transactional
+    private Problem updateProblemFileAndIoZipFile(ProblemCreateService problemCreateService, UploadFile uploadProblemFile, Integer groupId, ProblemCreateDao dao, Problem problem, ProblemRepository problemRepository) throws IOException, NoSuchAlgorithmException {
+        ProblemFile problemFile = problemCreateService.makeProblemFile(uploadProblemFile);
+        ProblemInputIoFile problemInputIoFile = problemCreateService.makeProblemIoZipFile(groupId, dao, uploadProblemFile);
+
+        if (problemFile == null || problemInputIoFile == null) {
+            return null;
+        }
+
+        problem.updateProblemFile(problemFile);
+        problem.updateProblemInputIoFile(problemInputIoFile);
+        problemRepository.saveAndFlush(problem);
+
+        return problem;
+    }
 
 
 }

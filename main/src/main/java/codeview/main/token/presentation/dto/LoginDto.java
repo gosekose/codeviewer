@@ -1,4 +1,4 @@
-package codeview.main.businessservice.token.presentation.dto;
+package codeview.main.token.presentation.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

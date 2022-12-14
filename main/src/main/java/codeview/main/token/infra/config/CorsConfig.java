@@ -1,6 +1,6 @@
 
 
-package codeview.main.businessservice.token.infra.config;
+package codeview.main.token.infra.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

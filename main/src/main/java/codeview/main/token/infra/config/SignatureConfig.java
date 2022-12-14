@@ -1,6 +1,6 @@
-package codeview.main.businessservice.token.infra.config;
+package codeview.main.token.infra.config;
 
-import codeview.main.businessservice.token.infra.signature.RsaSecuritySigner;
+import codeview.main.token.infra.signature.RsaSecuritySigner;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.RSAKey;

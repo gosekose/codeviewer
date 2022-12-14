@@ -55,14 +55,6 @@
     <div id="preview">
       <div class="card">
         <div class="card-body">
-          <div>
-            </br>
-            <h5 class="card-title" style="display:inline;" th:text="${problemId} + '번 문제 &nbsp;&nbsp;&nbsp;'"></h5>
-            <a href="#" th:href="@{/api/v1/groups/admin/{id}/problems (id=${groupId})}"
-               class="btn btn-outline-primary btn-sm" role="button">문제 목록 조회</a>
-            <a href="#" th:href="@{/api/v1/groups/admin/{id}/problems/{problemId}/edit (id=${groupId}, problemId=${problemId})}"
-               class="btn btn-outline-primary btn-sm" role="button">문제 편집</a>
-          </div>
           <div class="mb-auto col-10">
             <div>
               <br>
@@ -131,25 +123,33 @@
                       <h5 class="card-title">
                         코드 작성</h5>
 
-                      <div class="row mb-3 position-relative">
-                        <label class="col-sm-1 col-form-label" for="selectProblem">언어 선택</label>
-                        <div class="col-sm-2">
-                          <select aria-label="select example" class="form-select" id="selectProblem" onchange="selectLanguage(this.value)" required>
-                            <th:block th:each="language: ${problemClientDto.getProblemLanguages()}">
-                              <option th:value="${language}" th:text="${language}"
-                                      th:selected="${language} == 'python3'"></option>
-                            </th:block>
-                          </select>
+                      <form class="row" th:action="@{/api/v1/groups/{groupId}/problems/{problemId} (groupId=${groupId}, problemId=${problemId})}" th:object="${problemSolveForm}" method="post">
+                        <div class="row mb-3 position-relative">
+                          <label class="col-sm-1 col-form-label" th:for="*{problemLanguage}">언어 선택</label>
+                          <div class="col-sm-2">
+                            <select aria-label="select example" class="form-select" th:id="*{problemLanguage}" th:field="*{problemLanguage}"
+                                    th:name="*{problemLanguage}" onchange="selectLanguage(this.value)" required>
+                              <th:block th:each="language: ${problemClientDto.getProblemLanguages()}">
+                                <option th:value="${language}" th:text="${language}"
+                                        th:selected="${language} == 'python3'"></option>
+                              </th:block>
+                            </select>
+                          </div>
                         </div>
-                      </div>
-                      <!--  Start java editor /-->
-                      <div>
-                        <textarea id="myPythonEditor" rows="4" cols="8"></textarea>
-                      </div>
-                      <div style="display: none">
-                        <textarea id="myJavaEditor" rows="4" cols="8"></textarea>
-                      </div>
-                      <!--  End java editor /-->
+
+                      <!--  Start editor /-->
+                        <div>
+                          <textarea th:id="*{myPythonEditor}" th:name="*{myPythonEditor}" th:field="*{myPythonEditor}" rows="4" cols="8"></textarea>
+                        </div>
+                        <div style="display: none">
+                          <textarea th:id="*{myJavaEditor}" th:name="*{myJavaEditor}" th:field="*{myJavaEditor}" rows="4" cols="8"></textarea>
+                        </div>
+                      <!--  End editor /-->
+
+                        <div class="text-center">
+                          <button type="submit" class="btn btn-outline-primary">제출</button>
+                        </div>
+                      </form>
 
                     </div>
                   </div>

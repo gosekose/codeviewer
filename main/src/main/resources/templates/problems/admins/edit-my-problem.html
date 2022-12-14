@@ -64,10 +64,10 @@
                 <div class="col-sm-10">
                   <select aria-label="select example" class="form-select" id="selectProblem" onchange="selectProblemType(this.value)" required>
                     <option th:each="type : ${problemTypes}" th:value="${type.value}"
-                            th:text="${type.key}" th:selected="${problemAdminEditDto.problemType} == ${type.value}">공개</option>
+                            th:text="${type.key}" th:selected="${problemClientDto.problemType} == ${type.value}">공개</option>
                   </select>
                   <div class="invalid-feedback"> 출제 형태를 선택하세요 </div>
-                  <input type="text" id="problemType" name="problemType" th:value="${problemAdminEditDto.problemType}" style="display: none">
+                  <input type="text" id="problemType" name="problemType" th:value="${problemClientDto.problemType}" style="display: none">
                 </div>
               </div>
 
@@ -75,7 +75,7 @@
                 <label class="col-sm-2 col-form-label" for="problemName">문제명</label>
                 <div class="col-sm-10">
                   <input class="form-control" id="problemName" name="problemName" onchange="previewProblemTag(this)" required type="text"
-                         th:value="${problemAdminEditDto.name}">
+                         th:value="${problemClientDto.name}">
                 </div>
               </div>
 
@@ -83,7 +83,7 @@
                 <label class="col-sm-2 col-form-label" for="openTime">오픈 시간</label>
                 <div class="col-sm-10">
                   <input id="openTime" name='openTime' class="form-control" onchange="localDateTimeValidation()"
-                         th:value="${problemAdminEditDto.openTime}" type='datetime-local'/>
+                         th:value="${problemClientDto.openTime}" type='datetime-local'/>
                 </div>
                 <div class="valid-tooltip"></div>
               </div>
@@ -92,7 +92,7 @@
                 <label class="col-sm-2 col-form-label" for="closedTime">마감 시간</label>
                 <div class="col-sm-10">
                   <input id="closedTime" name='closedTime' class="form-control" onchange="localDateTimeValidation()"
-                         th:value="${problemAdminEditDto.closedTime}" type='datetime-local'/>
+                         th:value="${problemClientDto.closedTime}" type='datetime-local'/>
                 </div>
                 <div class="invalid-tooltip"></div>
               </div>
@@ -102,10 +102,10 @@
                 <div class="col-sm-10">
                   <select id="selectProblemDifficulty" name="selectProblemDifficulty" class="form-select">
                     <option th:each="problemDifficulty : ${problemDifficulties}" th:value="${problemDifficulty.value}"
-                            th:text="${problemDifficulty.key}" th:selected="${problemDifficulty.value} == ${problemAdminEditDto.problemDifficulty}"></option>
+                            th:text="${problemDifficulty.key}" th:selected="${problemDifficulty.value} == ${problemClientDto.problemDifficulty}"></option>
                   </select>
                 </div>
-                <input type="text" id="problemDifficulty" name="problemDifficulty" th:value="${problemAdminEditDto.problemDifficulty}" style="display: none">
+                <input type="text" id="problemDifficulty" name="problemDifficulty" th:value="${problemClientDto.problemDifficulty}" style="display: none">
                 <div class="invalid-tooltip"></div>
               </div>
 
@@ -118,7 +118,7 @@
                     <label class="form-check-label" th:for="${problemLanguage.key}" th:text="${problemLanguage.key}"></label>
                   </div>
                 </div>
-                <input type="text" id="problemLanguage" name="problemLanguage" th:value="${problemAdminEditDto.problemLanguage}" style="display: none">
+                <input type="text" id="problemLanguage" name="problemLanguage" th:value="${problemClientDto.problemLanguage}" style="display: none">
               </div>
 
               <div class="row mb-3 position-relative">
@@ -213,7 +213,7 @@
                       <h5 class="card-title">문제 파일</h5>
                       <div id="problemFileBoard">
                         <i class="fa fa-file-text-o fa-1x" aria-hidden="true"
-                        th:text="|    ${problemAdminEditDto.getProblemFileName()}    |"></i>
+                        th:text="|    ${problemClientDto.getProblemFileName()}    |"></i>
                       </div>
                     </div>
                   </div>
@@ -259,7 +259,7 @@
                         <div class="invalid-feedback">문제 점수 등록은 필수 입니다.</div>
                       </div>
                       <input type="number" id="totalScore" name="totalScore" value="0" style="display: none"
-                             th:value="${problemAdminEditDto.getTotalScore()}">
+                             th:value="${problemClientDto.getTotalScore()}">
                     </div>
 
                   </div>

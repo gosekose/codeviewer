@@ -1,4 +1,4 @@
-package codeview.main.businessservice.token.infra.filter.authorization;
+package codeview.main.token.infra.filter.authorization;
 
 import com.nimbusds.jose.JWSVerifier;
 
