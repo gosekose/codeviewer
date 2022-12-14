@@ -1,4 +1,4 @@
-package codeview.main.businessservice.token.infra.signature;
+package codeview.main.token.infra.signature;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;

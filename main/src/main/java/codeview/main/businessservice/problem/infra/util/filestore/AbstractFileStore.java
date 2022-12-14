@@ -6,8 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 @Slf4j
 public abstract class AbstractFileStore implements FileStore {
@@ -124,6 +123,31 @@ public abstract class AbstractFileStore implements FileStore {
                 .uploadFileName(originalFileName)
                 .storeFileName(storeFileName)
                 .build();
+    }
+
+    @Override
+    public void copyFile(String originalFilePath, String newFilePath) throws IOException {
+        File file = new File(originalFilePath);
+        File newFile = new File(newFilePath);
+
+        FileInputStream inputStream = new FileInputStream(file);
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+
+        FileOutputStream outputStream = new FileOutputStream(newFile);
+        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream);
+
+        byte[] buff = new byte[1024];
+
+        int readData;
+        while ((readData = bufferedInputStream.read(buff)) > 0) {
+            bufferedOutputStream.write(buff, 0, readData);
+        }
+
+        inputStream.close();
+        outputStream.close();
+
+        bufferedInputStream.close();
+        bufferedOutputStream.close();
     }
 
 }

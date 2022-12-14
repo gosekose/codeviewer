@@ -8,7 +8,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class ProblemAdminEditDto {
+public class ProblemClientDto {
 
     private String name;
     private ProblemType problemType;
@@ -20,9 +20,12 @@ public class ProblemAdminEditDto {
     private ProblemDifficulty problemDifficulty;
     private Integer totalScore;
     private String problemLanguage;
+    private String[] problemLanguages;
 
     @Builder
-    public ProblemAdminEditDto(String name, ProblemType problemType, String problemFileName, String problemInputIoFileName, LocalDateTime openTime, LocalDateTime closedTime, ProblemDifficulty problemDifficulty, Integer totalScore, String problemLanguage) {
+    public ProblemClientDto(String name, ProblemType problemType, String problemFileName, String problemInputIoFileName,
+                            LocalDateTime openTime, LocalDateTime closedTime, ProblemDifficulty problemDifficulty,
+                            Integer totalScore, String problemLanguage, String[] problemLanguages) {
         this.name = name;
         this.problemType = problemType;
         this.problemFileName = problemFileName;
@@ -32,6 +35,7 @@ public class ProblemAdminEditDto {
         this.problemDifficulty = problemDifficulty;
         this.totalScore = totalScore;
         this.problemLanguage = problemLanguage;
+        this.problemLanguages = problemLanguages;
     }
 
 }

@@ -19,6 +19,15 @@ public class FolderRemover {
 
     }
 
+    public void removeFileOne(String path) {
+        File file = new File(path);
+
+        if (file.isFile()) {
+            file.delete();
+        }
+    }
+
+
     public void removeFilesExceptFolder(String path) {
         File file = new File(path);
         File[] files = file.listFiles();

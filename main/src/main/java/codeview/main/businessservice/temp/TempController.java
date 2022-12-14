@@ -1,7 +1,6 @@
 package codeview.main.businessservice.temp;
 
 import codeview.main.auth.domain.users.PrincipalUser;
-import codeview.main.businessservice.groupstorage.application.GroupStorageService;
 import codeview.main.businessservice.member.application.MemberService;
 import codeview.main.businessservice.member.domain.Member;
 import codeview.main.businessservice.membergroup.application.GroupService;
@@ -9,10 +8,17 @@ import codeview.main.businessservice.membergroup.domain.MemberGroup;
 import codeview.main.businessservice.membergroup.domain.eumerate.GroupAutoJoin;
 import codeview.main.businessservice.membergroup.domain.eumerate.MemberGroupVisibility;
 import codeview.main.businessservice.membergroup.infra.repository.membergroup.MemberGroupRepository;
+import codeview.main.businessservice.problem.application.ProblemScoreService;
 import codeview.main.businessservice.problem.application.ProblemService;
 import codeview.main.businessservice.problem.domain.Problem;
+import codeview.main.businessservice.problem.domain.ProblemScore;
 import codeview.main.businessservice.problem.domain.embedded.ProblemInputIoFile;
 import codeview.main.businessservice.problem.domain.enumtype.ProblemDifficulty;
+import codeview.main.businessservice.problem.domain.enumtype.ProblemType;
+import codeview.main.businessservice.problemdescription.application.ProblemDescriptionService;
+import codeview.main.businessservice.problemdescription.application.ProblemIoExampleService;
+import codeview.main.businessservice.problemdescription.domain.ProblemDescription;
+import codeview.main.businessservice.problemdescription.domain.ProblemIoExample;
 import codeview.main.businessservice.solve.domain.LastSolveStatus;
 import codeview.main.businessservice.solve.domain.Solve;
 import codeview.main.businessservice.solve.domain.enumtype.SolveStatus;
@@ -39,7 +45,9 @@ public class TempController {
     private final ProblemService problemService;
 
     private final MemberGroupRepository memberGroupRepository;
-    private final GroupStorageService groupStorageService;
+    private final ProblemIoExampleService problemIoExampleService;
+    private final ProblemDescriptionService problemDescriptionService;
+    private final ProblemScoreService problemScoreService;
 
     private final SolveRepository solveRepository;
 
@@ -65,7 +73,7 @@ public class TempController {
                 .creator(member)
                 .maxMember(10)
                 .description("")
-                .name("iise-test")
+                .name("test1")
                 .joinClosedTime(LocalDateTime.now())
                 .memberGroupVisibility(MemberGroupVisibility.VISIBLE)
                 .groupAutoJoin(GroupAutoJoin.ON)
@@ -83,6 +91,65 @@ public class TempController {
                 .build();
 
         problemService.save(problem);
+
+
+        MemberGroup memberGroup1 = MemberGroup.builder()
+                .creator(solveMember)
+                .maxMember(10)
+                .description("")
+                .name("문제 TEST")
+                .joinClosedTime(LocalDateTime.now())
+                .memberGroupVisibility(MemberGroupVisibility.VISIBLE)
+                .groupAutoJoin(GroupAutoJoin.ON)
+                .build();
+
+        memberGroupRepository.save(memberGroup1);
+
+        Problem problem2 = Problem.builder()
+                .name("내림차순 정렬")
+                .memberGroup(memberGroup1)
+                .totalScore(100)
+                .openTime(LocalDateTime.now())
+                .closedTime(LocalDateTime.parse("2022-12-20T11:19:03"))
+                .problemType(ProblemType.TESTTYPE)
+                .problemDifficulty(ProblemDifficulty.GOLD1)
+                .problemInputIoFile(new ProblemInputIoFile(UUID.randomUUID().toString(), "sort.zip"))
+                .problemLanguage("python3&java11")
+                .build();
+
+        problemService.save(problem2);
+
+        problemIoExampleService.save(ProblemIoExample.builder().inputSource("3 1 2 3")
+                .outputSource("3 2 1")
+                .number(1)
+                .problem(problem2)
+                .build());
+
+        problemIoExampleService.save(ProblemIoExample.builder().inputSource("5 1 2 3 4 5")
+                .outputSource("5 4 3 2 1")
+                .number(2)
+                .problem(problem2)
+                .build());
+
+
+        problemDescriptionService.save(ProblemDescription.builder()
+                .description("내림차순 정렬 하시오")
+                .problem(problem2)
+                .number(1)
+                .build());
+
+        problemScoreService.save(ProblemScore.builder()
+                .number(1)
+                .score(50)
+                .problem(problem2)
+                .build());
+
+        problemScoreService.save(ProblemScore.builder()
+                .number(2)
+                .score(50)
+                .problem(problem2)
+                .build());
+
 
         int countSolveBySolver = solveRepository.getCountSolve(problem, solveMember);
         Solve solve1 = Solve.builder()
@@ -115,23 +182,23 @@ public class TempController {
         solveRepository.save(solve2);
         saveSolveStatusBySolver.updateSolveStatus(solve2.getSolveStatus());
 
-        MemberGroup memberGroup1 = MemberGroup.builder()
+        MemberGroup memberGroup2 = MemberGroup.builder()
                 .creator(solveMember)
                 .maxMember(21)
                 .description("")
-                .name("iise-test4")
+                .name("IISE")
                 .joinClosedTime(LocalDateTime.now())
                 .memberGroupVisibility(MemberGroupVisibility.VISIBLE)
                 .groupAutoJoin(GroupAutoJoin.ON)
                 .build();
 
-        memberGroupRepository.save(memberGroup1);
+        memberGroupRepository.save(memberGroup2);
 
         for(int i=0; i<50; i++) {
 
             Problem problemTest = Problem.builder()
                     .name("test" + (i + 10))
-                    .memberGroup(memberGroup1)
+                    .memberGroup(memberGroup2)
                     .problemDifficulty(ProblemDifficulty.GOLD2)
                     .problemInputIoFile(new ProblemInputIoFile(UUID.randomUUID().toString(), "add.zip"))
                     .build();
@@ -171,49 +238,6 @@ public class TempController {
             }
 
         }
-
-        Problem problem1 = Problem.builder()
-                .name("test1")
-                .memberGroup(memberGroup1)
-                .problemDifficulty(ProblemDifficulty.GOLD1)
-                .problemInputIoFile(new ProblemInputIoFile(UUID.randomUUID().toString(), "sort.zip"))
-                .build();
-
-        problemService.save(problem1);
-
-        int countSolveByMember = solveRepository.getCountSolve(problem1, member);
-        Solve solve3 = Solve.builder()
-                .member(member)
-                .number(countSolveByMember)
-                .score(70)
-                .solveStatus(SolveStatus.FAIL)
-                .problem(problem1)
-                .build();
-
-        solveRepository.save(solve3);
-
-        LastSolveStatus lastSolveStatus = LastSolveStatus.builder()
-                .member(member)
-                .problem(problem1)
-                .solveStatus(solve3.getSolveStatus())
-                .build();
-
-        LastSolveStatus saveSolveStatusByMember = lastSolveStatusRepository.save(lastSolveStatus);
-
-        countSolveByMember = solveRepository.getCountSolve(problem1, member);
-        Solve solve4 = Solve.builder()
-                .member(member)
-                .number(countSolveByMember)
-                .score(90)
-                .solveStatus(SolveStatus.SUCCESS)
-                .problem(problem1)
-                .build();
-
-        solveRepository.save(solve4);
-        saveSolveStatusByMember.updateSolveStatus(solve4.getSolveStatus());
-
-        log.info("member id = {}", member.getId());
-        log.info("memberGroup 저장 완료");
 
         return "redirect:/";
 
