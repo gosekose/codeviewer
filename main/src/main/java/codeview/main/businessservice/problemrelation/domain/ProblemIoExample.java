@@ -1,4 +1,4 @@
-package codeview.main.businessservice.problemdescription.domain;
+package codeview.main.businessservice.problemrelation.domain;
 
 import codeview.main.businessservice.problem.domain.Problem;
 import lombok.Builder;

@@ -1,7 +1,7 @@
 package codeview.main.businessservice.problem.presentation.utils;
 
 import codeview.main.businessservice.problem.application.ProblemCreateService;
-import codeview.main.businessservice.problem.application.ProblemScoreService;
+import codeview.main.businessservice.problemrelation.application.ProblemScoreService;
 import codeview.main.businessservice.problem.application.ProblemService;
 import codeview.main.businessservice.problem.domain.Problem;
 import codeview.main.businessservice.problem.domain.ProblemScore;
@@ -9,10 +9,10 @@ import codeview.main.businessservice.problem.infra.util.filestore.IoFileStore;
 import codeview.main.businessservice.problem.presentation.dto.IoFileDataDto;
 import codeview.main.businessservice.problem.presentation.dto.ProblemClientDto;
 import codeview.main.businessservice.problem.presentation.dto.ProblemSolveForm;
-import codeview.main.businessservice.problemdescription.application.ProblemDescriptionService;
-import codeview.main.businessservice.problemdescription.application.ProblemIoExampleService;
-import codeview.main.businessservice.problemdescription.domain.ProblemDescription;
-import codeview.main.businessservice.problemdescription.domain.ProblemIoExample;
+import codeview.main.businessservice.problemrelation.application.ProblemDescriptionService;
+import codeview.main.businessservice.problemrelation.application.ProblemIoExampleService;
+import codeview.main.businessservice.problemrelation.domain.ProblemDescription;
+import codeview.main.businessservice.problemrelation.domain.ProblemIoExample;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

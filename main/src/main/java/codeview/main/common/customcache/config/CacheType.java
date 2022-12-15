@@ -17,7 +17,6 @@ public enum CacheType {
     MEMBERGROUP("memberGroup", 5 * 60, 10000),
     PROBLEMSCORE("problemScore", 5 * 60, 10000),
 
-
     GROUPJOINREQUEST("groupJoinRequest", 5 * 60, 10000),
 
 
