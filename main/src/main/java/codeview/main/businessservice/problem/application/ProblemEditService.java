@@ -10,10 +10,11 @@ import codeview.main.businessservice.problem.infra.util.filestore.IoFileStore;
 import codeview.main.businessservice.problem.infra.util.filestore.ProblemFileStore;
 import codeview.main.businessservice.problem.presentation.dao.ProblemCreateDao;
 import codeview.main.businessservice.problem.presentation.dto.IoFileDataDto;
-import codeview.main.businessservice.problemdescription.application.ProblemDescriptionService;
-import codeview.main.businessservice.problemdescription.application.ProblemIoExampleService;
-import codeview.main.businessservice.problemdescription.domain.ProblemDescription;
-import codeview.main.businessservice.problemdescription.domain.ProblemIoExample;
+import codeview.main.businessservice.problemrelation.application.ProblemDescriptionService;
+import codeview.main.businessservice.problemrelation.application.ProblemIoExampleService;
+import codeview.main.businessservice.problemrelation.application.ProblemScoreService;
+import codeview.main.businessservice.problemrelation.domain.ProblemDescription;
+import codeview.main.businessservice.problemrelation.domain.ProblemIoExample;
 import codeview.main.common.application.FolderRemover;
 import codeview.main.common.domain.UploadFile;
 import lombok.RequiredArgsConstructor;
@@ -228,35 +229,16 @@ public class ProblemEditService {
 
     public IoFileDataDto convertIoZipRetainFolder(MultipartFile ioZipFile, String inputStoreFolderPath) {
         try{
-            UploadFile uploadFile = updateUploadFileForEdit(ioZipFile, inputStoreFolderPath);
+            UploadFile uploadFile = ioFileStore.updateUploadFileForEdit(ioZipFile, inputStoreFolderPath);
             Path newPath = fileUnZip.unzipAndSave(uploadFile);
             return ioFileStore.makeIoFileDataDto(newPath);
         } catch (Exception e) {
             return null;
         }
     }
-
-    /**
-     *
-     * 업로드 파일 수정시 사용하는 메소드
-     *
-     * @param ioZipFile
-     * @param alreadyPath
-     * @return
-     * @throws IOException
-     */
-    public UploadFile updateUploadFileForEdit(MultipartFile ioZipFile, String alreadyPath) throws IOException {
-        return ioFileStore.updateUploadFileForEdit(ioZipFile, alreadyPath);
-    }
-
-
-    public void removeFilesExceptFolder(String preFilePath) {
-        folderRemover.removeFilesExceptFolder(preFilePath);
-    }
-
-
+    
     @Transactional
-    private Problem updateProblemFileAndIoZipFile(ProblemCreateService problemCreateService, UploadFile uploadProblemFile, Integer groupId, ProblemCreateDao dao, Problem problem, ProblemRepository problemRepository) throws IOException, NoSuchAlgorithmException {
+    public Problem updateProblemFileAndIoZipFile(ProblemCreateService problemCreateService, UploadFile uploadProblemFile, Integer groupId, ProblemCreateDao dao, Problem problem, ProblemRepository problemRepository) throws IOException, NoSuchAlgorithmException {
         ProblemFile problemFile = problemCreateService.makeProblemFile(uploadProblemFile);
         ProblemInputIoFile problemInputIoFile = problemCreateService.makeProblemIoZipFile(groupId, dao, uploadProblemFile);
 

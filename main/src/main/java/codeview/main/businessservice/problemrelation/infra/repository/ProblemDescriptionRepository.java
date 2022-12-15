@@ -1,7 +1,7 @@
-package codeview.main.businessservice.problemdescription.infra.repository;
+package codeview.main.businessservice.problemrelation.infra.repository;
 
 import codeview.main.businessservice.problem.domain.Problem;
-import codeview.main.businessservice.problemdescription.domain.ProblemDescription;
+import codeview.main.businessservice.problemrelation.domain.ProblemDescription;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

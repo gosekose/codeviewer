@@ -1,4 +1,4 @@
-package codeview.main.businessservice.problem.application;
+package codeview.main.businessservice.problemrelation.application;
 
 import codeview.main.businessservice.problem.domain.Problem;
 import codeview.main.businessservice.problem.domain.ProblemScore;
@@ -6,6 +6,7 @@ import codeview.main.businessservice.problem.infra.repository.ProblemScoreReposi
 import codeview.main.businessservice.problem.presentation.dao.ProblemCreateDao;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,6 +48,7 @@ public class ProblemScoreService {
         return savedProblemScore.getId();
     }
 
+    @Cacheable(cacheNames = "problemScore", key="#problem.id")
     public List<ProblemScore> findProblemScoreByProblem(Problem problem) {
         return problemScoreRepository.findProblemScoreByProblem(problem);
     }

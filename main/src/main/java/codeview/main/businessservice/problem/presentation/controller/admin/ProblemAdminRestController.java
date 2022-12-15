@@ -4,7 +4,7 @@ import codeview.main.businessservice.membergroup.application.GroupService;
 import codeview.main.businessservice.membergroup.domain.MemberGroup;
 import codeview.main.businessservice.problem.application.ProblemCreateService;
 import codeview.main.businessservice.problem.application.ProblemEditService;
-import codeview.main.businessservice.problem.application.ProblemScoreService;
+import codeview.main.businessservice.problemrelation.application.ProblemScoreService;
 import codeview.main.businessservice.problem.application.ProblemService;
 import codeview.main.businessservice.problem.domain.Problem;
 import codeview.main.businessservice.problem.presentation.dao.ProblemCreateDao;
@@ -52,7 +52,6 @@ public class ProblemAdminRestController {
 
         ResponseEntity responseEntity = problemError.checkCreateError(problemCreateDao, bindingResult);
         if (responseEntity != null) {
-            log.info("responseEntity = {}", responseEntity);
             return responseEntity;
         }
 
@@ -101,8 +100,6 @@ public class ProblemAdminRestController {
             problemCreateService.removeFolderNotUsedInGroup(memberGroup);
         }
 
-//        problemCreateService.saveProblemData(problemCreateDao, problem);
-
         return new ResponseEntity<ProblemCreatedResultDto>(ProblemCreatedResultDto
                 .builder()
                 .problemId(problemId)
@@ -121,7 +118,6 @@ public class ProblemAdminRestController {
 
         removeProblemTemporaryUUidFolder(problemIoFileDao.getPreFilePath(), groupId);
 
-
         IoFileDataDto ioFileDataDto = problemCreateService.convertIoZip(groupId, problemIoFileDao.getIoZipFile(), String.valueOf(UUID.randomUUID()));
 
         String[] split = ioFileDataDto.getFolderPath().split("/");
@@ -129,10 +125,7 @@ public class ProblemAdminRestController {
         ioFileDataDto.setFolderPath(folderPath);
 
 
-        if (ioFileDataDto == null) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
-
+        if (ioFileDataDto == null) { return new ResponseEntity(HttpStatus.NOT_FOUND); }
         return new ResponseEntity(ioFileDataDto, HttpStatus.OK);
     }
 
@@ -170,14 +163,11 @@ public class ProblemAdminRestController {
             @ModelAttribute ProblemServerDao problemServerDao) throws IOException {
 
         if (problemServerDao == null || problemServerDao.getProblemFile() == null || problemServerDao.getIoZipFile() == null || problemServerDao.getScores() == null) {
-            log.info("not found");
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
 
         ServerIoFilePathDto serverIoFilePathDto = problemCreateService.convertServerFile(groupId, problemServerDao, String.valueOf(UUID.randomUUID()));
         ServerIoFileDemoTestResDto serverIoFilePathDtoReq = httpConnectionService.requestProblemCreateTest(serverIoFilePathDto);
-
-        log.info("mainFilePath = {}", serverIoFilePathDto.getMainFilePath());
 
         return new ResponseEntity(serverIoFilePathDtoReq, HttpStatus.OK);
     }
