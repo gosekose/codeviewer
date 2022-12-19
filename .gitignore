@@ -1,0 +1,12 @@
+*.yml
+*.js
+*.css
+
+main/src/main/resources/static
+source/
+.idea/
+.idea/*.xml
+
+*.in
+*.out
+*.zip
