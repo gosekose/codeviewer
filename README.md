@@ -108,7 +108,8 @@
  <img src="./img/home.png" alt="feat" style="height:400px; width:700px">
 </div>
 <br>
-## 온라인 과제 시험, 과제 수행 환경을 제공하는 웹 프로젝트<br>
+## 온라인 과제 시험, 과제 수행 환경을 제공하는 웹 프로젝트
+<br>
 + 배경 
     - 온라인 시험 플랫폼이 다수 존재하지만, 사용자 개별 코딩 과제나 시험을 치뤄야할 때 활용 가능한 오픈소스 시험 플랫폼을 제공하고자 함
   
@@ -120,14 +121,19 @@
 
 ## 공통
 <br>
-### 유저 가입<br>
+### 유저 가입
+<br>
+
 <div align="center">
  <img src="./img/login.png" alt="structure" style="height:400px; width:700px">
 </div>
 <br>
 유저는 로그인을 할 수 있습니다.
-<br><br>
-### 프로필 등록<br>
+<br>
+<br>
+
+### 프로필 등록
+<br>
 <div align="center">
  <img src="./img/profile.png" alt="structure" style="height:400px; width:700px">
  <img src="./img/profile2.png" alt="structure" style="height:400px; width:700px">
@@ -138,7 +144,8 @@
 
 ## 그룹 호스트
 
-<br><br>
+<br>
+<br>
 ### 그룹 생성<br>
 <div align="center">
  <img src="./img/admin-group-register.png" alt="structure" style="height:400px; width:700px">
@@ -155,25 +162,25 @@
  <img src="./img/admin-member-list.png" alt="structure" style="height:400px; width:700px">
 </div>
 <br>
-1. 그룹 호스트는 그룹의 가입 신청 관리, 회원 관리, 문제 관리, 그룹 관리를 진행할 수 있습니다.
-2. 그룹 호스트는 가입 신청한 회원을 승인/거부 할 수 있습니다.
-3. 그룹 호스트는 가입한 회원의 리스트를 볼 수 있습니다.
+1. 그룹 호스트는 그룹의 가입 신청 관리, 회원 관리, 문제 관리, 그룹 관리를 진행할 수 있습니다. <br>
+2. 그룹 호스트는 가입 신청한 회원을 승인/거부 할 수 있습니다. <br>
+3. 그룹 호스트는 가입한 회원의 리스트를 볼 수 있습니다. <br>
 <br>
 <br>
 
 ### 문제 생성
 <br>
 <div align="center">
- <img src="./img/create-problem1.png" alt="structure" style="height:400px; width:700px">
+ <img src="./img/create-problem1.png" alt="structure" style="height:400px; width:700px"> 
  <img src="./img/create-problem2.png" alt="structure" style="height:400px; width:700px">
  <img src="./img/create-problem3.png" alt="structure" style="height:400px; width:700px">
  <img src="./img/create-problem4.png" alt="structure" style="height:400px; width:700px">
 </div>
-<br>
-1. 그룹 호스트는 문제 이름, 문제 설명, 입출력 설정으로 문제를 생성할 수 있습니다.
-2. 문제의 정합성을 확인하기 위해 문제의 해답에 해당하는 소스와 입출력 파일(zip) 테스트를 제공하고, 입출력 zip 파일은 자동 압축해제하여 저장됩니다.
-3. 각 언어에 맞는 api 서버 호출을 통해 서버 테스트를 진행합니다.
-4. 미리보기 기능을 제공합니다.
+
+1. 그룹 호스트는 문제 이름, 문제 설명, 입출력 설정으로 문제를 생성할 수 있습니다. <br>
+2. 문제의 정합성을 확인하기 위해 문제의 해답에 해당하는 소스와 입출력 파일(zip) 테스트를 제공하고, 입출력 zip 파일은 자동 압축해제하여 저장됩니다. <br>
+3. 각 언어에 맞는 api 서버 호출을 통해 서버 테스트를 진행합니다. <br>
+4. 미리보기 기능을 제공합니다. <br>
 
 <br>
 <br>
@@ -183,7 +190,7 @@
  <img src="./img/admin-solve-chart.png" alt="structure" style="height:400px; width:700px">
 </div>
 <br>
-1. 응시자의 문제 해결 시도, 점수 등을 차트로 확인할 수 있습니다.
+1. 응시자의 문제 해결 시도, 점수 등을 차트로 확인할 수 있습니다. 
 <br>
 <br>
 ## 그룹 회원
@@ -216,8 +223,8 @@
 </div>
 
 <br>
-1. 유저는 문제 질문시 팝업창 제공하고 그 외의 버그 신고, 시스템 질문 등을 할 수 있습니다.
-2. 질문 등록은 공개/비공개 익명 등록 등을 제공합니다.
+1. 유저는 문제 질문시 팝업창 제공하고 그 외의 버그 신고, 시스템 질문 등을 할 수 있습니다. <br>
+2. 질문 등록은 공개/비공개 익명 등록 등을 제공합니다. <br>
 <br>
 
 </details>
