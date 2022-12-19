@@ -21,22 +21,23 @@
 <br>
 
 ### Technologies
-<img alt="Flask" src ="https://img.shields.io/badge/Flask-000000.svg?&style=for-the-badge&logo=Flask&logoColor=white"/>
-<img alt="AWS" src ="https://img.shields.io/badge/AWS-232F3E.svg?&style=for-the-badge&logo=amazonaws&logoColor=white"/>
+<p>
+<img alt="Spring Boot" src ="https://img.shields.io/badge/Spring Boot-6DB33F.svg?&style=for-the-badge&logo=springboot&logoColor=white"/> </a> &nbsp
+<img alt="JPA" src ="https://img.shields.io/badge/jpa-6DB33F.svg?&style=for-the-badge&logo=jpa&logoColor=white"/> </a> &nbsp
+<img alt="queryDsl" src ="https://img.shields.io/badge/querydsl-4479A1.svg?&style=for-the-badge&logo=querydsl&logoColor=white"/> </a> &nbsp
+<img alt="mysql" src ="https://img.shields.io/badge/mysql-4479A1.svg?&style=for-the-badge&logo=mysql&logoColor=white"/> </a> &nbsp
+<img alt="Redis" src ="https://img.shields.io/badge/Redis-DC382D.svg?&style=for-the-badge&logo=redis&logoColor=white"/> </a> &nbsp
+<img alt="Flask" src ="https://img.shields.io/badge/Flask-000000.svg?&style=for-the-badge&logo=Flask&logoColor=white"/> </a> &nbsp
 <img alt="Docker" src ="https://img.shields.io/badge/Docker-4479A1.svg?&style=for-the-badge&logo=Docker&logoColor=white"/>
-<img alt="Spring Boot" src ="https://img.shields.io/badge/Spring Boot-6DB33F.svg?&style=for-the-badge&logo=springboot&logoColor=white"/>
-<img alt="JPA" src ="https://img.shields.io/badge/jpa-6DB33F.svg?&style=for-the-badge&logo=jpa&logoColor=white"/>
-<img alt="queryDsl" src ="https://img.shields.io/badge/querydsl-4479A1.svg?&style=for-the-badge&logo=querydsl&logoColor=white"/>
-<img alt="mysql" src ="https://img.shields.io/badge/mysql-4479A1.svg?&style=for-the-badge&logo=mysql&logoColor=white"/>
-<img alt="Redis" src ="https://img.shields.io/badge/Redis-DC382D.svg?&style=for-the-badge&logo=redis&logoColor=white"/>
-
+</p>
 
 <br>
  
 ### Api Tool
-<img alt="Git" src ="https://img.shields.io/badge/Git-F05032.svg?&style=for-the-badge&logo=Git&logoColor=white"/>
-<img alt="Notion" src ="https://img.shields.io/badge/Notion-000000.svg?&style=for-the-badge&logo=Notion&logoColor=white"/>
-
+<p>
+<img alt="Git" src ="https://img.shields.io/badge/Git-F05032.svg?&style=for-the-badge&logo=Git&logoColor=white"/>  </a> &nbsp
+<img alt="Notion" src ="https://img.shields.io/badge/Notion-000000.svg?&style=for-the-badge&logo=Notion&logoColor=white"/>  </a> &nbsp
+</p>
 
 <br>
 
@@ -47,8 +48,6 @@
 # 📝 목차
 - [API 문서](#api)
 - [아키텍처](#structure)
-- [ERD](#feat)
-- [USECASE](#outputs)
 - [주요기능](#result)
 - [배운점](#result)
 
@@ -72,7 +71,9 @@
 <details>
 
 <div align="center">
- <img src="./img/structure.png" alt="structure">
+ <img src="./img/structure.png" alt="structure" style="height:500px; width:700px">
+ <img src="./img/erd.png" alt="erd" style="height:700px; width:700px">
+ <img src="./img/usecase.png" alt="usecase" style="height:800px; width:700px">
 </div>
 
 + 프론트
@@ -104,7 +105,7 @@
 <details>
    
 <div align="center">
- <img src="./img/home.png" alt="feat">
+ <img src="./img/home.png" alt="feat" style="height:400px; width:700px">
 </div>
 
 ## 온라인 과제 시험, 과제 수행 환경을 제공하는 웹 프로젝트
@@ -121,18 +122,94 @@
 
 ### 유저 가입
 <div align="center">
- <img src="./img/login.png" alt="structure">
+ <img src="./img/login.png" alt="structure" style="height:400px; width:700px">
 </div>
 
 유저는 로그인을 할 수 있습니다.
 
 ### 프로필 등록
 <div align="center">
- <img src="./img/profile.png" alt="structure">
- <img src="./img/profile2.png" alt="structure">
+ <img src="./img/profile.png" alt="structure" style="height:400px; width:700px">
+ <img src="./img/profile2.png" alt="structure" style="height:400px; width:700px">
 </div>
 
 유저는 프로필을 설정할 수 있습니다.
+
+
+## 그룹 호스트
+
+### 그룹 생성
+<div align="center">
+ <img src="./img/group-register.png" alt="structure" style="height:400px; width:700px">
+</div>
+
+1. 공개 설정 및 비공개 설정으로 그룹을 개설할 수 있습니다.
+
+### 그룹 생성
+<div align="center">
+ <img src="./img/admin-group-register.png" alt="structure" style="height:400px; width:700px">
+</div>
+
+1. 공개 설정 및 비공개 설정으로 그룹을 개설할 수 있습니다.
+
+
+### 그룹 관리
+<div align="center">
+ <img src="./img/admin-group-manage.png" alt="structure" style="height:400px; width:700px">
+ <img src="./img/admin-member-join.png" alt="structure" style="height:400px; width:700px">
+ <img src="./img/admin-member-list.png" alt="structure" style="height:400px; width:700px">
+</div>
+
+1. 그룹 호스트는 그룹의 가입 신청 관리, 회원 관리, 문제 관리, 그룹 관리를 진행할 수 있습니다.
+2. 그룹 호스트는 가입 신청한 회원을 승인/거부 할 수 있습니다.
+3. 그룹 호스트는 가입한 회원의 리스트를 볼 수 있습니다.
+
+
+### 문제 생성
+<div align="center">
+ <img src="./img/create-problem1.png" alt="structure" style="height:400px; width:700px">
+ <img src="./img/create-problem2.png" alt="structure" style="height:400px; width:700px">
+ <img src="./img/create-problem3.png" alt="structure" style="height:400px; width:700px">
+ <img src="./img/create-problem4.png" alt="structure" style="height:400px; width:700px">
+</div>
+
+1. 그룹 호스트는 문제 이름, 문제 설명, 입출력 설정으로 문제를 생성할 수 있습니다.
+2. 문제의 정합성을 확인하기 위해 문제의 해답에 해당하는 소스와 입출력 파일(zip) 테스트를 제공하고, 입출력 zip 파일은 자동 압축해제하여 저장됩니다.
+3. 각 언어에 맞는 api 서버 호출을 통해 서버 테스트를 진행합니다.
+4. 미리보기 기능을 제공합니다.
+
+### 응시자 정보 열람
+<div align="center">
+ <img src="./img/admin-solve-chart.png" alt="structure" style="height:400px; width:700px">
+</div>
+
+1. 응시자의 문제 해결 시도, 점수 등을 차트로 확인할 수 있습니다.
+
+## 그룹 회원
+
+### 그룹 찾기 밎 가입
+<div align="center">
+ <img src="./img/user-group-search.png" alt="structure" style="height:400px; width:700px">
+</div>
+
+1. 유저는 그룹을 찾거나 가입 신청할 수 있습니다. 자동 가입 여부에 따라 바로 가입이 될 수 있습니다.
+
+### 문제 풀기
+<div align="center">
+ <img src="./img/user-solve.png" alt="structure" style="height:400px; width:700px">
+</div>
+
+1. 유저는 출제자의 문제 풀이 가능 언어에 따라 해당 언어로 문제를 직접 작성하거나 파일을 제출할 수 있습니다.
+
+### 질문 등록
+<div align="center">
+ <img src="./img/user-qna1.png" alt="structure" style="height:400px; width:700px">
+ <img src="./img/user-qna2.png" alt="structure" style="height:400px; width:700px">
+ <img src="./img/user-qna3.png" alt="structure" style="height:400px; width:700px">
+</div>
+
+1. 유저는 문제 질문시 팝업창 제공하고 그 외의 버그 신고, 시스템 질문 등을 할 수 있습니다.
+2. 질문 등록은 공개/비공개 익명 등록 등을 제공합니다.
 
 
 </details>
