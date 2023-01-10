@@ -1,7 +1,7 @@
 <div align="center">
 
 
-### 캡스톤 프로젝트 - CODEVIEWER
+### CODEVIEWER
 
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 고세윤 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
 |:---:|  
