@@ -58,7 +58,6 @@
 <details>
 
 <div align="center">
- <img src="./img/structure.png" alt="structure" style="height:500px; width:700px">
  <img src="./img/erd.png" alt="erd" style="height:700px; width:700px">
  <img src="./img/usecase.png" alt="usecase" style="height:800px; width:700px">
 </div>
