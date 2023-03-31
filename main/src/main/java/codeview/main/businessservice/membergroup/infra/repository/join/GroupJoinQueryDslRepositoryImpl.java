@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.Tuple;
 import java.util.List;
 
 import static codeview.main.businessservice.member.domain.QMember.member;
@@ -30,8 +31,10 @@ public class GroupJoinQueryDslRepositoryImpl implements GroupJoinQueryDslReposit
     @Override
     public Page<JoinRequestQueryPageDto> findJoinRequestQueryPageDto(JoinRequestCondition condition, Pageable pageable) throws Exception{
 
-        List<JoinRequestQueryPageDto> content = query.
-                select(
+        JPAQuery<?> baseJoinRequestQuery = createBaseJoinRequestQuery(condition);
+
+        List<JoinRequestQueryPageDto> content = baseJoinRequestQuery
+                .select(
                         new QJoinRequestQueryPageDto(
                                 groupJoinRequest.memberGroup.id,
                                 groupJoinRequest.memberGroup.name,
@@ -40,20 +43,18 @@ public class GroupJoinQueryDslRepositoryImpl implements GroupJoinQueryDslReposit
                                 groupJoinRequest.member.school.schoolName,
                                 groupJoinRequest.member.department,
                                 groupJoinRequest.member.privateIdInSchool))
-                .from(groupJoinRequest)
-                .join(groupJoinRequest.memberGroup, memberGroup)
-                .on(memberGroup.creator.eq(condition.getMember()))
-                .join(groupJoinRequest.member, member)
-                .leftJoin(groupJoinRequest.member.school, school)
-                .where(
-                        groupJoinRequest.groupJoinStatus.eq(condition.getGroupJoinStatus())
-                )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        JPAQuery<Long> countQuery = query
-                .select(groupJoinRequest.count())
+        JPAQuery<Long> countQuery = baseJoinRequestQuery
+                .select(groupJoinRequest.count());
+
+        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
+    }
+    
+    private JPAQuery<?> createBaseJoinRequestQuery(JoinRequestCondition condition) {
+        return query
                 .from(groupJoinRequest)
                 .innerJoin(groupJoinRequest.memberGroup, memberGroup)
                 .on(memberGroup.creator.id.eq(condition.getMember().getId()))
@@ -62,8 +63,6 @@ public class GroupJoinQueryDslRepositoryImpl implements GroupJoinQueryDslReposit
                 .where(
                         groupJoinRequest.groupJoinStatus.eq(condition.getGroupJoinStatus())
                 );
-
-        return PageableExecutionUtils.getPage(content, pageable, countQuery::fetchOne);
     }
 }
 
