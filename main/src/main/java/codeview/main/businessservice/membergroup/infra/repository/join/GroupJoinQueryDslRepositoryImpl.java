@@ -28,6 +28,11 @@ public class GroupJoinQueryDslRepositoryImpl implements GroupJoinQueryDslReposit
 
     private final JPAQueryFactory query;
 
+    /**
+     * Condition member -> 그룹 방장
+     * groupJoinRequest 테이블에서 그룹에 참여한 회원 정보를 가져오되, (join) (groupJoinRequest member(fk))
+     * 그룹에 참여한 회원은 학교 정보가 없을 수 있음  (leftJoin) (member school(fk null))
+     */
     @Override
     public Page<JoinRequestQueryPageDto> findJoinRequestQueryPageDto(JoinRequestCondition condition, Pageable pageable) throws Exception{
 
@@ -59,7 +64,7 @@ public class GroupJoinQueryDslRepositoryImpl implements GroupJoinQueryDslReposit
                 .innerJoin(groupJoinRequest.memberGroup, memberGroup)
                 .on(memberGroup.creator.id.eq(condition.getMember().getId()))
                 .innerJoin(groupJoinRequest.member, member)
-                .leftJoin(groupJoinRequest.member.school, school)
+                .leftJoin(member.school, school)
                 .where(
                         groupJoinRequest.groupJoinStatus.eq(condition.getGroupJoinStatus())
                 );
