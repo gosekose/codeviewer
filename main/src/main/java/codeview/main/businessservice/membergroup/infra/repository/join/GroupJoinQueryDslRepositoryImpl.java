@@ -41,9 +41,9 @@ public class GroupJoinQueryDslRepositoryImpl implements GroupJoinQueryDslReposit
                                 groupJoinRequest.member.department,
                                 groupJoinRequest.member.privateIdInSchool))
                 .from(groupJoinRequest)
-                .innerJoin(groupJoinRequest.memberGroup, memberGroup)
-                .on(memberGroup.creator.id.eq(condition.getMember().getId()))
-                .innerJoin(groupJoinRequest.member, member)
+                .join(groupJoinRequest.memberGroup, memberGroup)
+                .on(memberGroup.creator.eq(condition.getMember()))
+                .join(groupJoinRequest.member, member)
                 .leftJoin(groupJoinRequest.member.school, school)
                 .where(
                         groupJoinRequest.groupJoinStatus.eq(condition.getGroupJoinStatus())
